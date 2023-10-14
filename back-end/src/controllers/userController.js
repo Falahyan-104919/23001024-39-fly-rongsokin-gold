@@ -7,7 +7,7 @@ require('dotenv').config();
 const userController = {
     registerUser: async (req, res) => {
         try {
-            const {email, phoneNumber, password} = req.body;
+            const {fullname, email, phoneNumber, password} = req.body;
 
 
             const existingUser = db.oneOrNone(`
@@ -23,11 +23,14 @@ const userController = {
             }
 
             const hashedPass = await bcrypt.hash(password, 10);
-
+            const prefixedPhoneNumber = phoneNumber.replace('0','62');
+            const prefixedFullname = fullname.toLowerCase().split(" ").map(word => {
+                return word[0].toUpperCase() + word.substring(1)
+            }).join(" ");
             await db.none(`
-                INSERT INTO users (email, password_hash, phone_number, mitra_type, role)
-                VALUES ($1, $2, $3, $4, $5)
-            `, [email, hashedPass, phoneNumber, 'customer', 'user']);
+                INSERT INTO users (fullname, email, password_hash, phone_number, mitra_type, role)
+                VALUES ($1, $2, $3, $4, $5, $6)
+            `, [prefixedFullname, email, hashedPass, prefixedPhoneNumber, 'customer', 'user']);
 
             res.status(200).json({
                 message: 'User Registration is Successful'
@@ -97,16 +100,18 @@ const userController = {
         try {
             const userId = req.params.userId;
             const userData = req.body;
-            // Example update query: await db.none('UPDATE users SET ... WHERE user_id = $1', [userId, ...userData]);
             await db.none(`
                 UPDATE users SET 
-                email = $1,
-                phone_number = $2
-                WHERE user_id = $3
-            `, [userData.email, userData.phoneNumber, userId])
-            res.status(200).json({ message: 'User profile updated successfully' });
+                fullname = $1,
+                email = $2,
+                phone_number = $3,
+                address = $4
+                WHERE user_id = $5;
+            `, [userData.fullname,userData.email, userData.phoneNumber, userData.address,userId]);
+            res.status(200).json({ message: 'User profile updated successfully'});
         } catch (error) {
-            res.status(500).json({ message: 'Internal server error' });
+            console.error(error)
+            res.status(500).json({ message: 'Internal server error'});
         }
     },
   
