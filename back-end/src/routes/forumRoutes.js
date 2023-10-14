@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -26,14 +26,16 @@ const verifyToken = (req,res,next) => {
 
 }
 
-const userController = require('../controllers/userController');
+const forumController = require('../controllers/forumController');
 
-router.post('/register', userController.registerUser);
-router.post('/login', userController.loginUser);
-router.get('/profile/:userId', verifyToken, userController.getUserProfile);
-router.put('/profile/:userId', verifyToken, userController.updateUserProfile);
-router.delete('/profile/:userId', verifyToken, userController.deleteUser);
-router.put('/profile/:userId/change_password', verifyToken, userController.updateUserPassword);
+// Customer Forum Routes
+router.get('/forum', verifyToken, forumController.getForumCustomer);
+router.post('/forum/:userId', verifyToken, forumController.postForumCustomer);
+router.put('/forum/:userId', verifyToken, forumController.updateForumCustomer);
 
-// Export the router
+// Mitra Forum Routes
+router.get('/mitra/forum', verifyToken, forumController.getForumMitra);
+router.post('/mitra/forum/:userId', verifyToken, forumController.postForumMitra);
+router.put('/mitra/forum/:userId', verifyToken, forumController.updateForumMitra);
+
 module.exports = router;

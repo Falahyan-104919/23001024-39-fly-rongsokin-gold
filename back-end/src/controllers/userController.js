@@ -45,13 +45,12 @@ const userController = {
         try {
             const {email, password} = req.body;
 
-
             const user = await db.oneOrNone(`
                 SELECT * FROM users 
                 WHERE email = $1
             `, email);
 
-            if(!user){
+            if(user == null){
                 return res.status(404).json({
                     message: 'User not found'
                 });
@@ -82,14 +81,15 @@ const userController = {
                 SELECT * FROM users 
                 WHERE user_id = $1
             `, userId);
-
-            if(!userProfile){
+            
+            if(userProfile == null){
                 res.status(404).json({
                     message: 'User not found'
                 })
+            } else {
+                res.status(200).json({user: userProfile});
             }
 
-            res.status(200).json({ user: userProfile });
         } catch (error) {
             console.error('Error while fetching user profile:', error);
             res.status(500).json({ message: 'Internal server error' });
