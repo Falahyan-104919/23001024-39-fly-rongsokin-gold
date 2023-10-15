@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const userRoutes = require('./userRoutes');
-const forumRoutes = require('./forumRoutes');
+const mitraRoutes = require('./mitraRoutes');
 
 
 router.use('/', userRoutes);
-router.use('/', forumRoutes);
+router.use('/', mitraRoutes);
 
 
 module.exports = router;

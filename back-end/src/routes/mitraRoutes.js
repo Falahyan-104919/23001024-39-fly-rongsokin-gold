@@ -28,10 +28,6 @@ const verifyToken = (req,res,next) => {
 
 const forumController = require('../controllers/forumController');
 
-// Customer Forum Routes
-router.get('/forum', verifyToken, forumController.getForumCustomer);
-router.post('/forum/:userId', verifyToken, forumController.postForumCustomer);
-router.put('/forum/:userId', verifyToken, forumController.updateForumCustomer);
 
 // Mitra Forum Routes
 router.get('/mitra/forum', verifyToken, forumController.getForumMitra);

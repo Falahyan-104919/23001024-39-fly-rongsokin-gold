@@ -28,12 +28,23 @@ const verifyToken = (req,res,next) => {
 
 const userController = require('../controllers/userController');
 
+// Authentication
 router.post('/register', userController.registerUser);
 router.post('/login', userController.loginUser);
+
+// User Profile Configuration
 router.get('/profile/:userId', verifyToken, userController.getUserProfile);
 router.put('/profile/:userId', verifyToken, userController.updateUserProfile);
 router.delete('/profile/:userId', verifyToken, userController.deleteUser);
 router.put('/profile/:userId/change_password', verifyToken, userController.updateUserPassword);
+
+const forumController = require('../controllers/forumController');
+
+// Customer Forum Routes
+router.get('/forum', verifyToken, forumController.getForumCustomer);
+router.post('/forum/:userId', verifyToken, forumController.postForumCustomer);
+router.put('/forum/:userId', verifyToken, forumController.updateForumCustomer);
+
 
 // Export the router
 module.exports = router;
