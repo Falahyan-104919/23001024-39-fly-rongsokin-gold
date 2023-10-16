@@ -1,7 +1,7 @@
 const createForumMitrasTable = `
     CREATE TABLE IF NOT EXISTS forum_mitras (
-    forum_mitra_id VARCHAR(50) PRIMARY KEY,
-    mitra_id VARCHAR(50) REFERENCES mitras(mitra_id),
+    forum_mitra_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    mitra_id UUID REFERENCES mitras(mitra_id),
     title VARCHAR(100) NOT NULL,
     content TEXT,
     created_at TIMESTAMP DEFAULT NOW(),

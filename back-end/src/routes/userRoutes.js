@@ -28,10 +28,6 @@ const verifyToken = (req,res,next) => {
 
 const userController = require('../controllers/userController');
 
-// Authentication
-router.post('/register', userController.registerUser);
-router.post('/login', userController.loginUser);
-
 // User Profile Configuration
 router.get('/profile/:userId', verifyToken, userController.getUserProfile);
 router.put('/profile/:userId', verifyToken, userController.updateUserProfile);

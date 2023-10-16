@@ -1,7 +1,7 @@
 const createProductsTable = `
   CREATE TABLE IF NOT EXISTS products (
-    product_id VARCHAR(50) PRIMARY KEY,
-    mitra_id VARCHAR(50) REFERENCES mitras(mitra_id),
+    product_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    mitra_id UUID REFERENCES mitras(mitra_id),
     name VARCHAR(100) NOT NULL,
     product_type VARCHAR(25) NOT NULL,
     description TEXT,
