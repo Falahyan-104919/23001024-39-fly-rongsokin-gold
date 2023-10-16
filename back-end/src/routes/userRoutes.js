@@ -34,12 +34,12 @@ router.put('/profile/:userId', verifyToken, userController.updateUserProfile);
 router.delete('/profile/:userId', verifyToken, userController.deleteUser);
 router.put('/profile/:userId/change_password', verifyToken, userController.updateUserPassword);
 
-const forumController = require('../controllers/forumController');
+const forumCustomerController = require('../controllers/forumCustomerController');
 
 // Customer Forum Routes
-router.get('/forum', verifyToken, forumController.getForumCustomer);
-router.post('/forum/:userId', verifyToken, forumController.postForumCustomer);
-router.put('/forum/:userId', verifyToken, forumController.updateForumCustomer);
+router.get('/forum', verifyToken, forumCustomerController.getForumCustomer);
+router.post('/forum/:userId', verifyToken, forumCustomerController.postForumCustomer);
+router.put('/forum/:userId', verifyToken, forumCustomerController.updateForumCustomer);
 
 
 // Export the router

@@ -26,12 +26,12 @@ const verifyToken = (req,res,next) => {
 
 }
 
-const forumController = require('../controllers/forumController');
+const forumMitraController = require('../controllers/forumMitraController');
 
 
 // Mitra Forum Routes
-router.get('/mitra/forum', verifyToken, forumController.getForumMitra);
-router.post('/mitra/forum/:userId', verifyToken, forumController.postForumMitra);
-router.put('/mitra/forum/:userId', verifyToken, forumController.updateForumMitra);
+router.get('/mitra/forum', verifyToken, forumMitraController.getForumMitra);
+router.post('/mitra/forum/:userId', verifyToken, forumMitraController.postForumMitra);
+router.put('/mitra/forum/:userId', verifyToken, forumMitraController.updateForumMitra);
 
 module.exports = router;

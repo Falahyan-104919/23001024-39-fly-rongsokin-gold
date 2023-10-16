@@ -6,7 +6,7 @@ const userRoutes = require('./userRoutes');
 const mitraRoutes = require('./mitraRoutes');
 
 
-router.user('/', authRoutes)
+router.use('/', authRoutes)
 router.use('/', userRoutes);
 router.use('/', mitraRoutes);
 

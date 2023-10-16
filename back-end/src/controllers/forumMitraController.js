@@ -7,7 +7,7 @@ const forumMitraController = {
     postForumMitra: async(req,res) => {
 
     },
-    editForumMitra: async(req,res) => {
+    updateForumMitra: async(req,res) => {
 
     },
     deleteForumMitra: async(req,res) => {
