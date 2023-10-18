@@ -4,7 +4,7 @@
   "description": "Server-Side for my Skripsi Project",
   "main": "index.js",
   "scripts": {
-    "test": "node app.js"
+    "server": "node app.js"
   },
   "author": "Falahyan",
   "license": "ISC",
