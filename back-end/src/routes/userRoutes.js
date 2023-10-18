@@ -29,10 +29,11 @@ const verifyToken = (req,res,next) => {
 const userController = require('../controllers/userController');
 
 // User Profile Configuration
-router.get('/profile/:userId', verifyToken, userController.getUserProfile);
-router.put('/profile/:userId', verifyToken, userController.updateUserProfile);
-router.delete('/profile/:userId', verifyToken, userController.deleteUser);
-router.put('/profile/:userId/change_password', verifyToken, userController.updateUserPassword);
+router.get('/user', verifyToken, userController.getAllUserProfile);
+router.get('/user/:userId', verifyToken, userController.getUserProfile);
+router.put('/user/:userId', verifyToken, userController.updateUserProfile);
+router.delete('/user/:userId', verifyToken, userController.deleteUser);
+router.put('/user/:userId/change_password', verifyToken, userController.updateUserPassword);
 
 const forumCustomerController = require('../controllers/forumCustomerController');
 

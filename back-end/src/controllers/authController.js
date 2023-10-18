@@ -14,7 +14,7 @@ const authController = {
             `, email);
 
             if(existingUser != null){
-                return res.status(400).json({
+                return res.status(200).json({
                     message: "Email already exists"
                 })
             }
@@ -26,7 +26,7 @@ const authController = {
                 VALUES ($1, $2, $3, $4, $5);
             `, [fullname, email, phoneNumber, 'user',hashedPassword])
 
-            return res.status(400).json({
+            return res.status(200).json({
                 message: "User Registration Successfull"
             })
         }catch(error){
@@ -67,7 +67,7 @@ const authController = {
                 expiresIn: '1h'
             });
     
-            return res.status(400).json({
+            return res.status(200).json({
                 userId: user.user_id,
                 email: user.email,
                 role: user.role,
