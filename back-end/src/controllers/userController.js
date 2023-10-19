@@ -116,6 +116,31 @@ const userController = {
       }
     },
 
+    becomeMitra: async (req,res) => {
+      try{
+        const userId = req.params.userId;
+        const { mitraName, type, address } = req.body
+
+        const newMitra = await db.one(`
+          INSERT INTO mitras (user_id, mitra_name, type, address) 
+          VALUES ($1, $2, $3, $4) RETURNING mitra_id
+        `,[userId, mitraName, type, address]);
+
+        res.status(201).json({
+          message: "Become Mitra Successfull",
+          data : {
+            userId: userId,
+            mitraId: newMitra.mitra_id
+          }
+        });
+
+      }catch(error){
+        res.status(500).json({
+          message: "Internal Server Error"
+        })
+      }
+    }
+
   };
   
   module.exports = userController;

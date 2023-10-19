@@ -34,6 +34,7 @@ router.get('/user/:userId', verifyToken, userController.getUserProfile);
 router.put('/user/:userId', verifyToken, userController.updateUserProfile);
 router.delete('/user/:userId', verifyToken, userController.deleteUser);
 router.put('/user/:userId/change_password', verifyToken, userController.updateUserPassword);
+router.post('/user/become_mitra/:userId', verifyToken, userController.becomeMitra);
 
 const forumCustomerController = require('../controllers/forumCustomerController');
 

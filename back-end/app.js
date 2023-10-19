@@ -2,13 +2,12 @@ require('dotenv').config()
 const express = require('express');
 const app = express();
 const port = process.env.DEV_PORT || 3000;
-const bodyParser = require('body-parser');
 const session = require('express-session');
 const { connectDatabase } = require('./src/database/db');
 const routes = require('./src/routes/routes');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(
   session({
     secret: 'rongsokin-key',
