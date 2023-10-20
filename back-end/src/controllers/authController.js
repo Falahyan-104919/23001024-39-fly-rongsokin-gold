@@ -59,7 +59,7 @@ const authController = {
                     message: "Invalid Password"
                 })
             }
-    
+
             const token = jwt.sign({
                 userId : user.user_id
             }, process.env.JWT_SECRET,
@@ -67,10 +67,27 @@ const authController = {
                 expiresIn: '1h'
             });
     
-            return res.status(200).json({
+            let userData = {
                 userId: user.user_id,
+                fullname: user.fullname,
                 email: user.email,
+                phoneNumber: user.phone_number,
                 role: user.role,
+            }
+
+            const mitra = await db.oneOrNone(`
+                SELECT * from mitras 
+                WHERE user_id = $1
+            `, user.user_id);
+
+
+            if(mitra){
+                userData.mitraId = mitra.mitra_id
+            }
+    
+            return res.status(200).json({
+                message: "Authentication is Successfull",
+                data: userData,
                 token: token
             })
 

@@ -73,7 +73,7 @@ const userController = {
 
         await db.none(`
           DELETE FROM users
-          WHERE users_id = $1 CASCADE;
+          WHERE user_id = $1;
         `, userId);
 
         return res.status(200).json({
@@ -81,6 +81,7 @@ const userController = {
         })
 
       }catch(error){
+        console.error(error)
         return res.status(500).json({
           message: "Internal Server Error"
         })
@@ -120,6 +121,10 @@ const userController = {
       try{
         const userId = req.params.userId;
         const { mitraName, type, address } = req.body
+
+        await db.none(`
+          UPDATE users SET role = 'mitra' WHERE user_id = $1 
+        `,userId)
 
         const newMitra = await db.one(`
           INSERT INTO mitras (user_id, mitra_name, type, address) 

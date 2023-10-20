@@ -75,7 +75,7 @@ const productController = {
 
             const updatedProducts = await db.one(`
                 UPDATE products SET 
-                name = $1, productType = $2, description = $3, price = $4, quantity = $5 
+                name = $1, product_type = $2, description = $3, price = $4, quantity = $5 
                 WHERE product_id = $6 RETURNING product_id
             `, [name, productType, description, price, quantity, productId]);
 
@@ -97,6 +97,7 @@ const productController = {
                 message: "Product Update Successfull"
             })
         }catch(error){
+            console.error(error);
             res.status(500).json({
                 message: "Internal Server Error"
             })
@@ -116,7 +117,9 @@ const productController = {
               GROUP BY p.product_id;
             `);
         
-            res.status(200).json({ products: productData });
+            res.status(200).json({ 
+                message: "Fetching All Product Data Successfully",
+                products: productData });
           } catch (error) {
             res.status(500).json({ message: 'Internal Server Error' });
           }

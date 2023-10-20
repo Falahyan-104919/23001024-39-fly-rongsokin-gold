@@ -6,6 +6,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const { db } = require('../database/db');
+const uuid = require('uuid');
 
 
 
@@ -29,24 +30,25 @@ const deleteAllProductImg = async(req,res,next) => {
         fs.unlink(path.join('public','img','products', `${mitraId}`,`${productImage[i]}`), (err) => {
             if(err){
                 return res.status(400).json({
-                    message: "failed to update the image"
+                    message: "Failed to Update the Image"
                 });
             }
         });
         await db.none(`
-            DELETE FROM images WHERE image_name = $1 CASCADE
+            DELETE FROM images WHERE image_name = $1
         `, productImage[i])
     }
 
     await db.none(`
-        DELETE FROM product_image WHERE product_id = $1 CASCADE
+        DELETE FROM product_image WHERE product_id = $1
     `, productId)
+    req.folderName = mitraId
     next()
 }
 
 const imgProductStorage = multer.diskStorage({
     destination : (req, res, cb)=>{
-        const mitraId = req.params.mitraId;
+        const mitraId = req.params.mitraId || req.folderName;
         const uploadDir = path.join('public', 'img', 'products', `${mitraId}`);
 
         fs.access(uploadDir, (error)=>{
@@ -104,9 +106,9 @@ const productMitraController = require('../controllers/productController');
 
 // Mitra Product Routes
 router.get('/mitra/products', productMitraController.getAllProduct);
-router.post('/mitra/products/:mitraId', uploadsProductImg, productMitraController.postProduct);
+router.post('/mitra/products/upload/:mitraId', uploadsProductImg, productMitraController.postProduct);
 router.get('/mitra/products/:productId', verifyToken, productMitraController.getProduct);
-router.get('/mitra/test/:productId', deleteAllProductImg, imgProductStorage, productMitraController.updateProduct);
+router.put('/mitra/products/update/:productId', deleteAllProductImg, uploadsProductImg, productMitraController.updateProduct);
 
 
 

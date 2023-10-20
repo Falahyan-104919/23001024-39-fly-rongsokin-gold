@@ -29,11 +29,11 @@ const verifyToken = (req,res,next) => {
 const userController = require('../controllers/userController');
 
 // User Profile Configuration
-router.get('/user', verifyToken, userController.getAllUserProfile);
-router.get('/user/:userId', verifyToken, userController.getUserProfile);
+router.get('/user', userController.getAllUserProfile);
+router.get('/user/:userId', userController.getUserProfile);
 router.put('/user/:userId', verifyToken, userController.updateUserProfile);
 router.delete('/user/:userId', verifyToken, userController.deleteUser);
-router.put('/user/:userId/change_password', verifyToken, userController.updateUserPassword);
+router.put('/user/change_password/:userId', verifyToken, userController.updateUserPassword);
 router.post('/user/become_mitra/:userId', verifyToken, userController.becomeMitra);
 
 const forumCustomerController = require('../controllers/forumCustomerController');
