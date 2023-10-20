@@ -18,8 +18,7 @@ router.put('/mitra/forum/:userId', verifyTokenAndRole, forumMitraController.upda
 
 
 const productMitraController = require('../controllers/productController');
-const imgProductHandler = multer({storage: storage.productImgStorage})
-const uploadsProductImg = imgProductHandler.array('productImg',5)
+const uploadsProductImg = storage.productsImageStorage.array('productImg',5)
 
 // Mitra Product Routes
 router.get('/mitra/products', productMitraController.getAllProduct);

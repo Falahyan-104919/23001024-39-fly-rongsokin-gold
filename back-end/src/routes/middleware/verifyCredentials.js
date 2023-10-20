@@ -20,7 +20,6 @@ const verifyToken = (req,res,next) => {
             message: "Invalid Token"
         })
     }
-
 }
 
 const verifyTokenAndRole = (req, res, next) => {

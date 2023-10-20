@@ -1,30 +1,8 @@
 require('dotenv').config()
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-
-const verifyToken = (req,res,next) => {
-    const token = req.headers.authorization
-
-    if(!token){
-        return res.status(403).json({
-            message: "Token not Provided"
-        })
-    }
-
-    try{
-        const decode = jwt.verify(token, process.env.JWT_SECRET)
-
-        req.user = decode;
-        next();
-    }catch(error){
-        console.error("Error during token verification", error)
-        return res.status(401).json({
-            message: "Invalid Token"
-        })
-    }
-
-}
+const {verifyToken} = require('./middleware/verifyCredentials');
+const {storage, updateImgProcessor} = require('./middleware/imageProcessor');
 
 const userController = require('../controllers/userController');
 
@@ -37,11 +15,12 @@ router.put('/user/change_password/:userId', verifyToken, userController.updateUs
 router.post('/user/become_mitra/:userId', verifyToken, userController.becomeMitra);
 
 const forumCustomerController = require('../controllers/forumCustomerController');
+const uploadForumCustomerImg = storage.forumCustomerImageStorage.array('forumImg', 5);
 
 // Customer Forum Routes
-router.get('/forum', verifyToken, forumCustomerController.getForumCustomer);
-router.post('/forum/:userId', verifyToken, forumCustomerController.postForumCustomer);
-router.put('/forum/:userId', verifyToken, forumCustomerController.updateForumCustomer);
+router.get('/forum', verifyToken, forumCustomerController.getAllForumCustomer);
+router.post('/forum/:userId', verifyToken, uploadForumCustomerImg,forumCustomerController.postForumCustomer);
+router.put('/forum/:forumCustomerId', verifyToken, updateImgProcessor.deleteAllImgForumCustomer, uploadForumCustomerImg,forumCustomerController.updateForumCustomer);
 
 
 // Export the router

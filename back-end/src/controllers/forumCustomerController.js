@@ -6,11 +6,11 @@ const forumCustomerController = {
         try{
             const forumCustomerData = await db.manyOrNone(`
                 SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, 
-                        json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name))
+                        json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image
                 FROM forum_customers fc 
-                LEFT JOIN forum_customer_id fci ON fc.forum_customers_id = fci.forum_id 
+                LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
                 LEFT JOIN images i ON fci.image_id = i.image_id 
-                GROUP BY fc.forum_customer_id; 
+                GROUP BY fc.forum_customers_id; 
             `)
     
             res.status(200).json({ 
@@ -29,12 +29,12 @@ const forumCustomerController = {
 
             const forumCustomerData = await db.manyOrNone(`
                 SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, 
-                        json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name))
+                        json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image
                 FROM forum_customers fc 
-                LEFT JOIN forum_customer_id fci ON fc.forum_customers_id = fci.forum_id 
+                LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
                 LEFT JOIN images i ON fci.image_id = i.image_id 
                 WHERE fc.forum_customers_id = $1
-                GROUP BY fc.forum_customer_id; 
+                GROUP BY fc.forum_customers_id; 
             `, forumCustomerId);
 
             res.status(200).json({
@@ -43,6 +43,7 @@ const forumCustomerController = {
             })
 
         }catch(error){
+            console.error(error);
             res.status(500).json({
                 message: "Internal Server Error"
             })
@@ -59,17 +60,19 @@ const forumCustomerController = {
                     VALUES ($1, $2, $3) RETURNING forum_customers_id
             `, [userId, title, content]);
     
-            for(let i = 0; i < forumImage.length; i++){
-                    const image = forumImage[i];
-                    const newImage = await db.one(`
-                        INSERT INTO images(user_id, image_path, image_name)
-                        VALUES($1,$2,$3) RETURNING image_id
-                    `,[userId, image.path, image.name]);
-    
-                    await db.none(`
-                        INSERT INTO forum_customer_image(forum_id, image_id)
-                        VALUES($1,$2)
-                    `, [newForumCustomer.forum_customers_id, newImage.image_id])
+            if(forumImage){
+                for(let i = 0; i < forumImage.length; i++){
+                        const image = forumImage[i];
+                        const newImage = await db.one(`
+                            INSERT INTO images(user_id, image_path, image_name)
+                            VALUES($1,$2,$3) RETURNING image_id
+                        `,[userId, image.path, image.name]);
+        
+                        await db.none(`
+                            INSERT INTO forum_customer_image(forum_id, image_id)
+                            VALUES($1,$2)
+                        `, [newForumCustomer.forum_customers_id, newImage.image_id])
+                }
             }
     
             res.status(201).json({
@@ -84,7 +87,43 @@ const forumCustomerController = {
 
     },
     updateForumCustomer: async (req,res) => {
-        
+        try{
+            const forumCustomerId = req.params.forumCustomerId;
+            const {title, content} = req.body;
+            const forumImage = req.files;
+
+            const newUpdate = await db.one(`
+                UPDATE forum_customers SET 
+                title = $1, content = $2, updated_at = NOW()
+                WHERE forum_customers_id = $3 RETURNING forum_customers_id, user_id
+            `, [title, content, forumCustomerId]);
+            if(forumImage){
+                for(let i= 0; i < forumImage.length; i++){
+                    const image = forumImage[i];
+                    console.log(image);
+                    const newImage = await db.one(`
+                        INSERT INTO images(user_id, image_path, image_name) 
+                        VALUES ($1,$2,$3) RETURNING image_id
+                    `, [newUpdate.user_id, image.path, image.filename]);
+
+                    await db.none(`
+                        INSERT INTO forum_customer_image(forum_id, image_id) 
+                        VALUES($1,$2)
+                    `, [newUpdate.user_id, newImage.image_id])
+                }
+            }
+
+            res.status(201).json({
+                message: "Update Forum Customer Successfully"
+            })
+
+        }catch(error){
+            console.error(error);
+            res.status(500).json({
+                message: "Internal Server Error"
+            })
+        }
+
     },
     deleteForumCustomer: async (req,res) => {
         
