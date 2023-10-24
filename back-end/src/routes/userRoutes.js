@@ -19,8 +19,17 @@ const uploadForumCustomerImg = storage.forumCustomerImageStorage.array('forumImg
 
 // Customer Forum Routes
 router.get('/forum', verifyToken, forumCustomerController.getAllForumCustomer);
+router.get('/forum/:forumCustomerId', verifyToken, forumCustomerController.getForumCustomer);
 router.post('/forum/:userId', verifyToken, uploadForumCustomerImg,forumCustomerController.postForumCustomer);
 router.put('/forum/:forumCustomerId', verifyToken, updateImgProcessor.deleteAllImgForumCustomer, uploadForumCustomerImg,forumCustomerController.updateForumCustomer);
+
+
+const transactionController = require('../controllers/transactionController');
+
+// Transaction Routes
+router.get('/transaction_list/:userId', verifyToken, transactionController.getAllCustomerTransaction);
+router.post('/order/:userId', verifyToken, transactionController.postTransaction);
+router.put('/order/arrived/:transactionId', verifyToken, transactionController.updateStatusTransaction);
 
 
 // Export the router

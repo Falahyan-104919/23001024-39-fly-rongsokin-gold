@@ -190,7 +190,7 @@ const updateImgProcessor = {
     deleteAllImgForumMitra: async(req, res, next) => {
         try{
             const forumMitraId = req.params.forumMitraId;
-            const forumData = await db.oneOrNone(`
+            const forumMitraData = await db.oneOrNone(`
             SELECT fm.title, fm.content, fm.mitra_id, 
                     json_agg(json_build_object('image_id', fmi.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image
             FROM forum_mitras fm 
@@ -199,10 +199,10 @@ const updateImgProcessor = {
             WHERE forum_mitra_id = $1 
             GROUP BY fm.forum_mitra_id;
             `, forumMitraId);
-            const mitraId = forumData['mitra_id'];
-            const forumImage = forumData['images'].map((image) => {
+            const mitraId = forumMitraData['mitra_id'];
+            const forumImage = forumMitraData['image'][0]['image_id'] != null ? forumMitraData['images'].map((image) => {
                 return image.image_name
-            })
+            }) : false;
 
             if(forumImage){
                 for(let i=0; i < forumImage.length; i++){

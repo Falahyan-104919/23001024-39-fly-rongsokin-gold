@@ -7,13 +7,13 @@ const { storage, updateImgProcessor } = require('./middleware/imageProcessor');
 
 
 const forumMitraController = require('../controllers/forumMitraController');
-const imgForumMitraHandler = multer({storage: storage.forumMitraImageStorage});
-const uploadsForumMitraImg = imgForumMitraHandler.array('forumMitraImg', 5);
+const uploadsForumMitraImg = storage.forumMitraImageStorage.array('forumMitraImg', 5);
 
 // Mitra Forum Routes
-router.get('/mitra/forum', verifyTokenAndRole, forumMitraController.getForumMitra);
-router.post('/mitra/forum/:userId', uploadsForumMitraImg, forumMitraController.postForumMitra);
-router.put('/mitra/forum/:userId', verifyTokenAndRole, forumMitraController.updateForumMitra);
+router.get('/mitra/forum', verifyTokenAndRole, forumMitraController.getAllForumMitra);
+router.get('/mitra/forum/:forumMitraId', verifyTokenAndRole, forumMitraController.getForumMitra);
+router.post('/mitra/forum/:mitraId', uploadsForumMitraImg, forumMitraController.postForumMitra);
+router.put('/mitra/forum/:forumMitraId', verifyTokenAndRole, updateImgProcessor.deleteAllImgForumMitra, uploadsForumMitraImg, forumMitraController.updateForumMitra);
 /* ===================================================================================*/
 
 
@@ -26,6 +26,11 @@ router.post('/mitra/products/upload/:mitraId', uploadsProductImg, productMitraCo
 router.get('/mitra/products/:productId', verifyTokenAndRole, productMitraController.getProduct);
 router.put('/mitra/products/update/:productId', updateImgProcessor.deleteAllProductImg, uploadsProductImg, productMitraController.updateProduct);
 
+
+const transactionController = require('../controllers/transactionController');
+// Mitra Transaction Routes
+router.get('/mitra/order_list/:mitraId', verifyTokenAndRole, transactionController.getAllMitraOrderTransaction);
+router.put('/mitra/delivery_product/:transactionId', verifyTokenAndRole, transactionController.updateStatusTransaction);
 
 
 module.exports = router;

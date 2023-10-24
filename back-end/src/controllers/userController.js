@@ -9,16 +9,17 @@ const userController = {
     getAllUserProfile: async(req,res) => {
       try{
         const resData = await db.manyOrNone(`
-          SELECT user_id, fullname, email, phone_number, profileImgId 
+          SELECT user_id, fullname, email, phone_number, role
           FROM users
         `)
 
-        return res.status(200).json({
+        res.status(200).json({
           message: "Fetching All User Data Successfull",
           data: resData
         });
       }catch(error){
-        return res.status(500).json({
+        console.error(error);
+        res.status(500).json({
           message: "Internal Server Error"
         })
       }
