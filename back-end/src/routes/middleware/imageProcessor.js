@@ -27,7 +27,7 @@ const imgProductStorage = multer.diskStorage({
 
 const imgForumCustomerStorage = multer.diskStorage({
     destination: (req,res,cb) => {
-        const userId = req.params.userId;
+        const userId = req.params.userId || req.folderName;
         const uploadDir = path.join('public','img','forum_customer', `${userId}`);
 
         fs.access(uploadDir, (error) => {
@@ -49,7 +49,7 @@ const imgForumCustomerStorage = multer.diskStorage({
 
 const imgForumMitraStorage = multer.diskStorage({
     destination: (req,res,cb) => {
-        const mitraId = req.params.mitraId;
+        const mitraId = req.params.mitraId || req.folderName;
         const uploadDir = path.join('public','img','forum_mitra', `${mitraId}`);
 
         fs.access(uploadDir, (error) => {
@@ -157,7 +157,7 @@ const updateImgProcessor = {
                     GROUP BY fc.forum_customers_id; 
                 `, forumCustomerId);
             const userId = forumCustomerData['user_id'];
-            const forumImage = forumCustomerData['image'][0]['image_id'] != null ? forumCustomerData['images'].map((image) => {
+            const forumImage = forumCustomerData['image'][0]['image_id'] != null ? forumCustomerData['image'].map((image) => {
                 return image.image_name
             }) : false;
 

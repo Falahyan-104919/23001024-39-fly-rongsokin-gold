@@ -109,7 +109,7 @@ const forumCustomerController = {
                     await db.none(`
                         INSERT INTO forum_customer_image(forum_id, image_id) 
                         VALUES($1,$2)
-                    `, [newUpdate.user_id, newImage.image_id])
+                    `, [newUpdate.forum_customers_id, newImage.image_id])
                 }
             }
 

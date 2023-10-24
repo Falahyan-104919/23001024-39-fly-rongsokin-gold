@@ -110,7 +110,7 @@ const productController = {
         try {
             const productData = await db.manyOrNone(`
               SELECT p.product_id, p.name, p.product_type, p.description, p.price, p.quantity, 
-                     json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path)) as images
+                     json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path,'image_name', i.image_name)) as images
               FROM products p
               LEFT JOIN product_image pi ON p.product_id = pi.product_id
               LEFT JOIN images i ON pi.image_id = i.image_id
