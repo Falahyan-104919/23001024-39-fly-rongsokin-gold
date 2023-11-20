@@ -1,141 +1,52 @@
-const { db } = require('../database/db');
+const { db } = require('../database/db')
 const fs = require('fs');
 const path = require('path');
-const multer = require('multer');
 
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('File type not supported'), false);
-    }
-  };
-
-const storageProductImg = multer.diskStorage({
-    destination: (req, res, cb) => {
-        const productId = req.params.productId;
-        const uploadDir = path.join(__dirname, 'public', 'images', 'products', `${productId}`);
-        if(!fs.existsSync(uploadDir)){
-            fs.mkdirSync(uploadDir, {recursive: true});
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, res, cb) => {
-        const uniqueFileName = `${Date.now()}`;
-        cb(null, uniqueFileName)
-    }
-});
-
-const storageForumCustomerImg = multer.diskStorage({
-    destination: (req, res, cb) => {
-        const forumId = req.params.forumId;
-        const uploadDir = path.join(__dirname, 'public', 'images', 'forums_customer', `${forumId}`);
-        if(!fs.existsSync(uploadDir)){
-            fs.mkdirSync(uploadDir, {recursive: true});
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, res, cb) => {
-        const uniqueFileName = `${Date.now()}-${file.originalname}`;
-        cb(null, uniqueFileName)
-    }
-});
-
-const storageForumMitraImg = multer.diskStorage({
-    destination: (req, res, cb) => {
-        const forumId = req.params.forumId;
-        const uploadDir = path.join(__dirname, 'public', 'images', 'forums_customer', `${forumId}`);
-        if(!fs.existsSync(uploadDir)){
-            fs.mkdirSync(uploadDir, {recursive: true});
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, res, cb) => {
-        const uniqueFileName = `${Date.now()}-${file.originalname}`;
-        cb(null, uniqueFileName)
-    }
-});
-
-
-const storageProfileImg = multer.diskStorage({
-    destination: (req, res, cb) => {
-        const userId = req.params.userId;
-        const uploadDir = path.join(__dirname, 'public', 'images', 'profile_picture', `${userId}`);
-        if(!fs.existsSync(uploadDir)){
-            fs.mkdirSync(uploadDir, {recursive: true});
-        }
-        cb(null, uploadDir);
-    },
-    filename: (req, res, cb) => {
-        const uniqueFileName = `${Date.now()}-${userId}`;
-        cb(null, uniqueFileName)
-    }
-});
 
 
 const imageController = {
-    uploadProfileImg: async(req,res) => {
-        const uploadProfilImg = multer({ storage: storageProfileImg , fileFilter: fileFilter}).single('profileImg');
-        uploadProfilImg(req, res, async(err) => {
-            if(err instanceof multer.MulterError){
-                return res.status(500).json({
-                    message: err.message
-                })
-            } else if (err){
-                return res.status(500).json({
-                    message: "Failed to upload profile image"
-                })
-            }
-        })
-        
+    getProfileImage : async(req, res) => {
+        try{
+            const userId = req.params.userId;
+            const imgData = await db.oneOrNone(`
+                SELECT u.image_id, i.image_name, i.image_path FROM users u LEFT JOIN images i ON i.user_id = u.user_id
+            `);
+            const image = fs.readFileSync(path('public','img','profile_image',`${userId}`,`${fileName}`))
+        }catch(err){
+            console.error(error);
+            res.status(400).json(null)
+        }
     },
-    uploadMitraForumImg: async(req,res) => {
-        const uploadForumCustomerImg = multer({ storage: storageForumCustomerImg , fileFilter: fileFilter}).array('forumImg');
-        uploadForumCustomerImg(req, res, async(err)=>{
-            if(err instanceof multer.MulterError){
-                return res.status(500).json({
-                    message: err.message
-                })
-            } else if (err){
-                return res.status(500).json({
-                    message: "Failed to upload forum image"
-                })
-            }
-        })
-        
+    getProductImages: async() => {
+        try {
+            
+        } catch (error) {
+            console.error(err)
+            res.status(500).json({
+                message: "Internal Server Error"
+            })
+        }
     },
-    uploadCustomerForumImg: async(req,res) => {
-        const uploadForumMitraImg = multer({ storage: storageForumMitraImg , fileFilter: fileFilter}).array('forumImg');
-        uploadForumMitraImg(req,res, async(err) => {
-            if(err instanceof multer.MulterError){
-                return res.status(500).json({
-                    message: err.message
-                })
-            } else if (err){
-                return res.status(500).json({
-                    message: "Failed to upload forum image"
-                })
-            }
-        })
-        
+    getForumMitraImages: async(req,res)=>{
+        try{
+
+        }catch(error){
+            console.error(error);
+            res.status(500).json({
+                message: "Internal Server Error"
+            })
+        }
     },
-    uploadProductImg: async(req,res, next) => {
-        console.log("INI MIDDLEWARE");
-        const uploadProductImg = multer({ storage: storageProductImg }).array('productImg');
-        console.log(uploadProductImg,'\n',req.body,'\n',req.file);
-        uploadProductImg(req, res, async (err) => {
-            if(err instanceof multer.MulterError){
-                return res.status(500).json({
-                    message: err.message
-                })
-            } else if (err){
-                return res.status(500).json({
-                    message: 'Failed to upload product image'
-                })
-            }
-        });
-        next()
-    }
+    getForumCustomerImages: async(req,res)=>{
+        try{
+
+        }catch(error){
+            console.error(error);
+            res.status(500).json({
+                message: "Internal Server Error"
+            })
+        }
+    },
 }
 
 module.exports = imageController;

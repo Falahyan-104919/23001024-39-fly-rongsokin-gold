@@ -1,28 +1,16 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.DEV_PORT || 3000;
-const session = require('express-session');
+const cors = require('cors');
 const { connectDatabase } = require('./src/database/db');
 const routes = require('./src/routes/routes');
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(
-  session({
-    secret: 'rongsokin-key',
-    resave: false,
-    saveUninitialized: true,
-  })
-);
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
+app.use('/public', express.static('public'));
 app.use('/', routes);
 
 app.listen(port, () => {
