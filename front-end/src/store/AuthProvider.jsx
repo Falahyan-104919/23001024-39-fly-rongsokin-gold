@@ -1,11 +1,12 @@
 import React, { createContext, useState } from 'react';
 import axiosInstance from '../utils/axios';
-import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const initialValues = {
+  const navigate = useNavigate();
+  const userTraits = JSON.parse(localStorage.getItem('user_traits')) || {
     userId: '',
     fullname: '',
     email: '',
@@ -13,8 +14,10 @@ export const AuthProvider = ({ children }) => {
     role: '',
     token: '',
   };
-  const [user, setUser] = useState(initialValues);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const userIsLoggedIn =
+    JSON.parse(localStorage.getItem('user_is_logged_in')) || false;
+  const [user, setUser] = useState(userTraits);
+  const [isLoggedIn, setIsLoggedIn] = useState(userIsLoggedIn);
 
   const login = async ({ email, password }) => {
     const res = await axiosInstance
@@ -114,8 +117,22 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setIsLoggedIn(false);
-    setUser(initialValues);
+    setUser({
+      userId: '',
+      fullname: '',
+      email: '',
+      phoneNumber: '',
+      role: '',
+      token: '',
+    });
+
+    localStorage.removeItem('user_traits');
+    localStorage.removeItem('user_is_logged_in');
+    navigate(0);
   };
+
+  localStorage.setItem('user_traits', JSON.stringify(user));
+  localStorage.setItem('user_is_logged_in', JSON.stringify(isLoggedIn));
 
   return (
     <AuthContext.Provider

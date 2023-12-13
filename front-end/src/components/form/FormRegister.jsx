@@ -5,6 +5,8 @@ import {
   Button,
   Input,
   useToast,
+  InputLeftAddon,
+  InputGroup,
 } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik, Field } from 'formik';
 import axiosInstance from '../../utils/axios';
@@ -22,10 +24,9 @@ export default function FormRegister({ close }) {
     fullname: Yup.string()
       .min(4, 'Fullname need at least 4 Character')
       .required('Fullname is Required'),
-    phoneNumber: Yup.string()
+    phoneNumber: Yup.number()
       .min(10, 'Phone Number Must be at least 10 Character')
-      .required('Phone Number is Required')
-      .transform((currentValue) => currentValue.replace('0', '62')),
+      .required('Phone Number is Required'),
     password: Yup.string()
       .min(6, 'Password need at least 6 Character')
       .required('Password is Required'),
@@ -106,7 +107,7 @@ export default function FormRegister({ close }) {
       validationSchema={registerSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting, isValid, dirty }) => (
+      {({ isSubmitting, isValid, dirty, setFieldValue }) => (
         <Form autoComplete="off" autoCapitalize="words">
           <Field name="email">
             {({ field }) => (
@@ -144,12 +145,25 @@ export default function FormRegister({ close }) {
             {({ field }) => (
               <FormControl id="phoneNumber" isRequired>
                 <FormLabel>Phone Number</FormLabel>
-                <Input
-                  {...field}
-                  placeholder="Phone Number"
-                  type="text"
-                  focusBorderColor="teal.100"
-                />
+                <InputGroup>
+                  <InputLeftAddon children="+62" />
+                  <Input
+                    {...field}
+                    placeholder="Phone Number"
+                    focusBorderColor="teal.100"
+                    onChange={(e) => {
+                      if (!isNaN(Number(e.target.value))) {
+                        if (e.target.value == 0) {
+                          setFieldValue('phoneNumber', '');
+                        }
+                        setFieldValue('phoneNumber', Number(e.target.value));
+                      } else {
+                        setFieldValue('phoneNumber', '');
+                      }
+                    }}
+                  />
+                </InputGroup>
+
                 <ErrorMessage
                   name="phoneNumber"
                   component={Text}

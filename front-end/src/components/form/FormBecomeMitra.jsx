@@ -70,9 +70,9 @@ export default function FormBecomeMitra() {
           duration: 3000,
           isClosable: true,
         });
-        logout();
+        navigate('/');
         focusManager.setFocused(true);
-        return navigate('/');
+        return logout();
       default:
         return toast({
           title: 'Become Mitra Failed',

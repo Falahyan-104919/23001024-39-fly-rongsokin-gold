@@ -8,7 +8,8 @@ const productController = {
       const mitraId = req.params.mitraId;
       const { userId, name, productType, description, price, quantity } =
         req.body;
-      const productImg = req.files;
+      const productImg = req.file;
+      console.log(productImg);
 
       const newProduct = await db.one(
         `
@@ -18,33 +19,24 @@ const productController = {
         [mitraId, name, productType, description, price, quantity]
       );
 
-      for (let i = 0; i < productImg.length; i++) {
-        const image = productImg[i];
-        const newImage = await db.one(
-          `
+      const newImage = await db.one(
+        `
                     INSERT INTO images(user_id, image_path, image_name) 
                     VALUES($1, $2, $3) 
                     RETURNING image_id
                 `,
-          [userId, image.path, image.filename]
-        );
+        [userId, productImg.path, productImg.filename]
+      );
 
-        await db.none(
-          `
+      await db.none(
+        `
                     INSERT INTO product_image(product_id, image_id)
                     VALUES ($1, $2)
                 `,
-          [newProduct.product_id, newImage.image_id]
-        );
-      }
+        [newProduct.product_id, newImage.image_id]
+      );
 
-      res.status(201).json({
-        data: {
-          body: req.body,
-          file: req.files,
-          products: newProduct,
-        },
-      });
+      res.status(201).json({ msg: 'success' });
     } catch (error) {
       console.error(error);
       res.status(500).json({
@@ -97,40 +89,37 @@ const productController = {
   },
   updateProduct: async (req, res) => {
     try {
+      console.log('masuk controllers');
       const { productId } = req.params;
-      const { userId, name, productType, description, price, quantity } =
-        req.body;
-      const productImg = req.files;
+      const { name, productType, description, price, quantity } = req.body;
+      const productImg = req.file;
 
-      const updatedProducts = await db.one(
+      await db.none(
         `
                 UPDATE products SET 
                 name = $1, product_type = $2, description = $3, price = $4, quantity = $5 
-                WHERE product_id = $6 RETURNING product_id
+                WHERE product_id = $6
             `,
         [name, productType, description, price, quantity, productId]
       );
 
       if (productImg) {
-        for (let i = 0; i < productImg.length; i++) {
-          const image = productImg[i];
-          const newImage = await db.one(
-            `
-                      INSERT INTO images(user_id, image_path, image_name) 
-                      VALUES($1, $2, $3) 
-                      RETURNING image_id
-                  `,
-            [userId, image.path, image.filename]
-          );
+        const product = await db.one(
+          `
+            SELECT pi.image_id FROM products as p 
+            LEFT JOIN product_image pi ON p.product_id = pi.product_id
+            WHERE p.product_id = $1
+            GROUP BY p.product_id, pi.image_id
+        `,
+          [productId]
+        );
 
-          await db.none(
-            `
-                      INSERT INTO product_image(product_id, image_id)
-                      VALUES ($1, $2)
-                  `,
-            [updatedProducts.product_id, newImage.image_id]
-          );
-        }
+        await db.none(
+          `
+            UPDATE images SET image_path = $1 , image_name = $2 WHERE image_id = $3;
+          `,
+          [productImg.path, productImg.filename, product.image_id]
+        );
       }
 
       res.status(203).json({

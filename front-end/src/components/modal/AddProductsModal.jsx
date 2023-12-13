@@ -35,25 +35,22 @@ export default function AddProductsModal({ open, toggleOff }) {
   const [uploadProductImage, setUploadProductImage] = useState([]);
   const toast = useToast();
   const pengumpulProductType = [
-    'Kertas dan Kardus',
-    'Logam',
+    'Kertas/Kardus',
+    'Besi/Logam',
+    'Kaca/Beling',
     'Plastik',
     'Elektronik',
     'Barang Tekstil',
-    'Barang-Bahan Bangunan',
-    'Barang Medis',
-    'Barang-Bahan Kimia',
+    'Bahan Bangunan',
   ];
   const pengelolaProductType = [
-    'Kertas Daur Ulang',
-    'Logam Daur Ulang',
-    'Plastik Daur Ulang',
-    'Kaca Daur Ulang',
-    'Barang Elektronik Daur Ulang',
-    'Barang Tekstil Daur Ulang',
-    'Barang-Bahan Bangunan Daur Ulang',
-    'Barang Medis Daur Ulang',
-    'Barang-Bahan Kimia Daur Ulang',
+    'Bahan Kertas Daur Ulang',
+    'Bahan Besi/Logam Daur Ulang',
+    'Bahan Kaca/Beling Daur Ulang',
+    'Bahan Plastik Daur Ulang',
+    'Bahan Elektronik Daur Ulang',
+    'Bahan Tekstil Daur Ulang',
+    'Bahan Bangunan Daur Ulang',
   ];
 
   const initialValues = {
@@ -102,21 +99,16 @@ export default function AddProductsModal({ open, toggleOff }) {
     },
     uploadProductImage
   ) => {
+    formData.set('mitraId', user.mitraId);
     formData.set('userId', user.userId);
     formData.set('name', productName);
     formData.set('productType', productType);
     formData.set('description', descriptionProduct);
     formData.set('price', parseInt(productPrice));
     formData.set('quantity', parseInt(productQuantity));
-    for (let i = 0; i < uploadProductImage.length; i++) {
-      formData.append(
-        'productImg',
-        uploadProductImage[i],
-        uploadProductImage[i].name
-      );
-    }
+    formData.append('productImg', uploadProductImage[0], uploadProductImage[0]);
     const response = await axiosInstance
-      .post(`mitra/products/upload/${user.mitraId}`, formData)
+      .post(`products/upload/${user.mitraId}`, formData)
       .then((res) => {
         return {
           status: res.status,

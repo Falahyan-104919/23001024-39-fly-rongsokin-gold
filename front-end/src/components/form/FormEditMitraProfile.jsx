@@ -20,7 +20,7 @@ export default function FormEditMitraProfile() {
 
   const { isPending, isError, isFetched, data, error } = useQuery({
     queryKey: ['mitraData', userId],
-    queryFn: async () => await axiosInstance.get(`user_mitra/${userId}`),
+    queryFn: async () => await axiosInstance.get(`/user_mitra/${userId}`),
   });
 
   const mitraSchema = Yup.object().shape({

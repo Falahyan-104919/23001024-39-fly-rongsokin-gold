@@ -3,19 +3,11 @@ const path = require('path');
 const multer = require('multer');
 const { db } = require('../../database/db');
 
-// const imageFilter = (req,res,cb) =>{
-//     if(file.mimetype.startsWith('image')){
-//         cb(null, true);
-//     } else {
-//         cb(new Error('Please provide an Image!'), false);
-//     }
-// }
-
 const imgProductStorage = multer.diskStorage({
   destination: (req, res, cb) => {
-    const mitraId = req.params.mitraId || req.folderName;
+    console.log('P BALAP');
+    const mitraId = req.body.mitraId;
     const uploadDir = path.join('public', 'img', 'products', `${mitraId}`);
-
     fs.access(uploadDir, (error) => {
       if (error) {
         if (error.code === 'ENOENT') {
@@ -109,11 +101,11 @@ const storage = {
 const updateImgProcessor = {
   deleteAllProductImg: async (req, res, next) => {
     try {
-      if (!req.files) {
+      if (!req.file) {
         next();
       }
       const productId = req.params.productId;
-      const productData = await db.oneOrNone(
+      const productData = await db.one(
         `
             SELECT p.product_id, p.mitra_id,
                 json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as images
@@ -126,44 +118,24 @@ const updateImgProcessor = {
         productId
       );
       const mitraId = productData['mitra_id'];
-      const productImage = productData['images'].map((data) => {
-        return data.image_name;
-      });
+      console.log('mitraId', mitraId);
+      req.folderName = mitraId;
+      console.log('folder name', req.folderName);
+      const productImage = productData['images'];
+      console.log(productImage[0].image_name);
 
       if (productImage) {
-        for (let i = 0; i < productImage.length; i++) {
-          fs.unlink(
-            path.join(
-              'public',
-              'img',
-              'products',
-              `${mitraId}`,
-              `${productImage[i]}`
-            ),
-            (err) => {
-              if (err) {
-                return res.status(400).json({
-                  message: 'Failed to Update the Image',
-                });
-              }
-            }
-          );
-          await db.none(
-            `
-                        DELETE FROM images WHERE image_name = $1
-                    `,
-            productImage[i]
-          );
-        }
-
-        await db.none(
-          `
-                    DELETE FROM product_image WHERE product_id = $1
-                `,
-          productId
+        fs.unlinkSync(
+          path.join(
+            'public',
+            'img',
+            'products',
+            `${mitraId}`,
+            `${productImage[0].image_name}`
+          )
         );
       }
-      req.folderName = mitraId;
+      console.log('hit update processor');
       next();
     } catch (err) {
       console.error(err);

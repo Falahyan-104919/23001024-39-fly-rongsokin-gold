@@ -29,7 +29,7 @@ export default function ProductTable() {
 
   const fetchMyProducts = async () => {
     const res = await axiosInstance
-      .get(`mitra/products/mitra_products/${mitraId}`)
+      .get(`mitra_products/${mitraId}`)
       .then((res) => {
         return {
           product_data: res.data.product_data,

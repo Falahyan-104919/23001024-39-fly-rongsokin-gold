@@ -31,7 +31,7 @@ export default function TableBodyTransaction({ transactions, keyword }) {
               onClick={async () => {
                 focusManager.setFocused(false);
                 await axiosInstance
-                  .put(`mitra/process_order/${transactionId}`, {
+                  .put(`process_order/${transactionId}`, {
                     status: 'process',
                     quantity: quantity_product - order_quantity,
                     productId: productId,
@@ -65,7 +65,7 @@ export default function TableBodyTransaction({ transactions, keyword }) {
               onClick={async () => {
                 focusManager.setFocused(false);
                 await axiosInstance
-                  .put(`mitra/update_status_transaction/${id}`, {
+                  .put(`update_status_transaction/${id}`, {
                     status: 'cancel',
                   })
                   .then((res) => {

@@ -53,4 +53,15 @@ const connectDatabase = () => {
     });
 };
 
-module.exports = { pool, connectDatabase, db };
+const clearDatabase = () => {
+  db.task(async (t) => {
+    await t.none(`
+    DROP SCHEMA public cascade;
+    `);
+    await t.none(`
+    CREATE SCHEMA public;
+    `);
+  });
+};
+
+module.exports = { pool, connectDatabase, db, clearDatabase };

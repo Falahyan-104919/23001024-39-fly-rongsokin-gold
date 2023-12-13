@@ -114,17 +114,18 @@ export default function EditProductsModal({ products, open, toggleOff }) {
     },
     uploadImg
   ) => {
+    formData.append('mitraId', user.mitraId);
     formData.append('userId', user.userId);
     formData.append('name', productName);
     formData.append('productType', productType);
     formData.append('description', productDescription);
-    formData.append('price', parseInt(productPrice));
-    formData.append('quantity', parseInt(productQuantity));
+    formData.append('price', Number(productPrice));
+    formData.append('quantity', Number(productQuantity));
     for (let i = 0; i < uploadImg.length; i++) {
       formData.append('productImg', uploadImg[i], uploadImg[i].name);
     }
     const response = await axiosInstance
-      .put(`mitra/products/update/${productId}`, formData)
+      .put(`products/update/${productId}`, formData)
       .then((res) => {
         return {
           status: res.status,
@@ -150,6 +151,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
         setUploadProductImage([]);
         return actions.resetForm({ values: values });
       default:
+        resetFormData(formData);
         return toast({
           title: 'Something Wrong!',
           description: response.message,
@@ -310,7 +312,6 @@ export default function EditProductsModal({ products, open, toggleOff }) {
                             type="file"
                             style={{ display: 'none' }}
                             id="productImage"
-                            multiple
                             {...field}
                             onChange={(e) => {
                               const files = e.target.files;
@@ -332,7 +333,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
                                 setFieldValue('productImage', updatedValue);
                               }
                             }}
-                            disabled={value ? value.length === 5 : false}
+                            disabled={value ? value.length === 1 : false}
                           />
                           {values.productImage?.map((image, index) => (
                             <Box key={index} m="10px">
@@ -347,6 +348,20 @@ export default function EditProductsModal({ products, open, toggleOff }) {
                                   boxSize="150px"
                                   objectFit="cover"
                                 />
+                                <IconButton
+                                  size="xs"
+                                  icon={<SmallCloseIcon />}
+                                  onClick={() => {
+                                    const updatedImages =
+                                      values.productImage?.filter(
+                                        (_, i) => i !== index
+                                      );
+                                    setFieldValue(
+                                      'productImage',
+                                      updatedImages
+                                    );
+                                  }}
+                                />
                               </Flex>
                             </Box>
                           ))}
@@ -355,7 +370,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
                               as="span"
                               icon={<AttachmentIcon color="white" />}
                               aria-label="Attach"
-                              isDisabled={value ? value.length === 5 : false}
+                              isDisabled={value ? value.length === 1 : false}
                               size="lg"
                               bgColor="teal"
                             />

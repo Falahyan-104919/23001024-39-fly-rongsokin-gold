@@ -6,13 +6,13 @@ import { AuthProvider } from './store/AuthProvider.jsx';
 import App from './App.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <AuthProvider>
-    <React.StrictMode>
-      <BrowserRouter>
+  <BrowserRouter>
+    <AuthProvider>
+      <React.StrictMode>
         <ChakraProvider>
           <App />
         </ChakraProvider>
-      </BrowserRouter>
-    </React.StrictMode>
-  </AuthProvider>
+      </React.StrictMode>
+    </AuthProvider>
+  </BrowserRouter>
 );

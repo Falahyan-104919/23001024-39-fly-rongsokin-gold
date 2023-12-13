@@ -6,6 +6,7 @@ import {
   InputGroup,
   InputLeftElement,
   Spacer,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -26,7 +27,7 @@ export default function TransactionTable() {
   const [keywordTransaction, setKeywordTransaction] = useState('');
   const fetchTransaction = async (id) => {
     const transaction = await axiosInstance
-      .get(`mitra/transaction_list/${id}`)
+      .get(`transaction_list/${id}`)
       .then((res) => {
         return res.data.data;
       });

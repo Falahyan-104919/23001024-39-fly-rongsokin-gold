@@ -36,57 +36,6 @@ router.put(
   userController.editProfileImg
 );
 
-const forumCustomerController = require('../controllers/forumCustomerController');
-const uploadForumCustomerImg = storage.forumCustomerImageStorage.array(
-  'forumImage',
-  5
-);
-
-// Customer Forum Routes
-router.get('/forum', forumCustomerController.getAllForumCustomer);
-router.get(
-  '/forum/:forumCustomerId',
-  verifyToken,
-  forumCustomerController.getForumCustomer
-);
-router.post(
-  '/forum/:userId',
-  verifyToken,
-  uploadForumCustomerImg,
-  forumCustomerController.postForumCustomer
-);
-router.put(
-  '/forum/:forumCustomerId',
-  verifyToken,
-  updateImgProcessor.deleteAllImgForumCustomer,
-  uploadForumCustomerImg,
-  forumCustomerController.updateForumCustomer
-);
-router.get(
-  '/forum_activity/:userId',
-  verifyToken,
-  forumCustomerController.getUserForumActivity
-);
-
-const transactionController = require('../controllers/transactionController');
-
-// Transaction Routes
-router.get(
-  '/order_list/:userId',
-  verifyToken,
-  transactionController.getCustomerTransaction
-);
-router.post(
-  '/order/:userId',
-  verifyToken,
-  transactionController.postTransaction
-);
-router.put(
-  '/order/arrived/:transactionId',
-  verifyToken,
-  transactionController.updateStatusTransaction
-);
-
 // const imageController = require('../controllers/imageController');
 
 // Image Routes
