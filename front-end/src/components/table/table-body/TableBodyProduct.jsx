@@ -2,6 +2,7 @@ import { focusManager } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button, ButtonGroup, Tbody, Td, Text, Tr } from '@chakra-ui/react';
 import EditProductsModal from '../../modal/EditProducts.Modal';
+import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
 
 export default function TableBodyProduct({ products, keyword }) {
   const [openModals, setOpenModals] = useState({});
@@ -47,6 +48,7 @@ export default function TableBodyProduct({ products, keyword }) {
           <Td colSpan="2" textAlign="center">
             <ButtonGroup>
               <Button
+                colorScheme="orange"
                 onClick={() => {
                   focusManager.setFocused(false);
                   handleOpenModal(product.product_id);
@@ -54,7 +56,9 @@ export default function TableBodyProduct({ products, keyword }) {
               >
                 Edit
               </Button>
-              <Button>Delete</Button>
+              <Button colorScheme="red" leftIcon={<DeleteIcon />}>
+                Delete
+              </Button>
             </ButtonGroup>
             <EditProductsModal
               products={product}

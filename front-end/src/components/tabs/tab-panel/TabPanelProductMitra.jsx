@@ -8,7 +8,7 @@ export default function TabPanelProductMitra() {
   const { mitraId } = useParams();
   const fetchProductMitra = async (id) => {
     const response = await axiosInstance
-      .get(`mitra/products/mitra_products/${id}`)
+      .get(`mitra_products/${id}`)
       .then((res) => {
         return {
           product_mitra: res.data.product_data,

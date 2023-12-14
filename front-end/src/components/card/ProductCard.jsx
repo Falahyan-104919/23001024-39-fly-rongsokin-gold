@@ -24,7 +24,7 @@ export default function ProductCard({ name, price, imageURL, productId }) {
             />
           </Box>
           <Link to={`/products/${productId}`}>
-            <Text>{name}</Text>
+            <Text noOfLines={1}>{name}</Text>
           </Link>
           <Text>Rp. {price}</Text>
         </CardBody>
