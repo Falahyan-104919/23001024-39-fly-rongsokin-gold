@@ -57,7 +57,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
   ];
 
   const displayImage = products?.images.map((image) => {
-    const baseURL = 'http://localhost:7000/';
+    const baseURL = 'http://localhost:8080/';
     const filePath = image.image_path?.replace(/\\/g, '/');
     const encodePath = encodeURI(filePath);
     const publicUrl = baseURL + encodePath;

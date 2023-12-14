@@ -1,5 +1,5 @@
 const { db } = require('../database/db');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -22,7 +22,7 @@ const authController = {
         });
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcryptjs.hash(password, 10);
 
       db.none(
         `
@@ -60,7 +60,10 @@ const authController = {
         });
       }
 
-      const passwordMatch = await bcrypt.compare(password, user.password_hash);
+      const passwordMatch = await bcryptjs.compare(
+        password,
+        user.password_hash
+      );
 
       if (!passwordMatch) {
         return res.status(401).json({

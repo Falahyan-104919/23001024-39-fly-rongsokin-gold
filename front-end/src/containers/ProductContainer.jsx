@@ -55,7 +55,7 @@ export default function ProductContainer() {
   }
 
   const displayImage = (path) => {
-    const baseURL = 'http://localhost:7000/';
+    const baseURL = 'http://localhost:8080/';
     const imagePath = path.replace(/\\/g, '/');
     const encodePath = encodeURI(imagePath);
     const publicURL = baseURL + encodePath;

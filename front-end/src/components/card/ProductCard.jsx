@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Box, Card, CardBody, GridItem, Image, Text } from '@chakra-ui/react';
 export default function ProductCard({ name, price, imageURL, productId }) {
   const preppedURL = (path) => {
-    const baseURL = 'http://localhost:7000/';
+    const baseURL = 'http://localhost:8080/';
     const imagePath = path?.replace(/\\/g, '/');
     const encodedPath = encodeURI(imagePath);
     const imageURL = baseURL + encodedPath;

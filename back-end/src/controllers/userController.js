@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { db } = require('../database/db');
-const bcrypt = require('bcrypt');
+const bcryptjs = require('bcryptjs');
 require('dotenv').config();
 
 const userController = {
@@ -106,13 +106,13 @@ const userController = {
         `,
         userId
       );
-      const passwordValidation = await bcrypt.compare(
+      const passwordValidation = await bcryptjs.compare(
         oldPassword,
         userData.password_hash
       );
 
       if (passwordValidation) {
-        const newHashPassword = await bcrypt.hash(newPassword, 10);
+        const newHashPassword = await bcryptjs.hash(newPassword, 10);
         await db.none(
           `
             UPDATE users SET password_hash = $1 WHERE user_id = $2
