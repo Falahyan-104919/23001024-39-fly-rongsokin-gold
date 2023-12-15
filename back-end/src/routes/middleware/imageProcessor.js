@@ -5,7 +5,6 @@ const { db } = require('../../database/db');
 
 const imgProductStorage = multer.diskStorage({
   destination: (req, res, cb) => {
-    console.log('P BALAP');
     const mitraId = req.body.mitraId;
     const uploadDir = path.join('public', 'img', 'products', `${mitraId}`);
     fs.access(uploadDir, (error) => {
@@ -118,11 +117,8 @@ const updateImgProcessor = {
         productId
       );
       const mitraId = productData['mitra_id'];
-      console.log('mitraId', mitraId);
       req.folderName = mitraId;
-      console.log('folder name', req.folderName);
       const productImage = productData['images'];
-      console.log(productImage[0].image_name);
 
       if (productImage) {
         fs.unlinkSync(
@@ -135,7 +131,6 @@ const updateImgProcessor = {
           )
         );
       }
-      console.log('hit update processor');
       next();
     } catch (err) {
       console.error(err);

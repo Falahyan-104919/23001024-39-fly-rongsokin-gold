@@ -9,7 +9,6 @@ const productController = {
       const { userId, name, productType, description, price, quantity } =
         req.body;
       const productImg = req.file;
-      console.log(productImg);
 
       const newProduct = await db.one(
         `
@@ -89,7 +88,6 @@ const productController = {
   },
   updateProduct: async (req, res) => {
     try {
-      console.log('masuk controllers');
       const { productId } = req.params;
       const { name, productType, description, price, quantity } = req.body;
       const productImg = req.file;
