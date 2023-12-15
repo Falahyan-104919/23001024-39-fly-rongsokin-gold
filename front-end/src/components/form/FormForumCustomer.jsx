@@ -196,14 +196,14 @@ export default function FormForumCustomer() {
                             setFieldValue('forumImage', updatedValue);
                           }
                         }}
-                        disabled={value ? value.length === 3 : false}
+                        disabled={value ? value.length === 1 : false}
                       />
                       <label htmlFor="forumImage">
                         <IconButton
                           as="span"
                           icon={<AttachmentIcon />}
                           aria-label="Attach"
-                          isDisabled={value ? value.length === 3 : false}
+                          isDisabled={value ? value.length === 1 : false}
                         />
                       </label>
                     </Box>

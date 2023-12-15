@@ -63,16 +63,16 @@ export default function FormBecomeMitra() {
     const response = await becomeMitra(values);
     switch (response.status) {
       case 201:
-        toast({
+        logout();
+        navigate('/');
+        focusManager.setFocused(true);
+        return toast({
           title: 'Success',
           description: `${response.message} \n You need to Re-Logged In`,
           status: 'success',
           duration: 3000,
           isClosable: true,
         });
-        navigate('/');
-        focusManager.setFocused(true);
-        return logout();
       default:
         return toast({
           title: 'Become Mitra Failed',

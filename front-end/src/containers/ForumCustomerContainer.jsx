@@ -64,6 +64,7 @@ export default function ForumCustomerContainer() {
             title={post.title}
             content={post.content}
             userId={post.user_id}
+            images={post.image}
           />
         ))}
       </>

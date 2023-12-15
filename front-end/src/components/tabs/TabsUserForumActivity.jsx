@@ -92,6 +92,7 @@ export default function TabsUserForumActivity({ id }) {
                 title={activity.title}
                 content={activity.content}
                 time={activity.updated_at}
+                images={activity.images}
               />
             ))}
           </TabPanel>

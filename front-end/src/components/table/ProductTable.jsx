@@ -35,7 +35,6 @@ export default function ProductTable() {
           product_data: res.data.product_data,
         };
       });
-    console.log('fetched');
     return res;
   };
 

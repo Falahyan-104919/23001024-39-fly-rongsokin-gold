@@ -128,6 +128,7 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.removeItem('user_traits');
     localStorage.removeItem('user_is_logged_in');
+    navigate('/');
     navigate(0);
   };
 

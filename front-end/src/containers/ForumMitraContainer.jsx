@@ -55,7 +55,6 @@ export default function ForumMitraContainer() {
   }
 
   if (isFetched) {
-    console.log(data);
     return (
       <>
         <FormForumMitra />

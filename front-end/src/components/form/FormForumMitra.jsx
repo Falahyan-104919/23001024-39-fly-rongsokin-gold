@@ -19,6 +19,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../store/AuthProvider';
 import axiosInstance from '../../utils/axios';
+import { focusManager } from '@tanstack/react-query';
 
 export default function FormForumMitra() {
   const { user } = useContext(AuthContext);
@@ -63,6 +64,7 @@ export default function FormForumMitra() {
   };
 
   const onSubmit = async (values, { resetForm }) => {
+    focusManager.setFocused(false);
     const response = await postForumMitra(values, images);
     switch (response.status) {
       case 201:
@@ -75,7 +77,8 @@ export default function FormForumMitra() {
         });
         resetFormData(formData);
         setImages([]);
-        return resetForm();
+        resetForm();
+        return focusManager.setFocused(true);
       default:
         return toast({
           title: 'Something Wrong!',
