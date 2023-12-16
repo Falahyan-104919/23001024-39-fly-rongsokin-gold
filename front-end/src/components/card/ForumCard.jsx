@@ -21,6 +21,9 @@ export default function ForumCard(props) {
             const fixed_path =
               'http://localhost:8080/' +
               image['image_path'].replace(/\\/g, '/');
+            // const fixed_path =
+            //   'https://vxvs523h-8080.asse.devtunnels.ms/' +
+            //   image['image_path'].replace(/\\/g, '/');
             return fixed_path;
           }
         })
