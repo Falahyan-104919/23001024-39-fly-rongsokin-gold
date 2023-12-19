@@ -9,8 +9,8 @@ const forumMitraController = {
                 FROM forum_mitras fm 
                 LEFT JOIN mitras m ON fm.mitra_id = m.mitra_id
                 LEFT JOIN users u ON m.user_id = u.user_id
-                LEFT JOIN forum_mitras_image fmi ON fm.forum_mitra_id = fmi.forum_id 
-                LEFT JOIN images i ON fmi.image_id = i.image_id 
+                RIGHT JOIN forum_mitras_image fmi ON fm.forum_mitra_id = fmi.forum_id 
+                RIGHT JOIN images i ON fmi.image_id = i.image_id 
                 GROUP BY fm.forum_mitra_id, u.fullname, u.email
             `);
 
@@ -56,12 +56,6 @@ const forumMitraController = {
       const mitraId = req.params.mitraId;
       const { title, content } = req.body;
       const forumImg = req.files;
-      const userId = await db.oneOrNone(
-        `
-                SELECT user_id FROM mitras WHERE mitra_id = $1
-            `,
-        mitraId
-      );
 
       const newForum = await db.one(
         `
@@ -76,10 +70,10 @@ const forumMitraController = {
           const image = forumImg[i];
           const newImage = await db.one(
             `
-                        INSERT INTO images (user_id, image_path, image_name)
-                        VALUES ($1,$2,$3) RETURNING image_id
+                        INSERT INTO images (image_path, image_name)
+                        VALUES ($1,$2) RETURNING image_id
                     `,
-            [userId.user_id, image.path, image.filename]
+            [image.path, image.filename]
           );
 
           await db.none(
@@ -105,14 +99,8 @@ const forumMitraController = {
   updateForumMitra: async (req, res) => {
     try {
       const forumMitraId = req.params.forumMitraId;
-      const { mitraId, title, content } = req.body;
+      const { title, content } = req.body;
       const forumMitraImg = req.files;
-      const userId = await db.oneOrNone(
-        `
-                SELECT user_id FROM mitras WHERE mitra_id = $1
-            `,
-        mitraId
-      );
 
       const updatedForum = await db.one(
         `
@@ -128,10 +116,10 @@ const forumMitraController = {
           const image = forumMitraImg[i];
           const newImage = await db.one(
             `
-                        INSERT INTO images(user_id, image_path, image_name) 
-                        VALUES ($1,$2,$3) RETURNING image_id
+                        INSERT INTO images(image_path, image_name) 
+                        VALUES ($1,$2) RETURNING image_id
                     `,
-            [userId.user_id, image.path, image.filename]
+            [image.path, image.filename]
           );
 
           await db.none(
@@ -159,10 +147,13 @@ const forumMitraController = {
       const { mitraId } = req.params;
       const mitraActivity = await db.manyOrNone(
         `
-      SELECT fm.forum_mitra_id, fm.mitra_id, fm.title, fm.content, fm.updated_at, u.fullname, u.email, json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images FROM forum_mitras AS fm 
+      SELECT fm.forum_mitra_id, fm.mitra_id, fm.title, fm.content, fm.updated_at, u.fullname, u.email, 
+      json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images 
+      FROM forum_mitras AS fm 
       LEFT JOIN mitras m ON fm.mitra_id = m.mitra_id
       LEFT JOIN users u ON m.user_id = u.user_id 
-      LEFT JOIN images i ON m.user_id = i.user_id
+      RIGHT JOIN forum_mitras_image fmi ON fm.forum_mitra_id = fmi.forum_id
+      RIGHT JOIN images i ON fmi.image_id = i.image_id
       WHERE fm.mitra_id = $1 
       GROUP BY fm.forum_mitra_id, u.fullname, u.email
       `,

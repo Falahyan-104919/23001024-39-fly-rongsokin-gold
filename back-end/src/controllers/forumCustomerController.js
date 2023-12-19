@@ -8,8 +8,8 @@ const forumCustomerController = {
                         json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image
                 FROM forum_customers fc 
                 LEFT JOIN users u ON fc.user_id = u.user_id
-                LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
-                LEFT JOIN images i ON fci.image_id = i.image_id 
+                RIGHT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
+                RIGHT JOIN images i ON fci.image_id = i.image_id 
                 GROUP BY fc.forum_customers_id, u.fullname, u.email; 
             `);
 
@@ -33,8 +33,8 @@ const forumCustomerController = {
                 SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, 
                         json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image
                 FROM forum_customers fc 
-                LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
-                LEFT JOIN images i ON fci.image_id = i.image_id 
+                RIGHT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
+                RIGHT JOIN images i ON fci.image_id = i.image_id 
                 WHERE fc.forum_customers_id = $1
                 GROUP BY fc.forum_customers_id; 
             `,
@@ -70,10 +70,10 @@ const forumCustomerController = {
           const image = forumImage[i];
           const newImage = await db.one(
             `
-                            INSERT INTO images(user_id, image_path, image_name)
-                            VALUES($1,$2,$3) RETURNING image_id
+                            INSERT INTO images(image_path, image_name)
+                            VALUES($1,$2) RETURNING image_id
                         `,
-            [userId, image.path, image.filename]
+            [image.path, image.filename]
           );
 
           await db.none(
@@ -115,10 +115,10 @@ const forumCustomerController = {
           const image = forumImage[i];
           const newImage = await db.one(
             `
-                        INSERT INTO images(user_id, image_path, image_name) 
-                        VALUES ($1,$2,$3) RETURNING image_id
+                        INSERT INTO images(image_path, image_name) 
+                        VALUES ($1,$2) RETURNING image_id
                     `,
-            [newUpdate.user_id, image.path, image.filename]
+            [image.path, image.filename]
           );
 
           await db.none(
@@ -147,8 +147,12 @@ const forumCustomerController = {
       const { userId } = req.params;
       const forumActivity = await db.manyOrNone(
         `
-        SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, u.fullname, u.email, json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images FROM forum_customers AS fc LEFT JOIN users u ON fc.user_id = u.user_id 
-        LEFT JOIN images i ON fc.user_id = i.user_id
+        SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, u.fullname, u.email, 
+        json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images 
+        FROM forum_customers AS fc 
+        LEFT JOIN users u ON fc.user_id = u.user_id 
+        RIGHT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id
+        RIGHT JOIN images i ON fci.image_id = i.image_id
         WHERE fc.user_id = $1 
         GROUP BY fc.forum_customers_id, u.fullname, u.email
       `,

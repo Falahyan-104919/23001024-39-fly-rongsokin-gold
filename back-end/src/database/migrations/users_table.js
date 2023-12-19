@@ -6,6 +6,7 @@ const createUsersTable = `
     phone_number NUMERIC(15,0) NOT NULL,
     password_hash VARCHAR(60) NOT NULL,
     role VARCHAR(10) NOT NULL,
+    status BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
   );

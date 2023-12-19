@@ -11,7 +11,7 @@ const authController = {
       const existingUser = await db.oneOrNone(
         `
                 SELECT * from users 
-                WHERE email = $1
+                WHERE email = $1;
             `,
         email
       );
@@ -48,8 +48,13 @@ const authController = {
 
       const user = await db.oneOrNone(
         `
-                SELECT * from users 
-                WHERE email = $1
+                SELECT u.user_id, u.fullname, u.email, u.phone_number, u.role, u.password_hash,
+                json_agg(json_build_object('image_id', i.image_id, 'image_path', i.image_path)) as image_profile
+                from USERS u 
+                LEFT JOIN user_image ui ON u.user_id = ui.user_id
+                LEFT JOIN images i ON ui.image_id = i.image_id
+                WHERE u.email = $1 AND u.status
+                GROUP BY u.user_id;
             `,
         email
       );
@@ -84,6 +89,7 @@ const authController = {
         email: user.email,
         phoneNumber: user.phone_number,
         role: user.role,
+        image_profile: user.image_profile,
       };
 
       const mitra = await db.oneOrNone(
@@ -97,10 +103,6 @@ const authController = {
       if (mitra) {
         userData.mitraId = mitra.mitra_id;
         userData.mitraType = mitra.type;
-      }
-
-      if (user.image_id) {
-        userData.image_id = user.image_id;
       }
 
       return res.status(200).json({

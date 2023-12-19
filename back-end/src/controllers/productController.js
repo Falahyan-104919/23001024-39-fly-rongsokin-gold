@@ -20,11 +20,11 @@ const productController = {
 
       const newImage = await db.one(
         `
-                    INSERT INTO images(user_id, image_path, image_name) 
-                    VALUES($1, $2, $3) 
+                    INSERT INTO images(image_path, image_name) 
+                    VALUES($1, $2) 
                     RETURNING image_id
                 `,
-        [userId, productImg.path, productImg.filename]
+        [productImg.path, productImg.filename]
       );
 
       await db.none(
@@ -52,8 +52,8 @@ const productController = {
               SELECT p.product_id, p.mitra_id, p.name, p.product_type, p.description, p.price, p.quantity, 
                      json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as images
               FROM products p
-              LEFT JOIN product_image pi ON p.product_id = pi.product_id
-              LEFT JOIN images i ON pi.image_id = i.image_id
+              RIGHT JOIN product_image pi ON p.product_id = pi.product_id
+              RIGHT JOIN images i ON pi.image_id = i.image_id
               WHERE p.product_id = $1
               GROUP BY p.product_id;
             `,
@@ -158,8 +158,8 @@ const productController = {
               SELECT p.mitra_id, p.product_id, p.name, p.product_type, p.description, p.price, p.quantity, 
                      json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path,'image_name', i.image_name)) as images
               FROM products p
-              LEFT JOIN product_image pi ON p.product_id = pi.product_id
-              LEFT JOIN images i ON pi.image_id = i.image_id
+              RIGHT JOIN product_image pi ON p.product_id = pi.product_id
+              RIGHT JOIN images i ON pi.image_id = i.image_id
               WHERE p.mitra_id = $1
               GROUP BY p.product_id;
             `,

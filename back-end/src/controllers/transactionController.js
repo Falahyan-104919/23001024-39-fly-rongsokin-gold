@@ -6,12 +6,13 @@ const transactionController = {
       const userId = req.params.userId;
       const transactionData = await db.manyOrNone(
         `
-                SELECT t.transaction_id, p.name, t.quantity, t.total_price, t.transaction_date, t.transaction_status, m.mitra_name,json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name)) as image_data
+                SELECT t.transaction_id, p.name, t.quantity, t.total_price, t.transaction_date, t.transaction_status, m.mitra_name,
+                json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name)) as image_data
                 FROM transactions t 
-                LEFT JOIN mitras m ON t.mitra_id = m.mitra_id
+                RIGHT JOIN mitras m ON t.mitra_id = m.mitra_id
                 LEFT JOIN products p ON t.product_id = p.product_id 
-                LEFT JOIN product_image pi ON p.product_id = pi.product_id
-                LEFT JOIN images i ON pi.image_id = i.image_id 
+                RIGHT JOIN product_image pi ON p.product_id = pi.product_id
+                RIGHT JOIN images i ON pi.image_id = i.image_id 
                 WHERE buyer_id = $1 
                 GROUP BY t.transaction_id, p.name, m.mitra_name
             `,
@@ -37,9 +38,9 @@ const transactionController = {
                 SELECT t.transaction_id, p.name, t.quantity, t.total_price, t.transaction_date, t.transaction_status, u.fullname, p.quantity as quantity_product, p.product_id, json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name)) as image_data
                 FROM transactions t 
                 LEFT JOIN users u ON u.user_id = t.buyer_id
-                LEFT JOIN products p ON t.product_id = p.product_id 
-                LEFT JOIN product_image pi ON p.product_id = pi.product_id
-                LEFT JOIN images i ON pi.image_id = i.image_id 
+                RIGHT JOIN products p ON t.product_id = p.product_id 
+                RIGHT JOIN product_image pi ON p.product_id = pi.product_id
+                RIGHT JOIN images i ON pi.image_id = i.image_id 
                 WHERE t.mitra_id = $1 
                 GROUP BY t.transaction_id, p.name, u.fullname, p.quantity, p.product_id
             `,
@@ -64,9 +65,9 @@ const transactionController = {
         `
             SELECT t.transaction_id, p.name, t.quantity, t.total_price, t.transaction_date, t.transaction_status, json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name)) as image_data
             FROM transactions t 
-            LEFT JOIN products p ON t.product_id = p.product_id 
-            LEFT JOIN product_image pi ON p.product_id = pi.product_id
-            LEFT JOIN images i ON pi.image_id = i.image_id 
+            RIGHT JOIN products p ON t.product_id = p.product_id 
+            RIGHT JOIN product_image pi ON p.product_id = pi.product_id
+            RIGHT JOIN images i ON pi.image_id = i.image_id 
             WHERE t.transaction_id = $1
             GROUP BY t.transaction_id, p.name
             `,

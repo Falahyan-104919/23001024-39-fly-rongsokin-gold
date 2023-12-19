@@ -11,6 +11,7 @@ const imageTable = require('./migrations/images_table');
 const forumMitrasImageJunction = require('./migrations/forum_mitra_image_junction_table');
 const forumCustomersImageJunction = require('./migrations/forum_customer_image_junction_table');
 const productsImageJunction = require('./migrations/product_image_junction_table');
+const userImageJunction = require('./migrations/user_image_junction_table');
 const additionalQuery = require('./migrations/additional_query');
 const extensionsQuery = require('./migrations/extensions_query');
 
@@ -43,7 +44,8 @@ const connectDatabase = () => {
     await t.none(forumMitrasImageJunction);
     await t.none(forumCustomersImageJunction);
     await t.none(productsImageJunction);
-    // await t.none(additionalQuery);
+    await t.none(userImageJunction);
+    await t.none(additionalQuery);
   })
     .then((data) => {
       console.log('Database is Ready');
@@ -62,6 +64,7 @@ const clearDatabase = () => {
     CREATE SCHEMA public;
     `);
   });
+  console.log('Database Successfully Reset');
 };
 
 module.exports = { pool, connectDatabase, db, clearDatabase };

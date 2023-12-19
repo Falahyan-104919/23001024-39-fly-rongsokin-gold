@@ -28,8 +28,12 @@ const userController = {
       const userId = req.params.userId;
       const userData = await db.one(
         `
-          SELECT fullname, email, phone_number, image_id 
-          FROM users WHERE user_id = $1
+          SELECT u.fullname, u.email, u.phone_number, json_agg(json_build_object('image_id', ui.image_id, 'image_path', i.image_path)) as image_profile 
+          FROM users u 
+          LEFT JOIN user_image ui ON u.user_id = ui.user_id
+          LEFT JOIN images i ON ui.image_id = i.image_id
+          WHERE u.user_id = $1
+          GROUP BY u.fullname, u.email, u.phone_number
         `,
         [userId]
       );
@@ -140,17 +144,18 @@ const userController = {
       const profileImg = req.file;
       const newImageId = await db.oneOrNone(
         `
-          INSERT INTO images(user_id, image_path, image_name)
-          VALUES ($1,$2,$3) RETURNING image_id;
+          INSERT INTO images(image_path, image_name)
+          VALUES ($1,$2) RETURNING image_id;
         `,
-        [userId, profileImg.path, profileImg.filename]
+        [profileImg.path, profileImg.filename]
       );
 
       await db.none(
         `
-          UPDATE users SET image_id = $1 WHERE user_id = $2
+          INSERT INTO user_image(user_id, image_id)
+          VALUES ($1,$2)
         `,
-        [newImageId.image_id, userId]
+        [userId, newImageId.image_id]
       );
 
       res.status(201).json({
@@ -169,15 +174,15 @@ const userController = {
       const profilImg = req.file;
       const newImageId = await db.oneOrNone(
         `
-          INSERT INTO images(user_id, image_path, image_name) 
-          VALUES ($1,$2,$3) RETURNING image_id;
+          INSERT INTO images(image_path, image_name) 
+          VALUES ($1,$2) RETURNING image_id;
         `,
-        [userId, profilImg.path, profilImg.filename]
+        [profilImg.path, profilImg.filename]
       );
 
       await db.none(
         `
-          UPDATE users SET image_id = $1 WHERE user_id = $2
+          UPDATE user_image SET image_id = $1 WHERE user_id = $2
         `,
         [newImageId.image_id, userId]
       );
