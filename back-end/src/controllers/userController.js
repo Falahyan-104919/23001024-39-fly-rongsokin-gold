@@ -28,7 +28,7 @@ const userController = {
       const userId = req.params.userId;
       const userData = await db.one(
         `
-          SELECT fullname, email, phone_number, image_id 
+          SELECT fullname, email, phone_number 
           FROM users WHERE user_id = $1
         `,
         [userId]
