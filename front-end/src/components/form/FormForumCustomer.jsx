@@ -42,7 +42,6 @@ export default function FormForumCustomer() {
     formData.append('title', forumTitle);
     formData.append('content', forumTopic);
     if (images) {
-      console.log('masuk append image');
       formData.append('forumImage', images, images.name);
     }
     const response = await axiosInstance

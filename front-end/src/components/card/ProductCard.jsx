@@ -13,14 +13,14 @@ export default function ProductCard({ name, price, imageURL, productId }) {
     <GridItem w="100%" boxShadow="base">
       <Card p="10px">
         <CardBody p="5px">
-          <Box h="200" w="150">
+          <Box h="200" w="150" justifyContent="center">
             <Image
               src={preppedURL(imageURL)}
               alt="placeholder"
               mb="10px"
               objectFit="cover"
-              w="100%"
               h="100%"
+              w="100%"
               borderRadius="10px"
             />
           </Box>

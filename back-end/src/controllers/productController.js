@@ -8,7 +8,6 @@ const productController = {
       const mitraId = req.params.mitraId;
       const { name, productType, description, price, quantity } = req.body;
       const productImg = req.file;
-      console.log(productImg);
       const newProduct = await db.one(
         `
                 INSERT INTO products (mitra_id, name, product_type, description, price, quantity) 
@@ -103,12 +102,24 @@ const productController = {
       if (productImg) {
         const product = await db.one(
           `
-            SELECT pi.image_id FROM products as p 
+            SELECT pi.image_id, p.mitra_id, i.image_name FROM products as p 
+            LEFT JOIN mitras m ON p.mitra_id = m.mitra_id
             LEFT JOIN product_image pi ON p.product_id = pi.product_id
+            LEFT JOIN images i ON pi.image_id = i.image_id
             WHERE p.product_id = $1
-            GROUP BY p.product_id, pi.image_id
+            GROUP BY p.product_id, pi.image_id, i.image_name
         `,
           [productId]
+        );
+
+        fs.unlinkSync(
+          path.join(
+            'public',
+            'img',
+            'products',
+            `${product.mitra_id}`,
+            `${product.image_name}`
+          )
         );
 
         await db.none(

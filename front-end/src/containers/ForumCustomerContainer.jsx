@@ -52,7 +52,6 @@ export default function ForumCustomerContainer() {
   }
 
   if (isFetched) {
-    console.log(data);
     return (
       <>
         <FormForumCustomer />

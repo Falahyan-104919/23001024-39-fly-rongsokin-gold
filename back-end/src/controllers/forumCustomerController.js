@@ -57,7 +57,6 @@ const forumCustomerController = {
       const userId = req.params.userId;
       const { title, content } = req.body;
       const forumImage = req.file;
-      console.log(forumImage);
       const newForumCustomer = await db.one(
         `
                     INSERT INTO forum_customers (user_id, title, content)

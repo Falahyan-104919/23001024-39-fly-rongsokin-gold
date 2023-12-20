@@ -32,7 +32,7 @@ import axiosInstance from '../../utils/axios';
 
 export default function EditProductsModal({ products, open, toggleOff }) {
   const { user } = useContext(AuthContext);
-  const [uploadProductImage, setUploadProductImage] = useState([]);
+  const [uploadProductImage, setUploadProductImage] = useState({});
   const toast = useToast();
   const pengumpulProductType = [
     'Kertas dan Kardus',
@@ -309,24 +309,10 @@ export default function EditProductsModal({ products, open, toggleOff }) {
                             id="productImage"
                             {...field}
                             onChange={(e) => {
-                              const files = e.target.files;
-                              if (files) {
-                                if (uploadProductImage.length === 0) {
-                                  setUploadProductImage([...files]);
-                                } else {
-                                  setUploadProductImage((prevData) => [
-                                    ...prevData,
-                                    ...files,
-                                  ]);
-                                }
-                                const imageArray = Array.from(files).map(
-                                  (file) => URL.createObjectURL(file)
-                                );
-                                const updatedValue = value
-                                  ? [...value, ...imageArray]
-                                  : [...imageArray];
-                                setFieldValue('productImage', updatedValue);
-                              }
+                              const files = e.target.files[0];
+                              const displayImage = URL.createObjectURL(files);
+                              setUploadProductImage(files);
+                              setFieldValue('productImage', [displayImage]);
                             }}
                             disabled={value ? value.length === 1 : false}
                           />
@@ -351,6 +337,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
                                       values.productImage?.filter(
                                         (_, i) => i !== index
                                       );
+                                    setUploadProductImage({});
                                     setFieldValue(
                                       'productImage',
                                       updatedImages

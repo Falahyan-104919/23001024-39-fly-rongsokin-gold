@@ -127,7 +127,7 @@ const updateImgProcessor = {
             'img',
             'products',
             `${mitraId}`,
-            `${productImage[0].image_name}`
+            `${productImage.image_name}`
           )
         );
       }

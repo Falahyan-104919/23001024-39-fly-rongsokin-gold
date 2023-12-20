@@ -17,7 +17,6 @@ router.post(
 router.get('/product/:productId', productMitraController.getProduct);
 router.put(
   '/products/update/:productId',
-  updateImgProcessor.deleteAllProductImg,
   uploadsProductImg,
   productMitraController.updateProduct
 );
