@@ -68,9 +68,12 @@ const mitraController = {
       const { userId } = req.params;
       const mitraData = await db.oneOrNone(
         `
-        SELECT m.mitra_id, m.mitra_name, m.type, m.address, m.user_id, u.fullname, u.phone_number, u.email, json_agg(json_build_object('image_path', i.image_path, 'image_id', i.image_id, 'image_name', i.image_name)) as images FROM mitras as m 
+        SELECT m.mitra_id, m.mitra_name, m.type, m.address, m.user_id, u.fullname, u.phone_number, u.email, 
+        json_agg(json_build_object('image_path', i.image_path, 'image_id', i.image_id, 'image_name', i.image_name)) as images 
+        FROM mitras as m 
         LEFT JOIN users u ON m.user_id = u.user_id
-        LEFT JOIN images i on u.image_id = i.user_id
+        LEFT JOIN user_image ui ON u.user_id = ui.user_id
+        LEFT JOIN images i on ui.image_id = i.image_id
         WHERE m.user_id = $1
         GROUP BY m.mitra_id, u.fullname, u.phone_number, u.email
     `,
@@ -81,6 +84,7 @@ const mitraController = {
         data: mitraData,
       });
     } catch (error) {
+      console.error(error);
       return res.status(500).json({
         message: 'Internal Server Error',
       });

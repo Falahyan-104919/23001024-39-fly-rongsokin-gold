@@ -6,10 +6,9 @@ const productController = {
   postProduct: async (req, res) => {
     try {
       const mitraId = req.params.mitraId;
-      const { userId, name, productType, description, price, quantity } =
-        req.body;
+      const { name, productType, description, price, quantity } = req.body;
       const productImg = req.file;
-
+      console.log(productImg);
       const newProduct = await db.one(
         `
                 INSERT INTO products (mitra_id, name, product_type, description, price, quantity) 
@@ -20,11 +19,11 @@ const productController = {
 
       const newImage = await db.one(
         `
-                    INSERT INTO images(user_id, image_path, image_name) 
-                    VALUES($1, $2, $3) 
+                    INSERT INTO images(image_path, image_name) 
+                    VALUES($1, $2) 
                     RETURNING image_id
                 `,
-        [userId, productImg.path, productImg.filename]
+        [productImg.path, productImg.filename]
       );
 
       await db.none(

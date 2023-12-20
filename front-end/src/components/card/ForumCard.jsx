@@ -55,7 +55,7 @@ export default function ForumCard(props) {
         <Heading size="md" mb="25px">
           {props.title}
         </Heading>
-        <Text>{props.content}</Text>
+        <Text mb={5}>{props.content}</Text>
         <Flex gap={2}>
           {image_path != null || undefined
             ? image_path.map((path, index) => {

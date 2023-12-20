@@ -23,12 +23,12 @@ import { focusManager } from '@tanstack/react-query';
 
 export default function FormForumCustomer() {
   const { user } = useContext(AuthContext);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState({});
   const toast = useToast();
   const initialValues = {
     forumTitle: '',
     forumTopic: '',
-    forumImage: [],
+    forumImage: '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -42,9 +42,8 @@ export default function FormForumCustomer() {
     formData.append('title', forumTitle);
     formData.append('content', forumTopic);
     if (images) {
-      for (let i = 0; i < images.length; i++) {
-        formData.append('forumImage', images[i], images[i].name);
-      }
+      console.log('masuk append image');
+      formData.append('forumImage', images, images.name);
     }
     const response = await axiosInstance
       .post(`forum/${user.userId}`, formData)
@@ -75,7 +74,7 @@ export default function FormForumCustomer() {
           duration: 3000,
           isClosable: true,
         });
-        setImages([]);
+        setImages({});
         resetFormData(formData);
         focusManager.setFocused(true);
         return resetForm();
@@ -148,12 +147,12 @@ export default function FormForumCustomer() {
                 )}
               </Field>
               <Flex>
-                {values.forumImage?.map((image, index) => (
-                  <Box key={index} m="10px">
+                {values.forumImage !== '' ? (
+                  <Box m="10px">
                     <Flex>
                       <Image
-                        src={image}
-                        alt={`attached_image_${index}`}
+                        src={values.forumImage}
+                        alt={`attached_image_${values.forumImage}`}
                         boxSize="150px"
                         objectFit="cover"
                       />
@@ -161,15 +160,14 @@ export default function FormForumCustomer() {
                         size="xs"
                         icon={<SmallCloseIcon />}
                         onClick={() => {
-                          const updatedImages = values.forumImage.filter(
-                            (_, i) => i !== index
-                          );
+                          const updatedImages = '';
+                          setImages({});
                           setFieldValue('forumImage', updatedImages);
                         }}
                       />
                     </Flex>
                   </Box>
-                ))}
+                ) : null}
                 <Spacer />
                 <Field type="file" name="forumImage" multiple>
                   {({ field: { value, ...field } }) => (
@@ -181,20 +179,10 @@ export default function FormForumCustomer() {
                         multiple
                         {...field}
                         onChange={(e) => {
-                          const files = e.target.files;
-                          if (images.length === 0) {
-                            setImages([...files]);
-                          }
-                          setImages((prevData) => [...files, ...prevData]);
-                          if (files) {
-                            const imageArray = Array.from(files).map((file) =>
-                              URL.createObjectURL(file)
-                            );
-                            const updatedValue = value
-                              ? [...value, ...imageArray]
-                              : [...imageArray];
-                            setFieldValue('forumImage', updatedValue);
-                          }
+                          const files = e.target.files[0];
+                          const displayImage = URL.createObjectURL(files);
+                          setImages(files);
+                          setFieldValue('forumImage', displayImage);
                         }}
                         disabled={value ? value.length === 1 : false}
                       />
@@ -203,7 +191,7 @@ export default function FormForumCustomer() {
                           as="span"
                           icon={<AttachmentIcon />}
                           aria-label="Attach"
-                          isDisabled={value ? value.length === 1 : false}
+                          isDisabled={value !== '' ? true : false}
                         />
                       </label>
                     </Box>

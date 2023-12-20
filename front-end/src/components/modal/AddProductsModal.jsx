@@ -32,7 +32,7 @@ import axiosInstance from '../../utils/axios';
 
 export default function AddProductsModal({ open, toggleOff }) {
   const { user } = useContext(AuthContext);
-  const [uploadProductImage, setUploadProductImage] = useState([]);
+  const [uploadProductImage, setUploadProductImage] = useState({});
   const toast = useToast();
   const pengumpulProductType = [
     'Kertas/Kardus',
@@ -59,7 +59,7 @@ export default function AddProductsModal({ open, toggleOff }) {
     descriptionProduct: '',
     productPrice: '',
     productQuantity: '',
-    productImage: [],
+    productImage: '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -76,10 +76,7 @@ export default function AddProductsModal({ open, toggleOff }) {
     productQuantity: Yup.number('Product Quantity is Must Be a Number Types')
       .required('Product Quantity is Required')
       .positive('Product Quantity is Must Be a Positive Number'),
-    productImage: Yup.array()
-      .required('Product Image is Required')
-      .min(1, 'Minimum 1 Product Images')
-      .max(5, 'Maximum 5 Product Images'),
+    productImage: Yup.mixed().required('File is required'),
   });
 
   const formData = new FormData();
@@ -106,7 +103,7 @@ export default function AddProductsModal({ open, toggleOff }) {
     formData.set('description', descriptionProduct);
     formData.set('price', parseInt(productPrice));
     formData.set('quantity', parseInt(productQuantity));
-    formData.append('productImg', uploadProductImage[0], uploadProductImage[0]);
+    formData.append('productImg', uploadProductImage, uploadProductImage.name);
     const response = await axiosInstance
       .post(`products/upload/${user.mitraId}`, formData)
       .then((res) => {
@@ -137,7 +134,7 @@ export default function AddProductsModal({ open, toggleOff }) {
           isClosable: true,
         });
         resetFormData(formData);
-        setUploadProductImage([]);
+        setUploadProductImage({});
         return actions.resetForm();
       default:
         return toast({
@@ -294,36 +291,21 @@ export default function AddProductsModal({ open, toggleOff }) {
                             type="file"
                             style={{ display: 'none' }}
                             id="productImage"
-                            multiple
                             {...field}
                             onChange={(e) => {
-                              const files = e.target.files;
-                              if (files) {
-                                if (uploadProductImage.length === 0) {
-                                  setUploadProductImage([...files]);
-                                } else {
-                                  setUploadProductImage((prevData) => [
-                                    ...prevData,
-                                    ...files,
-                                  ]);
-                                }
-                                const imageArray = Array.from(files).map(
-                                  (file) => URL.createObjectURL(file)
-                                );
-                                const updatedValue = value
-                                  ? [...value, ...imageArray]
-                                  : [...imageArray];
-                                setFieldValue('productImage', updatedValue);
-                              }
+                              const files = e.target.files[0];
+                              const displayImage = URL.createObjectURL(files);
+                              setUploadProductImage(files);
+                              setFieldValue('productImage', displayImage);
                             }}
-                            disabled={value ? value.length === 5 : false}
+                            disabled={value !== '' ? true : false}
                           />
-                          {values.productImage?.map((image, index) => (
-                            <Box key={index} m="10px">
+                          {values.productImage !== '' ? (
+                            <Box m="10px">
                               <Flex>
                                 <Image
-                                  src={image}
-                                  alt={`attached_product_image_${index}`}
+                                  src={values.productImage}
+                                  alt={`attached_product_image_${values.productImage}`}
                                   boxSize="150px"
                                   objectFit="cover"
                                 />
@@ -331,13 +313,8 @@ export default function AddProductsModal({ open, toggleOff }) {
                                   size="xs"
                                   icon={<SmallCloseIcon />}
                                   onClick={() => {
-                                    const updatedImages =
-                                      values.productImage.filter(
-                                        (_, i) => i !== index
-                                      );
-                                    setUploadProductImage((prevData) =>
-                                      prevData.filter((_, i) => i !== index)
-                                    );
+                                    const updatedImages = '';
+                                    setUploadProductImage({});
                                     setFieldValue(
                                       'productImage',
                                       updatedImages
@@ -346,13 +323,13 @@ export default function AddProductsModal({ open, toggleOff }) {
                                 />
                               </Flex>
                             </Box>
-                          ))}
+                          ) : null}
                           <label htmlFor="productImage">
                             <IconButton
                               as="span"
                               icon={<AttachmentIcon color="white" />}
                               aria-label="Attach"
-                              isDisabled={value ? value.length === 5 : false}
+                              isDisabled={value !== '' ? true : false}
                               size="lg"
                               bgColor="teal"
                             />

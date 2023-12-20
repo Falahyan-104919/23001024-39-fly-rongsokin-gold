@@ -56,7 +56,8 @@ const forumCustomerController = {
     try {
       const userId = req.params.userId;
       const { title, content } = req.body;
-      const forumImage = req.files;
+      const forumImage = req.file;
+      console.log(forumImage);
       const newForumCustomer = await db.one(
         `
                     INSERT INTO forum_customers (user_id, title, content)
@@ -66,24 +67,21 @@ const forumCustomerController = {
       );
 
       if (forumImage) {
-        for (let i = 0; i < forumImage.length; i++) {
-          const image = forumImage[i];
-          const newImage = await db.one(
-            `
-                            INSERT INTO images(user_id, image_path, image_name)
-                            VALUES($1,$2,$3) RETURNING image_id
+        const newImage = await db.one(
+          `
+                            INSERT INTO images(image_path, image_name)
+                            VALUES($1,$2) RETURNING image_id
                         `,
-            [userId, image.path, image.filename]
-          );
+          [forumImage.path, forumImage.filename]
+        );
 
-          await db.none(
-            `
+        await db.none(
+          `
                             INSERT INTO forum_customer_image(forum_id, image_id)
                             VALUES($1,$2)
                         `,
-            [newForumCustomer.forum_customers_id, newImage.image_id]
-          );
-        }
+          [newForumCustomer.forum_customers_id, newImage.image_id]
+        );
       }
 
       res.status(201).json({
@@ -115,10 +113,10 @@ const forumCustomerController = {
           const image = forumImage[i];
           const newImage = await db.one(
             `
-                        INSERT INTO images(user_id, image_path, image_name) 
-                        VALUES ($1,$2,$3) RETURNING image_id
+                        INSERT INTO images(image_path, image_name) 
+                        VALUES ($1,$2) RETURNING image_id
                     `,
-            [newUpdate.user_id, image.path, image.filename]
+            [image.path, image.filename]
           );
 
           await db.none(
@@ -147,8 +145,13 @@ const forumCustomerController = {
       const { userId } = req.params;
       const forumActivity = await db.manyOrNone(
         `
-        SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, u.fullname, u.email, json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images FROM forum_customers AS fc LEFT JOIN users u ON fc.user_id = u.user_id 
-        LEFT JOIN images i ON fc.user_id = i.user_id
+        SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, u.fullname, u.email, 
+        json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images 
+        FROM forum_customers AS fc 
+        LEFT JOIN users u ON fc.user_id = u.user_id 
+        LEFT JOIN user_image ui ON u.user_id = ui.user_id
+        LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id
+        LEFT JOIN images i ON fci.image_id = i.image_id
         WHERE fc.user_id = $1 
         GROUP BY fc.forum_customers_id, u.fullname, u.email
       `,

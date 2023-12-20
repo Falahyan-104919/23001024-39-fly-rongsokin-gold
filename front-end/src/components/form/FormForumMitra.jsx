@@ -23,12 +23,12 @@ import { focusManager } from '@tanstack/react-query';
 
 export default function FormForumMitra() {
   const { user } = useContext(AuthContext);
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState({});
   const toast = useToast();
   const initialValues = {
     forumTitle: '',
     forumTopic: '',
-    forumImage: [],
+    forumImage: '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -42,9 +42,7 @@ export default function FormForumMitra() {
     formData.append('title', forumTitle);
     formData.append('content', forumTopic);
     if (images) {
-      for (let i = 0; i < images.length; i++) {
-        formData.append('forumMitraImg', images[i], images[i].name);
-      }
+      formData.append('forumMitraImg', images, images[i].name);
     }
     const response = await axiosInstance
       .post(`mitra/forum/${user.mitraId}`, formData)
@@ -76,7 +74,7 @@ export default function FormForumMitra() {
           isClosable: true,
         });
         resetFormData(formData);
-        setImages([]);
+        setImages({});
         resetForm();
         return focusManager.setFocused(true);
       default:
@@ -148,12 +146,12 @@ export default function FormForumMitra() {
                 )}
               </Field>
               <Flex>
-                {values.forumImage?.map((image, index) => (
-                  <Box key={index} m="10px">
+                {values.forumImage !== '' ? (
+                  <Box m="10px">
                     <Flex>
                       <Image
-                        src={image}
-                        alt={`attached_image_${index}`}
+                        src={values.forumImage}
+                        alt={`attached_image_${values.forumImage}`}
                         boxSize="150px"
                         objectFit="cover"
                       />
@@ -161,15 +159,14 @@ export default function FormForumMitra() {
                         size="xs"
                         icon={<SmallCloseIcon />}
                         onClick={() => {
-                          const updatedImages = values.forumImage.filter(
-                            (_, i) => i !== index
-                          );
+                          const updatedImages = '';
+                          setImages({});
                           setFieldValue('forumImage', updatedImages);
                         }}
                       />
                     </Flex>
                   </Box>
-                ))}
+                ) : null}
                 <Spacer />
                 <Field type="file" name="forumImage" multiple>
                   {({ field: { value, ...field } }) => (
@@ -178,33 +175,21 @@ export default function FormForumMitra() {
                         type="file"
                         style={{ display: 'none' }}
                         id="forumImage"
-                        multiple
                         {...field}
                         onChange={(e) => {
-                          const files = e.target.files;
-                          if (files) {
-                            if (images.length === 0) {
-                              setImages([...files]);
-                            } else {
-                              setImages((prevData) => [...files, ...prevData]);
-                            }
-                            const imageArray = Array.from(files).map((file) =>
-                              URL.createObjectURL(file)
-                            );
-                            const updatedValue = value
-                              ? [...value, ...imageArray]
-                              : [...imageArray];
-                            setFieldValue('forumImage', updatedValue);
-                          }
+                          const files = e.target.files[0];
+                          setImages(files);
+                          const displayImage = URL.createObjectURL(files);
+                          setFieldValue('forumImage', displayImage);
                         }}
-                        disabled={value ? value.length === 3 : false}
+                        disabled={value ? value.length === 1 : false}
                       />
                       <label htmlFor="forumImage">
                         <IconButton
                           as="span"
                           icon={<AttachmentIcon />}
                           aria-label="Attach"
-                          isDisabled={value ? value.length === 3 : false}
+                          isDisabled={value ? value.length === 1 : false}
                         />
                       </label>
                     </Box>

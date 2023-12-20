@@ -6,7 +6,7 @@ const { storage, updateImgProcessor } = require('./middleware/imageProcessor');
 
 const forumCustomerController = require('../controllers/forumCustomerController');
 const uploadForumCustomerImg =
-  storage.forumCustomerImageStorage.array('forumImage');
+  storage.forumCustomerImageStorage.single('forumImage');
 
 // Customer Forum Routes
 router.get('/forum', forumCustomerController.getAllForumCustomer);

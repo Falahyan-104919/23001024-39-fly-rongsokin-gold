@@ -4,10 +4,10 @@ const createMitrasTable = `
     user_id UUID REFERENCES users(user_id),
     mitra_name VARCHAR(100) NOT NULL,
     type VARCHAR(10) NOT NULL,
-    address VARCHAR(100),
+    address VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
   );
-`
+`;
 
 module.exports = createMitrasTable;

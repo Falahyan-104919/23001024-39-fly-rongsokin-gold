@@ -7,7 +7,9 @@ const createProductsTable = `
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     quantity INT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    status BOOLEAN NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
   );
 `;
 

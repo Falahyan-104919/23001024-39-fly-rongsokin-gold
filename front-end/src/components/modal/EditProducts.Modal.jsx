@@ -90,10 +90,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
     productQuantity: Yup.number(
       'Product Quantity is Must Be a Positive Number'
     ),
-    productImage: Yup.array()
-      .required('Product Image is Required')
-      .min(1, 'Minimum 1 Product Image')
-      .max(5, 'Maximum 5 Product Image'),
+    productImage: Yup.mixed().required('File is required'),
   });
 
   const formData = new FormData();
@@ -121,9 +118,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
     formData.append('description', productDescription);
     formData.append('price', Number(productPrice));
     formData.append('quantity', Number(productQuantity));
-    for (let i = 0; i < uploadImg.length; i++) {
-      formData.append('productImg', uploadImg[i], uploadImg[i].name);
-    }
+    formData.append('productImg', uploadImg, uploadImg.name);
     const response = await axiosInstance
       .put(`products/update/${productId}`, formData)
       .then((res) => {
@@ -148,7 +143,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
           isClosable: true,
         });
         resetFormData(formData);
-        setUploadProductImage([]);
+        setUploadProductImage({});
         return actions.resetForm({ values: values });
       default:
         resetFormData(formData);

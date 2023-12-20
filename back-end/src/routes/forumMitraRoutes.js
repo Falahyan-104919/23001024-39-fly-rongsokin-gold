@@ -6,7 +6,7 @@ const { storage, updateImgProcessor } = require('./middleware/imageProcessor');
 
 const forumMitraController = require('../controllers/forumMitraController');
 const uploadsForumMitraImg =
-  storage.forumMitraImageStorage.array('forumMitraImg');
+  storage.forumMitraImageStorage.single('forumMitraImg');
 
 // Mitra Forum Routes
 router.get('/forum_mitra', forumMitraController.getAllForumMitra);
