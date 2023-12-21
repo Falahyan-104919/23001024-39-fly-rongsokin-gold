@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import axiosInstance from '../../../utils/axios';
 import { useQuery } from '@tanstack/react-query';
 import {
+  Badge,
   Button,
   ButtonGroup,
   Tbody,
@@ -80,7 +81,7 @@ export default function TableBodyTransaction({ transactions, keyword }) {
                       });
                     }
                   })
-                  .then((err) => {
+                  .catch((err) => {
                     return toast({
                       title: 'Status Order Failed to Update',
                       description: err.response.data.message,
@@ -108,6 +109,35 @@ export default function TableBodyTransaction({ transactions, keyword }) {
     }
   };
 
+  const BadgeStatus = ({ status }) => {
+    switch (status) {
+      case 'pending':
+        return (
+          <Badge variant="subtle" colorScheme="yellow">
+            {status.toUpperCase()}
+          </Badge>
+        );
+      case 'process':
+        return (
+          <Badge variant="subtle" colorScheme="blue">
+            {status.toUpperCase()}
+          </Badge>
+        );
+      case 'success':
+        return (
+          <Badge variant="subtle" colorScheme="teal">
+            {status.toUpperCase()}
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="subtle" colorScheme="red">
+            {status.toUpperCase()}
+          </Badge>
+        );
+    }
+  };
+
   const filteredTransactions = transactions?.filter((transaction) => {
     return transaction.name.toLowerCase().includes(keyword.toLowerCase());
   });
@@ -131,7 +161,9 @@ export default function TableBodyTransaction({ transactions, keyword }) {
           <Td>{transaction.name}</Td>
           <Td>{transaction.quantity}</Td>
           <Td>RP. {transaction.total_price}</Td>
-          <Td>{transaction.transaction_status.toUpperCase()}</Td>
+          <Td>
+            <BadgeStatus status={transaction.transaction_status} />
+          </Td>
           <Td colSpan={2} textAlign="center">
             <ActionButton
               status={transaction.transaction_status}

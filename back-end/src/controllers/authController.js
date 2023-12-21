@@ -10,9 +10,9 @@ const authController = {
 
       const existingUser = await db.oneOrNone(
         `
-                SELECT * from users 
-                WHERE email = $1
-            `,
+          SELECT * from users 
+          WHERE email = $1
+        `,
         email
       );
 
@@ -26,9 +26,9 @@ const authController = {
 
       db.none(
         `
-                INSERT INTO users (fullname, email, phone_number, role, password_hash)
-                VALUES ($1, $2, $3, $4, $5);
-            `,
+          INSERT INTO users (fullname, email, phone_number, role, password_hash)
+          VALUES ($1, $2, $3, $4, $5);
+        `,
         [fullname, email, phoneNumber, 'user', hashedPassword]
       );
 
@@ -48,14 +48,14 @@ const authController = {
 
       const user = await db.oneOrNone(
         `
-                SELECT u.*, 
-                json_agg(json_build_object('image_id', i.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image_profile 
-                from users u 
-                LEFT JOIN user_image ui ON u.user_id = ui.user_id
-                LEFT JOIN images i ON ui.image_id = i.image_id
-                WHERE email = $1 
-                GROUP BY u.user_id
-            `,
+          SELECT u.*, 
+          json_agg(json_build_object('image_id', i.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image_profile 
+          from users u 
+          LEFT JOIN user_image ui ON u.user_id = ui.user_id
+          LEFT JOIN images i ON ui.image_id = i.image_id
+          WHERE email = $1 
+          GROUP BY u.user_id
+        `,
         email
       );
 
@@ -93,9 +93,9 @@ const authController = {
 
       const mitra = await db.oneOrNone(
         `
-                SELECT * from mitras 
-                WHERE user_id = $1
-            `,
+          SELECT * from mitras 
+          WHERE user_id = $1
+        `,
         user.user_id
       );
 
@@ -104,7 +104,7 @@ const authController = {
         userData.mitraType = mitra.type;
       }
 
-      if (user.image_profile['image_path'] !== null) {
+      if (user.image_profile[0]['image_path'] !== null) {
         userData.image_profile = user.image_profile;
       }
 

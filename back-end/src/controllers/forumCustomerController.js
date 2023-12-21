@@ -5,11 +5,14 @@ const forumCustomerController = {
     try {
       const forumCustomerData = await db.manyOrNone(`
                 SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, u.fullname, u.email,
-                        json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image
+                        json_agg(json_build_object('image_id', fci.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image,
+                        json_agg(json_build_object('image_id', ui.image_id, 'image_path', i2.image_path, 'image_name', i2.image_name)) as image_profile
                 FROM forum_customers fc 
                 LEFT JOIN users u ON fc.user_id = u.user_id
+                LEFT JOIN user_image ui ON u.user_id = ui.user_id
                 LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
-                LEFT JOIN images i ON fci.image_id = i.image_id 
+                LEFT JOIN images i ON fci.image_id = i.image_id
+                LEFT JOIN images i2 ON ui.image_id = i2.image_id
                 GROUP BY fc.forum_customers_id, u.fullname, u.email; 
             `);
 
@@ -145,12 +148,14 @@ const forumCustomerController = {
       const forumActivity = await db.manyOrNone(
         `
         SELECT fc.forum_customers_id, fc.user_id, fc.title, fc.content, fc.updated_at, u.fullname, u.email, 
-        json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images 
+        json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', fci.image_id)) AS images,
+        json_agg(json_build_object('image_path', i2.image_path, 'image_name', i2.image_name, 'image_id', ui.image_id)) as profile_image
         FROM forum_customers AS fc 
         LEFT JOIN users u ON fc.user_id = u.user_id 
         LEFT JOIN user_image ui ON u.user_id = ui.user_id
         LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id
         LEFT JOIN images i ON fci.image_id = i.image_id
+        LEFT JOIN images i2 ON ui.image_id = i2.image_id
         WHERE fc.user_id = $1 
         GROUP BY fc.forum_customers_id, u.fullname, u.email
       `,

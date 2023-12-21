@@ -3,20 +3,36 @@ import { useState } from 'react';
 import { Button, ButtonGroup, Tbody, Td, Text, Tr } from '@chakra-ui/react';
 import EditProductsModal from '../../modal/EditProducts.Modal';
 import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import DeleteProductsAlert from '../../modal/DeleteProductsAlertModal';
 
 export default function TableBodyProduct({ products, keyword }) {
-  const [openModals, setOpenModals] = useState({});
+  const [openModalsAddProducts, setOpenModalsAddProducts] = useState({});
+  const [openAlertDeleteProducts, setOpenAlertDeleteProducts] = useState({});
 
-  const handleOpenModal = (productId) => {
-    setOpenModals((prevModals) => ({
+  const handleOpenModalAddProducts = (productId) => {
+    setOpenModalsAddProducts((prevModals) => ({
       ...prevModals,
       [productId]: true,
     }));
   };
 
-  const handleCloseModal = (productId) => {
-    setOpenModals((prevModals) => ({
+  const handleOpenAlertDeleteProducts = (productId) => {
+    setOpenAlertDeleteProducts((prevAlert) => ({
+      ...prevAlert,
+      [productId]: true,
+    }));
+  };
+
+  const handleCloseModalAddProducts = (productId) => {
+    setOpenModalsAddProducts((prevModals) => ({
       ...prevModals,
+      [productId]: false,
+    }));
+  };
+
+  const handleCloseAlertDeleteProducts = (productId) => {
+    setOpenAlertDeleteProducts((prevAlert) => ({
+      ...prevAlert,
       [productId]: false,
     }));
   };
@@ -51,21 +67,36 @@ export default function TableBodyProduct({ products, keyword }) {
                 colorScheme="orange"
                 onClick={() => {
                   focusManager.setFocused(false);
-                  handleOpenModal(product.product_id);
+                  handleOpenModalAddProducts(product.product_id);
                 }}
               >
                 Edit
               </Button>
-              <Button colorScheme="red" leftIcon={<DeleteIcon />}>
+              <Button
+                colorScheme="red"
+                leftIcon={<DeleteIcon />}
+                onClick={() => {
+                  focusManager.setFocused(false);
+                  handleOpenAlertDeleteProducts(product.product_id);
+                }}
+              >
                 Delete
               </Button>
             </ButtonGroup>
             <EditProductsModal
               products={product}
-              open={openModals[product.product_id] || false}
+              open={openModalsAddProducts[product.product_id] || false}
               toggleOff={() => {
                 focusManager.setFocused(true);
-                handleCloseModal(product.product_id);
+                handleCloseModalAddProducts(product.product_id);
+              }}
+            />
+            <DeleteProductsAlert
+              products={product}
+              open={openAlertDeleteProducts[product.product_id] || false}
+              toggleOff={() => {
+                focusManager.setFocused(true);
+                handleCloseAlertDeleteProducts(product.product_id);
               }}
             />
           </Td>

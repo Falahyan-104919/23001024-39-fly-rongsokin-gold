@@ -140,7 +140,26 @@ const productController = {
       });
     }
   },
-  deleteProduct: async (req, res) => {},
+  deleteProduct: async (req, res) => {
+    try {
+      const { productId } = req.params;
+      await db.none(
+        `
+      UPDATE products p SET
+      status = false WHERE product_id = $1
+    `,
+        [productId]
+      );
+      res.status(203).json({
+        message: 'Delete Product Successfuly!',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
   getAllProduct: async (req, res) => {
     try {
       const productData = await db.manyOrNone(`
@@ -149,6 +168,7 @@ const productController = {
               FROM products p
               LEFT JOIN product_image pi ON p.product_id = pi.product_id
               LEFT JOIN images i ON pi.image_id = i.image_id
+              WHERE status
               GROUP BY p.product_id;
             `);
 
@@ -170,7 +190,7 @@ const productController = {
               FROM products p
               LEFT JOIN product_image pi ON p.product_id = pi.product_id
               LEFT JOIN images i ON pi.image_id = i.image_id
-              WHERE p.mitra_id = $1
+              WHERE p.mitra_id = $1 AND status
               GROUP BY p.product_id;
             `,
         [mitraId]
@@ -197,7 +217,7 @@ const productController = {
         FROM products p
         LEFT JOIN product_image pi ON p.product_id = pi.product_id
         LEFT JOIN images i ON pi.image_id = i.image_id
-        WHERE p.name ILIKE $1
+        WHERE p.name ILIKE $1 AND status
         GROUP BY p.product_id;
       `,
         [keyword]

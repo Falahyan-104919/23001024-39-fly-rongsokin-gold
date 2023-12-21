@@ -58,6 +58,7 @@ export default function ForumCustomerContainer() {
         {data.forumData.map((post, index) => (
           <ForumCard
             key={`${post.user_id}-${index}`}
+            profileImg={post.image_profile}
             time={post.updated_at}
             fullname={post.fullname}
             email={post.email}

@@ -67,6 +67,7 @@ export default function ForumMitraContainer() {
             title={post.title}
             content={post.content}
             userId={post.mitra_id}
+            images={post.image}
           />
         ))}
       </>

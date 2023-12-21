@@ -4,7 +4,7 @@ import { Flex, Spinner, TabPanel, Text } from '@chakra-ui/react';
 import ForumCard from '../../card/ForumCard';
 
 export default function TabPanelForumCustomerActivityMitra({ userId }) {
-  const fetchMitraForumCustomerActivity = async (id) => {
+  const fetchCustomerForumCustomerActivity = async (id) => {
     const response = await axiosInstance
       .get(`forum_activity/${id}`)
       .then((res) => {
@@ -16,7 +16,7 @@ export default function TabPanelForumCustomerActivityMitra({ userId }) {
   };
   const { data, error, isError, isLoading, isFetched } = useQuery({
     queryKey: ['mitra_forum_customer_activity', userId],
-    queryFn: () => fetchMitraForumCustomerActivity(userId),
+    queryFn: () => fetchCustomerForumCustomerActivity(userId),
   });
 
   if (isError) {
@@ -55,10 +55,13 @@ export default function TabPanelForumCustomerActivityMitra({ userId }) {
           <ForumCard
             key={`${activity.forum_customers_id}-${index}`}
             fullname={activity.fullname}
+            profileImg={activity.profile_image}
             email={activity.email}
             title={activity.title}
             content={activity.content}
             time={activity.updated_at}
+            userId={activity.user_id}
+            images={activity.images}
           />
         ))}
       </TabPanel>

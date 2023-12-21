@@ -19,7 +19,7 @@ const forumMitraController = {
         data: forumMitraData,
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       res.status(500).json({
         message: 'Internal Server Error',
       });
@@ -154,12 +154,15 @@ const forumMitraController = {
       const mitraActivity = await db.manyOrNone(
         `
       SELECT fm.forum_mitra_id, fm.mitra_id, fm.title, fm.content, fm.updated_at, u.fullname, u.email, 
-      json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images 
+      json_agg(json_build_object('image_path', i.image_path, 'image_name', i.image_name, 'image_id', i.image_id)) AS images,
+      json_agg(json_build_object('image_path', i2.image_path, 'image_name', i2.image_name, 'image_id', ui.image_id)) as profile_image
       FROM forum_mitras AS fm 
       LEFT JOIN mitras m ON fm.mitra_id = m.mitra_id
       LEFT JOIN users u ON m.user_id = u.user_id 
-      LEFT JOIN forum_mitras_image fmi ON fm.forum_mitra_id = fmi.image_id
+      LEFT JOIN user_image ui ON u.user_id = ui.user_id
+      LEFT JOIN forum_mitras_image fmi ON fm.forum_mitra_id = fmi.forum_id
       LEFT JOIN images i ON fmi.image_id = i.image_id
+      LEFT JOIN images i2 ON ui.image_id = i.image_id
       WHERE fm.mitra_id = $1 
       GROUP BY fm.forum_mitra_id, u.fullname, u.email
       `,

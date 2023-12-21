@@ -88,10 +88,12 @@ export default function TabsUserForumActivity({ id }) {
               <ForumCard
                 key={`${activity.forum_customers_id}-${index}`}
                 fullname={activity.fullname}
+                profileImg={activity.profile_image}
                 email={activity.email}
                 title={activity.title}
                 content={activity.content}
                 time={activity.updated_at}
+                userId={activity.user_id}
                 images={activity.images}
               />
             ))}

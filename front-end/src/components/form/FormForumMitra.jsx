@@ -42,7 +42,7 @@ export default function FormForumMitra() {
     formData.append('title', forumTitle);
     formData.append('content', forumTopic);
     if (images) {
-      formData.append('forumMitraImg', images, images[i].name);
+      formData.append('forumMitraImg', images, images.name);
     }
     const response = await axiosInstance
       .post(`mitra/forum/${user.mitraId}`, formData)

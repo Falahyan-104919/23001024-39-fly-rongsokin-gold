@@ -20,7 +20,7 @@ router.put(
   uploadsProductImg,
   productMitraController.updateProduct
 );
-
+router.delete('/products/:productId', productMitraController.deleteProduct);
 router.get('/mitra_products/:mitraId', productMitraController.getMitraProducts);
 
 module.exports = router;

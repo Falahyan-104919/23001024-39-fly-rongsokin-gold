@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { db } = require('../database/db');
 const bcryptjs = require('bcryptjs');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const userController = {
@@ -140,24 +142,26 @@ const userController = {
       const profileImg = req.file;
       const newImageId = await db.oneOrNone(
         `
-          INSERT INTO images(user_id, image_path, image_name)
-          VALUES ($1,$2,$3) RETURNING image_id;
+          INSERT INTO images(image_path, image_name)
+          VALUES ($1,$2) RETURNING image_id;
         `,
-        [userId, profileImg.path, profileImg.filename]
+        [profileImg.path, profileImg.filename]
       );
 
       await db.none(
         `
-          UPDATE users SET image_id = $1 WHERE user_id = $2
+          INSERT INTO user_image(user_id, image_id)
+          VALUES ($1,$2)
         `,
-        [newImageId.image_id, userId]
+        [userId, newImageId.image_id]
       );
 
       res.status(201).json({
         message: 'Change Profile Image Successfully',
       });
     } catch (error) {
-      res.status(500).message({
+      console.error(error);
+      res.status(500).json({
         message: 'Internal Server Error!',
       });
     }
@@ -167,19 +171,19 @@ const userController = {
     try {
       const userId = req.params.userId;
       const profilImg = req.file;
-      const newImageId = await db.oneOrNone(
+      const { image_id } = await db.one(
         `
-          INSERT INTO images(user_id, image_path, image_name) 
-          VALUES ($1,$2,$3) RETURNING image_id;
-        `,
-        [userId, profilImg.path, profilImg.filename]
+        SELECT image_id from user_image WHERE user_id = $1
+      `,
+        [userId]
       );
 
       await db.none(
         `
-          UPDATE users SET image_id = $1 WHERE user_id = $2
+          UPDATE images SET image_path = $1, image_name = $2 
+          WHERE image_id = $3
         `,
-        [newImageId.image_id, userId]
+        [profilImg.path, profilImg.filename, image_id]
       );
 
       res.status(201).json({

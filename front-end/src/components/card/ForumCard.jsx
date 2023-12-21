@@ -9,10 +9,16 @@ import {
   CardFooter,
   Box,
   Image,
+  Divider,
+  Spacer,
 } from '@chakra-ui/react';
 import { Link, useHref } from 'react-router-dom';
+import MenuForumCard from '../button/MenuForumCard';
+import { useContext } from 'react';
+import { AuthContext } from '../../store/AuthProvider';
 
 export default function ForumCard(props) {
+  const { user } = useContext(AuthContext);
   const url = useHref();
   const image_path =
     props.images[0].image_path != null
@@ -38,17 +44,28 @@ export default function ForumCard(props) {
     minute: 'numeric',
   });
   const path_decider = url.includes('customer') ? '/user/' : '/mitra/';
+  const profile_image_path =
+    props.profileImg[0].image_path == null
+      ? 'user-placeholder.png'
+      : `http://localhost:8080/${props.profileImg[0].image_path}`;
+
   return (
     <Card m="10px" mb="25px">
       <CardHeader>
         <Flex>
-          <Avatar src="user-placeholder.png" />
-          <Flex direction={'column'} ml="10px">
-            <Link to={`${path_decider}${props.userId}`}>
-              <Text as="b">{props.fullname}</Text>
-            </Link>
-            <Text>{props.email}</Text>
+          <Flex>
+            <Avatar src={profile_image_path} />
+            <Flex direction={'column'} ml="10px">
+              <Link to={`${path_decider}${props.userId}`}>
+                <Text as="b">{props.fullname}</Text>
+              </Link>
+              <Text>{props.email}</Text>
+            </Flex>
           </Flex>
+          <Spacer />
+          {user.userId == props.userId || user.mitraId == props.userId ? (
+            <MenuForumCard />
+          ) : null}
         </Flex>
       </CardHeader>
       <CardBody>
@@ -56,7 +73,8 @@ export default function ForumCard(props) {
           {props.title}
         </Heading>
         <Text mb={5}>{props.content}</Text>
-        <Flex gap={2}>
+        <Divider />
+        <Flex gap={2} mt={5}>
           {image_path != null || undefined
             ? image_path.map((path, index) => {
                 return (

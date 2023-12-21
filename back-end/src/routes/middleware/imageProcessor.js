@@ -69,7 +69,7 @@ const imgForumMitraStorage = multer.diskStorage({
 });
 
 const imgProfileStorage = multer.diskStorage({
-  destination: (req, res, cb) => {
+  destination: (req, file, cb) => {
     const userId = req.params.userId;
     const uploadDir = path.join('public', 'img', 'profile_image', `${userId}`);
 
@@ -84,8 +84,8 @@ const imgProfileStorage = multer.diskStorage({
       }
     });
   },
-  filename: (req, res, cb) => {
-    const uniqeFileName = `${Date.now()}.jpg`;
+  filename: (req, file, cb) => {
+    const uniqeFileName = `${req.params.userId}.jpg`;
     cb(null, uniqeFileName);
   },
 });

@@ -56,11 +56,14 @@ export default function TabPanelForumMitraActivityMitra() {
         {data.forumActivity.map((activity, index) => (
           <ForumCard
             key={`${activity.forum_customers_id}-${index}`}
+            profileImg={activity.profile_image}
             fullname={activity.fullname}
             email={activity.email}
             title={activity.title}
             content={activity.content}
             time={activity.updated_at}
+            userId={activity.mitra_id}
+            images={activity.images}
           />
         ))}
       </TabPanel>

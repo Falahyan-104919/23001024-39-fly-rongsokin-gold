@@ -11,6 +11,7 @@ export default function getUserProps() {
       phoneNumber: '',
       role: '',
       token: '',
+      profileImg: '',
     },
   };
   return item;

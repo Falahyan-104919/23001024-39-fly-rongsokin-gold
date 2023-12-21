@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
       role: res.userData.role,
       token: res.token,
     });
+
     axiosInstance.interceptors.request.use(
       (config) => {
         config.headers['Authorization'] = res.token;
@@ -86,14 +87,15 @@ export const AuthProvider = ({ children }) => {
       });
     }
 
-    if (res.userData.image_id) {
+    if (res.userData.image_profile[0]['image_path'] !== null) {
       setUser((prevData) => {
         return {
           ...prevData,
-          imageId: res.userData.image_id,
+          profileImg: res.userData.image_profile[0]['image_path'],
         };
       });
     }
+
     return res;
   };
 
@@ -124,6 +126,7 @@ export const AuthProvider = ({ children }) => {
       phoneNumber: '',
       role: '',
       token: '',
+      profileImg: '',
     });
 
     localStorage.removeItem('user_traits');
