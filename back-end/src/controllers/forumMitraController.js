@@ -5,12 +5,15 @@ const forumMitraController = {
     try {
       const forumMitraData = await db.manyOrNone(`
                 SELECT fm.forum_mitra_id, fm.title, fm.content, fm.updated_at, fm.mitra_id, u.fullname, u.email,
-                        json_agg(json_build_object('image_id', fmi.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image
+                        json_agg(json_build_object('image_id', fmi.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as image,
+                        json_agg(json_build_object('image_id', ui.image_id, 'image_path', i2.image_path, 'image_name', i2.image_name)) as profile_image
                 FROM forum_mitras fm 
                 LEFT JOIN mitras m ON fm.mitra_id = m.mitra_id
                 LEFT JOIN users u ON m.user_id = u.user_id
-                LEFT JOIN forum_mitras_image fmi ON fm.forum_mitra_id = fmi.forum_id 
+                LEFT JOIN forum_mitras_image fmi ON fm.forum_mitra_id = fmi.forum_id
+                LEFT JOIN user_image ui ON u.user_id = ui.user_id
                 LEFT JOIN images i ON fmi.image_id = i.image_id 
+                LEFT JOIN images i2 ON ui.image_id = i.image_id
                 GROUP BY fm.forum_mitra_id, u.fullname, u.email
             `);
 

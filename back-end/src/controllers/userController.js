@@ -9,8 +9,12 @@ const userController = {
   getAllUserProfile: async (req, res) => {
     try {
       const resData = await db.manyOrNone(`
-          SELECT user_id, fullname, email, phone_number, role
-          FROM users
+          SELECT u.user_id, u.fullname, u.email, u.phone_number, u.role, 
+          json_agg(json_build_object('image_id', i.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as profile_image
+          FROM users u 
+          LEFT JOIN user_image ui ON u.user_id = ui.user_id
+          LEFT JOIN images i ON ui.image_id = i.image_id
+          GROUP BY u.user_id
         `);
 
       res.status(200).json({
@@ -30,8 +34,12 @@ const userController = {
       const userId = req.params.userId;
       const userData = await db.one(
         `
-          SELECT fullname, email, phone_number 
-          FROM users WHERE user_id = $1
+          SELECT u.fullname, u.email, u.phone_number, json_agg(json_build_object('image_id', i.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as profile_image 
+          FROM users u
+          LEFT JOIN user_image ui ON u.user_id = ui.user_id
+          LEFT JOIN images i ON ui.image_id = i.image_id
+          WHERE u.user_id = $1
+          GROUP BY u.user_id
         `,
         [userId]
       );
@@ -143,7 +151,7 @@ const userController = {
       const newImageId = await db.oneOrNone(
         `
           INSERT INTO images(image_path, image_name)
-          VALUES ($1,$2) RETURNING image_id;
+          VALUES ($1,$2) RETURNING image_id, image_path;
         `,
         [profileImg.path, profileImg.filename]
       );
@@ -158,6 +166,7 @@ const userController = {
 
       res.status(201).json({
         message: 'Change Profile Image Successfully',
+        image_path: newImageId.image_path,
       });
     } catch (error) {
       console.error(error);

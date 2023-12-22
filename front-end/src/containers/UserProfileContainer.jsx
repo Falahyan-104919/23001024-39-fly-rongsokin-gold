@@ -46,6 +46,10 @@ export default function UserProfileContainer() {
   }
 
   if (isFetched) {
+    const preppedImage =
+      data.user.profile_image[0].image_path !== null
+        ? `http://localhost:8080/${data.user.profile_image[0].image_path}`
+        : '/user-placeholder.png';
     return (
       <Grid
         templateColumns="repeat(6, 1fr)"
@@ -68,7 +72,7 @@ export default function UserProfileContainer() {
               objectFit="cover"
               size="2xl"
               name={data.user.fullname}
-              src="/user-placeholder.png"
+              src={preppedImage}
             />
           </Flex>
         </GridItem>

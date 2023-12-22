@@ -63,6 +63,7 @@ export default function ForumMitraContainer() {
             key={`${post.forum_mitra_id}-${index}`}
             time={post.updated_at}
             fullname={post.fullname}
+            profileImg={post.profile_image}
             email={post.email}
             title={post.title}
             content={post.content}

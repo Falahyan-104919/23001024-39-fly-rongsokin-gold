@@ -117,6 +117,15 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
+  const setProfilePic = (values) => {
+    setUser((prevData) => {
+      return {
+        ...prevData,
+        profileImg: values,
+      };
+    });
+  };
+
   const logout = () => {
     setIsLoggedIn(false);
     setUser({
@@ -148,6 +157,7 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn,
         setRole,
         setMitraId,
+        setProfilePic,
       }}
     >
       {children}

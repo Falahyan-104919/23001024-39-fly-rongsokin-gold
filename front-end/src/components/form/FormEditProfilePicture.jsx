@@ -1,11 +1,23 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../store/AuthProvider';
-import { Avatar, Button, Flex, Link, Text, useToast } from '@chakra-ui/react';
+import {
+  Avatar,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Link,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 import axiosInstance from '../../utils/axios';
 
 export default function FormEditProfilePicture() {
-  const { user } = useContext(AuthContext);
-  const image = user.imageId || 'user-placeholder.png';
+  const { user, setProfilePic } = useContext(AuthContext);
+  const image =
+    user.profileImg == null || user.profileImg == undefined
+      ? 'user-placeholder.png'
+      : `http://localhost:8080/${user.profileImg}`;
   const [imagePreview, setImagePreview] = useState(image);
   const [uploadProfileImage, setUploadProfileImage] = useState({});
   const toast = useToast();
@@ -33,6 +45,7 @@ export default function FormEditProfilePicture() {
       });
     switch (response.status) {
       case 201:
+        setProfilePic(response.image_path);
         return toast({
           title: 'Success',
           description: `${response.message}`,
@@ -50,37 +63,62 @@ export default function FormEditProfilePicture() {
         });
     }
   };
-
   return (
-    <Flex
-      flexDir="column"
-      alignItems="center"
-      gap="5px"
+    <Grid
+      h="250px"
+      templateColumns="repeat(2, '1fr')"
+      templateRows="repeat(2, '1fr')"
+      gap={4}
       bgColor="white"
-      m="10px"
-      borderRadius="10px"
-      boxShadow="base"
-      p="15px"
+      p={4}
+      m={2}
+      borderRadius={10}
     >
-      <form onSubmit={submitHandle}>
-        <Avatar alt={user.fullname} src={imagePreview} size="2xl" />
-        <input
-          id="fileInput"
-          type="file"
-          onChange={handleFileChange}
-          style={{ display: 'none' }}
-        />
-        <Button size="xs" onClick={() => submitHandle(uploadProfileImage)}>
-          <Text fontSize="xs">Submit</Text>
-        </Button>
-      </form>
-      <Link
-        onClick={() => {
-          document.getElementById('fileInput').click();
-        }}
-      >
-        Upload New Image
-      </Link>
-    </Flex>
+      <GridItem colSpan={1} alignSelf="end" w="112%">
+        <Flex justifyContent="end" alignItems="end">
+          <Avatar alt={user.fullname} src={imagePreview} size="2xl" />
+          <input
+            id="fileInput"
+            type="file"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+        </Flex>
+      </GridItem>
+      <GridItem colSpan={1}>
+        <Flex justifyContent="end">
+          {user.profileImg == null || user.profileImg == undefined ? (
+            <Button
+              size="xs"
+              onClick={() => submitHandle(uploadProfileImage)}
+              colorScheme="facebook"
+              isDisabled={uploadProfileImage.name == undefined}
+            >
+              <Text fontSize="xs">Upload New Image</Text>
+            </Button>
+          ) : (
+            <Button
+              size="xs"
+              onClick={() => submitHandle(uploadProfileImage)}
+              colorScheme="teal"
+              isDisabled={uploadProfileImage.name == undefined}
+            >
+              <Text fontSize="xs">Update New Image</Text>
+            </Button>
+          )}
+        </Flex>
+      </GridItem>
+      <GridItem colSpan={2}>
+        <Flex justifyContent="center">
+          <Link
+            onClick={() => {
+              document.getElementById('fileInput').click();
+            }}
+          >
+            Upload New Image
+          </Link>
+        </Flex>
+      </GridItem>
+    </Grid>
   );
 }
