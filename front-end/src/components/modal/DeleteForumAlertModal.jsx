@@ -9,44 +9,16 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import axiosInstance from '../../utils/axios';
-import { focusManager } from '@tanstack/react-query';
 
-export default function DeleteProductsAlert({ products, open, toggleOff }) {
+export default function DeleteForumAlert({ forum, open, toggleOff }) {
   const toast = useToast();
-  const handleDeleteProducts = async (id) => {
-    const response = await axiosInstance
-      .delete(`products/${id}`)
-      .then((res) => {
-        return {
-          status: res.status,
-          message: res.message,
-        };
-      });
-    if (response.status != 203) {
-      focusManager.setFocused(true);
-      return toast({
-        title: 'Something Wrong!',
-        description: response.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-    focusManager.setFocused(true);
-    return toast({
-      title: 'Successfully Delete Products!',
-      description: response.message,
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
-  };
+  const handleDeleteProducts = async (id) => {};
   return (
     <AlertDialog isOpen={open} onClose={toggleOff}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Delete Product
+            Delete Forum
           </AlertDialogHeader>
 
           <AlertDialogBody>
@@ -58,8 +30,7 @@ export default function DeleteProductsAlert({ products, open, toggleOff }) {
             <Button
               colorScheme="red"
               onClick={() => {
-                focusManager.setFocused(false);
-                handleDeleteProducts(products.product_id);
+                handleDeleteProducts();
                 toggleOff();
               }}
               ml={3}

@@ -49,9 +49,10 @@ export default function TableBodyTransaction({ transactions, keyword }) {
                       });
                     }
                   })
-                  .then((err) => {
+                  .catch((err) => {
                     return toast({
                       title: 'Status Order Failed to Update',
+                      description: err.message,
                       status: 'error',
                       duration: 3000,
                       isClosable: true,

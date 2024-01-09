@@ -89,6 +89,7 @@ const authController = {
         email: user.email,
         phoneNumber: user.phone_number,
         role: user.role,
+        image_profile: user.image_profile,
       };
 
       const mitra = await db.oneOrNone(
@@ -102,10 +103,6 @@ const authController = {
       if (mitra) {
         userData.mitraId = mitra.mitra_id;
         userData.mitraType = mitra.type;
-      }
-
-      if (user.image_profile[0]['image_path'] !== null) {
-        userData.image_profile = user.image_profile;
       }
 
       return res.status(200).json({

@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
       };
     }
     setIsLoggedIn(true);
+    console.log(res.userData);
     setUser({
       userId: res.userData.userId,
       fullname: res.userData.fullname,
