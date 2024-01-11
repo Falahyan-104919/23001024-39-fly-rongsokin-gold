@@ -11,16 +11,22 @@ import {
 import axiosInstance from '../../utils/axios';
 import { focusManager } from '@tanstack/react-query';
 
-export default function DeleteForumAlert({ forumId, open, toggleOff }) {
+export default function CancelTransactionAlertModal({
+  transactionId,
+  open,
+  toggleOff,
+}) {
   const toast = useToast();
-  const handleDeleteProducts = async (id) => {
+  const handleCancelTransaction = async (transaction_id) => {
     focusManager.setFocused(false);
     await axiosInstance
-      .delete(`forum/${id}`)
+      .put(`update_status_transaction/${transaction_id}`, {
+        status: 'cancel',
+      })
       .then((res) => {
-        if (res.status == 203) {
+        if (res.status == 201) {
           return toast({
-            title: 'Forum Successfull Delete',
+            title: 'Status Order Updated',
             description: res.data.message,
             status: 'success',
             duration: 3000,
@@ -30,8 +36,8 @@ export default function DeleteForumAlert({ forumId, open, toggleOff }) {
       })
       .catch((err) => {
         return toast({
-          title: 'Forum Failed to Delete',
-          description: err.response.message,
+          title: 'Status Order Failed to Update',
+          description: err.response.data.message,
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -43,7 +49,7 @@ export default function DeleteForumAlert({ forumId, open, toggleOff }) {
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Delete Forum ?
+            Cancel Transaction ?
           </AlertDialogHeader>
 
           <AlertDialogBody>
@@ -55,13 +61,13 @@ export default function DeleteForumAlert({ forumId, open, toggleOff }) {
             <Button
               colorScheme="red"
               onClick={() => {
-                handleDeleteProducts(forumId);
+                handleCancelTransaction(transactionId);
                 focusManager.setFocused(true);
                 toggleOff();
               }}
               ml={3}
             >
-              Delete
+              Cancel Transactions
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

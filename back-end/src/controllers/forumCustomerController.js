@@ -13,6 +13,7 @@ const forumCustomerController = {
                 LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
                 LEFT JOIN images i ON fci.image_id = i.image_id
                 LEFT JOIN images i2 ON ui.image_id = i2.image_id
+                WHERE fc.status
                 GROUP BY fc.forum_customers_id, u.fullname, u.email; 
             `);
 
@@ -38,7 +39,7 @@ const forumCustomerController = {
                 FROM forum_customers fc 
                 LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id 
                 LEFT JOIN images i ON fci.image_id = i.image_id 
-                WHERE fc.forum_customers_id = $1
+                WHERE fc.forum_customers_id = $1 AND status
                 GROUP BY fc.forum_customers_id; 
             `,
         forumCustomerId
@@ -141,7 +142,27 @@ const forumCustomerController = {
       });
     }
   },
-  deleteForumCustomer: async (req, res) => {},
+  deleteForumCustomer: async (req, res) => {
+    try {
+      const { forumCustomerId } = req.params;
+      await db.none(
+        `
+        UPDATE forum_customers 
+        SET status = false 
+        WHERE forum_customers_id = $1
+      `,
+        [forumCustomerId]
+      );
+      res.status(203).json({
+        message: 'Delete Forum Successfully',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
   getUserForumActivity: async (req, res) => {
     try {
       const { userId } = req.params;
@@ -156,7 +177,7 @@ const forumCustomerController = {
         LEFT JOIN forum_customer_image fci ON fc.forum_customers_id = fci.forum_id
         LEFT JOIN images i ON fci.image_id = i.image_id
         LEFT JOIN images i2 ON ui.image_id = i2.image_id
-        WHERE fc.user_id = $1 
+        WHERE fc.user_id = $1 AND fc.status
         GROUP BY fc.forum_customers_id, u.fullname, u.email
       `,
         [userId]

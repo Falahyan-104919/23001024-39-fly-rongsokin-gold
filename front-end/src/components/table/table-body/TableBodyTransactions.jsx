@@ -12,15 +12,48 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { focusManager } from '@tanstack/react-query';
+import { useState } from 'react';
+import ProcessOrderAlertModal from '../../modal/ProcessOrderAlertModal';
+import CancelTransactionAlertModal from '../../modal/CancelTransactionAlertModal';
 
 export default function TableBodyTransaction({ transactions, keyword }) {
-  const toast = useToast();
+  const [openProcessAlert, setOpenProcessAlert] = useState({});
+  const [openCancelAlert, setOpenCancelAlert] = useState({});
+
+  const handleOpenProcessAlert = (transaction_id) => {
+    setOpenProcessAlert((prevProcessAlert) => ({
+      ...prevProcessAlert,
+      [transaction_id]: true,
+    }));
+  };
+
+  const handleOpenCancelAlert = (transaction_id) => {
+    setOpenCancelAlert((prevCancelAlert) => ({
+      ...prevCancelAlert,
+      [transaction_id]: true,
+    }));
+  };
+
+  const handleCloseProcessAlert = (transaction_id) => {
+    setOpenProcessAlert((prevProcessAlert) => ({
+      ...prevProcessAlert,
+      [transaction_id]: false,
+    }));
+  };
+
+  const handleCloseCancelAlert = (transaction_id) => {
+    setOpenCancelAlert((prevCancelAlert) => ({
+      ...prevCancelAlert,
+      [transaction_id]: false,
+    }));
+  };
+
   const ActionButton = ({
     status,
-    transactionId,
-    productId,
     order_quantity,
     quantity_product,
+    transactionId,
+    productId,
   }) => {
     switch (status) {
       case 'pending':
@@ -29,72 +62,38 @@ export default function TableBodyTransaction({ transactions, keyword }) {
             <Button
               colorScheme="blue"
               isDisabled={order_quantity > quantity_product}
-              onClick={async () => {
+              onClick={() => {
                 focusManager.setFocused(false);
-                await axiosInstance
-                  .put(`process_order/${transactionId}`, {
-                    status: 'process',
-                    quantity: quantity_product - order_quantity,
-                    productId: productId,
-                  })
-                  .then((res) => {
-                    focusManager.setFocused(true);
-                    if (res.status == 201) {
-                      return toast({
-                        title: 'Status Order Updated',
-                        description: res.data.message,
-                        status: 'success',
-                        duration: 3000,
-                        isClosable: true,
-                      });
-                    }
-                  })
-                  .catch((err) => {
-                    return toast({
-                      title: 'Status Order Failed to Update',
-                      description: err.message,
-                      status: 'error',
-                      duration: 3000,
-                      isClosable: true,
-                    });
-                  });
+                handleOpenProcessAlert(transactions.transaction_id);
               }}
             >
               Process
             </Button>
+            <ProcessOrderAlertModal
+              transactionId={transactionId}
+              productId={productId}
+              newQuantity={quantity_product - order_quantity}
+              toggleOff={() =>
+                handleCloseProcessAlert(transactions.transaction_id)
+              }
+              open={openProcessAlert[transactions.transaction_id] || false}
+            />
             <Button
               colorScheme="red"
-              onClick={async () => {
+              onClick={() => {
                 focusManager.setFocused(false);
-                await axiosInstance
-                  .put(`update_status_transaction/${id}`, {
-                    status: 'cancel',
-                  })
-                  .then((res) => {
-                    focusManager.setFocused(true);
-                    if (res.status == 201) {
-                      return toast({
-                        title: 'Status Order Updated',
-                        description: res.data.message,
-                        status: 'success',
-                        duration: 3000,
-                        isClosable: true,
-                      });
-                    }
-                  })
-                  .catch((err) => {
-                    return toast({
-                      title: 'Status Order Failed to Update',
-                      description: err.response.data.message,
-                      status: 'error',
-                      duration: 3000,
-                      isClosable: true,
-                    });
-                  });
+                handleOpenCancelAlert(transactions.transaction_id);
               }}
             >
               Cancel
             </Button>
+            <CancelTransactionAlertModal
+              transactionId={transactionId}
+              open={openCancelAlert[transactions.transaction_id] || false}
+              toggleOff={() =>
+                handleCloseCancelAlert(transactions.transaction_id)
+              }
+            />
           </ButtonGroup>
         );
       case 'process':

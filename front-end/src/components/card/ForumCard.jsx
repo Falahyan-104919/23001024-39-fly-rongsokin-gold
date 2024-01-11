@@ -64,7 +64,7 @@ export default function ForumCard(props) {
           </Flex>
           <Spacer />
           {user.userId == props.userId || user.mitraId == props.userId ? (
-            <MenuForumCard />
+            <MenuForumCard forum_id={props.forum_id} />
           ) : null}
         </Flex>
       </CardHeader>

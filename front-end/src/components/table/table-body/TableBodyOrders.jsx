@@ -11,11 +11,94 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react';
+import { useState } from 'react';
+import DeliveredProductsAlertModal from '../../modal/DeliveredProductsAlertModal';
 
 export default function TableBodyOrders({ orders, keyword }) {
+  const [openDeliveredAlert, setOpenDeliveredAlert] = useState({});
+
+  const handleOpenDeliveredAlert = (order_id) => {
+    setOpenDeliveredAlert((prevDeliveredAlert) => ({
+      ...prevDeliveredAlert,
+      [order_id]: true,
+    }));
+  };
+
+  const handleCloseDeliveredAlert = (order_id) => {
+    setOpenDeliveredAlert((prevDeliveredAlert) => ({
+      ...prevDeliveredAlert,
+      [order_id]: false,
+    }));
+  };
+
   const filteredOrders = orders.filter((order) => {
     return order.name.toLowerCase().includes(keyword.toLowerCase());
   });
+
+  const ActionButton = ({ status, id }) => {
+    const toast = useToast();
+    switch (status) {
+      case 'pending':
+        return (
+          <Button isDisabled colorScheme="green">
+            Delivered
+          </Button>
+        );
+      case 'process':
+        return (
+          <>
+            <Button
+              colorScheme="green"
+              onClick={() => {
+                focusManager.setFocused(false);
+                handleOpenDeliveredAlert(orders.order_id);
+              }}
+            >
+              Delivered
+            </Button>
+            <DeliveredProductsAlertModal
+              orderId={id}
+              open={openDeliveredAlert[orders.order_id] || false}
+              toggleOff={() => {
+                focusManager.setFocused(true);
+                handleCloseDeliveredAlert(orders.order_id);
+              }}
+            />
+          </>
+        );
+      default:
+        return <Text>No Actions Needed</Text>;
+    }
+  };
+
+  const BadgeStatus = ({ status }) => {
+    switch (status) {
+      case 'pending':
+        return (
+          <Badge variant="subtle" colorScheme="yellow">
+            {status.toUpperCase()}
+          </Badge>
+        );
+      case 'process':
+        return (
+          <Badge variant="subtle" colorScheme="blue">
+            {status.toUpperCase()}
+          </Badge>
+        );
+      case 'success':
+        return (
+          <Badge variant="subtle" colorScheme="teal">
+            {status.toUpperCase()}
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="subtle" colorScheme="red">
+            {status.toUpperCase()}
+          </Badge>
+        );
+    }
+  };
 
   if (filteredOrders?.length == 0) {
     return (
@@ -52,82 +135,3 @@ export default function TableBodyOrders({ orders, keyword }) {
     </Tbody>
   );
 }
-
-const ActionButton = ({ status, id }) => {
-  const toast = useToast();
-  switch (status) {
-    case 'pending':
-      return (
-        <Button isDisabled colorScheme="green">
-          Delivered
-        </Button>
-      );
-    case 'process':
-      return (
-        <Button
-          colorScheme="green"
-          onClick={async () => {
-            focusManager.setFocused(false);
-            await axiosInstance
-              .put(`order/arrived/${id}`, {
-                status: 'success',
-              })
-              .then((res) => {
-                focusManager.setFocused(true);
-                if (res.status == 201) {
-                  return toast({
-                    title: 'Status Order Updated',
-                    description: res.data.message,
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: true,
-                  });
-                }
-              })
-              .catch((err) => {
-                return toast({
-                  title: 'Status Order Failed to Update',
-                  description: err.response.data.message,
-                  status: 'error',
-                  duration: 3000,
-                  isClosable: true,
-                });
-              });
-          }}
-        >
-          Delivered
-        </Button>
-      );
-    default:
-      return <Text>No Actions Needed</Text>;
-  }
-};
-
-const BadgeStatus = ({ status }) => {
-  switch (status) {
-    case 'pending':
-      return (
-        <Badge variant="subtle" colorScheme="yellow">
-          {status.toUpperCase()}
-        </Badge>
-      );
-    case 'process':
-      return (
-        <Badge variant="subtle" colorScheme="blue">
-          {status.toUpperCase()}
-        </Badge>
-      );
-    case 'success':
-      return (
-        <Badge variant="subtle" colorScheme="teal">
-          {status.toUpperCase()}
-        </Badge>
-      );
-    default:
-      return (
-        <Badge variant="subtle" colorScheme="red">
-          {status.toUpperCase()}
-        </Badge>
-      );
-  }
-};

@@ -41,7 +41,7 @@ export default function FormForumCustomer() {
   const postForumCustomer = async ({ forumTitle, forumTopic }, images) => {
     formData.append('title', forumTitle);
     formData.append('content', forumTopic);
-    if (images) {
+    if ('name' in images) {
       formData.append('forumImage', images, images.name);
     }
     const response = await axiosInstance

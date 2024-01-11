@@ -15,7 +15,7 @@ export default function ForumCustomerContainer() {
   };
   const { data, isError, isLoading, isFetched } = useQuery({
     queryKey: ['forum_customer_data'],
-    queryFn: () => fetchAllForumCustomerData(),
+    queryFn: fetchAllForumCustomerData,
   });
 
   if (isError) {
@@ -58,6 +58,7 @@ export default function ForumCustomerContainer() {
         {data.forumData.map((post, index) => (
           <ForumCard
             key={`${post.user_id}-${index}`}
+            forum_id={post.forum_customers_id}
             profileImg={post.image_profile}
             time={post.updated_at}
             fullname={post.fullname}
@@ -72,19 +73,3 @@ export default function ForumCustomerContainer() {
     );
   }
 }
-
-/*
-
-props.time
-props.fullname
-props.email
-props.title
-props.content
-
-content: "Dicari Barang Plastik Rongsok sudah bersih jangan kotor"
-forum_customers_id: "a1b9371f-24a3-45f8-a79e-c540cf3ff2d6"
-image: Array [ {…} ]
-title: "Dicari Barang Plastik Rongsok"
-updated_at: "2023-11-14T18:46:49.393Z"
-user_id: "c6928dd6-de9b-40d3-9bd8-e6443cd454a0"
-*/

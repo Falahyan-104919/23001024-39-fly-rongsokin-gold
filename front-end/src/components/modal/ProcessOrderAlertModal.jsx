@@ -11,16 +11,26 @@ import {
 import axiosInstance from '../../utils/axios';
 import { focusManager } from '@tanstack/react-query';
 
-export default function DeleteForumAlert({ forumId, open, toggleOff }) {
+export default function ProcessOrderAlertModal({
+  transactionId,
+  productId,
+  newQuantity,
+  open,
+  toggleOff,
+}) {
   const toast = useToast();
-  const handleDeleteProducts = async (id) => {
+  const handleProcessOrder = async (transaction_id, product_id, quantity) => {
     focusManager.setFocused(false);
     await axiosInstance
-      .delete(`forum/${id}`)
+      .put(`process_order/${transaction_id}`, {
+        status: 'process',
+        quantity: quantity,
+        product_id: product_id,
+      })
       .then((res) => {
-        if (res.status == 203) {
+        if (res.status == 201) {
           return toast({
-            title: 'Forum Successfull Delete',
+            title: 'Status Order Updated',
             description: res.data.message,
             status: 'success',
             duration: 3000,
@@ -30,8 +40,8 @@ export default function DeleteForumAlert({ forumId, open, toggleOff }) {
       })
       .catch((err) => {
         return toast({
-          title: 'Forum Failed to Delete',
-          description: err.response.message,
+          title: 'Status Order Failed to Update',
+          description: err.message,
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -43,7 +53,7 @@ export default function DeleteForumAlert({ forumId, open, toggleOff }) {
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Delete Forum ?
+            Process Order ?
           </AlertDialogHeader>
 
           <AlertDialogBody>
@@ -53,15 +63,15 @@ export default function DeleteForumAlert({ forumId, open, toggleOff }) {
           <AlertDialogFooter>
             <Button onClick={toggleOff}>Cancel</Button>
             <Button
-              colorScheme="red"
-              onClick={() => {
-                handleDeleteProducts(forumId);
+              colorScheme="facebook"
+              onClick={async () => {
+                await handleProcessOrder(transactionId, productId, newQuantity);
                 focusManager.setFocused(true);
                 toggleOff();
               }}
               ml={3}
             >
-              Delete
+              Process
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

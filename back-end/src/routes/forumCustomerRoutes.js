@@ -28,6 +28,11 @@ router.put(
   uploadForumCustomerImg,
   forumCustomerController.updateForumCustomer
 );
+router.delete(
+  '/forum/:forumCustomerId',
+  verifyToken,
+  forumCustomerController.deleteForumCustomer
+);
 router.get(
   '/forum_activity/:userId',
   verifyToken,
