@@ -16,6 +16,7 @@ export default function UserAvatar() {
     <Avatar
       size="lg"
       name={user.fullname}
+      showBorder="true"
       src={
         user.profileImg == null || user.profileImg == undefined
           ? '/user-placeholder.png'

@@ -69,7 +69,7 @@ export default function MitraProfileContainer() {
     const imagePath =
       data.mitraProfile.profile_image[0].image_path !== null
         ? `http://localhost:8080/${data.mitraProfile.profile_image[0].image_path}`
-        : 'user-placeholder.png';
+        : '/user-placeholder.png';
     return (
       <Grid
         templateColumns="repeat(6, 1fr)"
@@ -94,6 +94,7 @@ export default function MitraProfileContainer() {
               size="2xl"
               name={data.mitraProfile.fullname}
               src={imagePath}
+              showBorder="true"
             />
           </Flex>
         </GridItem>

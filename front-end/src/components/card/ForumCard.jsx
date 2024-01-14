@@ -54,7 +54,7 @@ export default function ForumCard(props) {
       <CardHeader>
         <Flex>
           <Flex>
-            <Avatar src={profile_image_path} />
+            <Avatar src={profile_image_path} showBorder="true" />
             <Flex direction={'column'} ml="10px">
               <Link to={`${path_decider}${props.userId}`}>
                 <Text as="b">{props.fullname}</Text>

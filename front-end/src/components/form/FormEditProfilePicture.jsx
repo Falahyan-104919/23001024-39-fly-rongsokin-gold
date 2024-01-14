@@ -76,7 +76,12 @@ export default function FormEditProfilePicture() {
     >
       <GridItem colSpan={1} alignSelf="end" w="112%">
         <Flex justifyContent="end" alignItems="end">
-          <Avatar alt={user.fullname} src={imagePreview} size="2xl" />
+          <Avatar
+            alt={user.fullname}
+            src={imagePreview}
+            size="2xl"
+            showBorder="true"
+          />
           <input
             id="fileInput"
             type="file"

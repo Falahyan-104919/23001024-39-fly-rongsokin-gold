@@ -13,9 +13,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import EditProfile from './accordion-panel-item/EditProfile';
 import { useContext } from 'react';
 import { AuthContext } from '../../store/AuthProvider';
+import MitraProfile from './accordion-panel-item/MitraProfile';
 
 export function AccordionProfile({ userId }) {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { user, isLoggedIn } = useContext(AuthContext);
   return (
     <AccordionItem
       mt="10px"
@@ -37,6 +38,8 @@ export function AccordionProfile({ userId }) {
       </AccordionButton>
       <AccordionPanel>
         <EditProfile userId={userId} />
+        {user.role == 'admin' ? <></> : null}
+        {user.role == 'mitra' ? <MitraProfile mitraId={user.mitraId} /> : null}
       </AccordionPanel>
     </AccordionItem>
   );

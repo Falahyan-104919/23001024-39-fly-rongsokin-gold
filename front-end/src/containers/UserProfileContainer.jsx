@@ -73,6 +73,7 @@ export default function UserProfileContainer() {
               size="2xl"
               name={data.user.fullname}
               src={preppedImage}
+              showBorder="true"
             />
           </Flex>
         </GridItem>
