@@ -16,7 +16,7 @@ export default function Sidebar() {
         <AccordionProfile userId={user.userId} />
         <AccordionForum role={user.role} />
         <AccordionTransaction role={user.role} />
-        {user.role != 'user' ? <AccordionStorage /> : null}
+        {user.role == 'mitra' ? <AccordionStorage /> : null}
       </Accordion>
     </VStack>
   );

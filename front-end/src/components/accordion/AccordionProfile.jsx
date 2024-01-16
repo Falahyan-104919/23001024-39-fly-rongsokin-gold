@@ -14,6 +14,7 @@ import EditProfile from './accordion-panel-item/EditProfile';
 import { useContext } from 'react';
 import { AuthContext } from '../../store/AuthProvider';
 import MitraProfile from './accordion-panel-item/MitraProfile';
+import AdminDashboard from './accordion-panel-item/AdminDashboard';
 
 export function AccordionProfile({ userId }) {
   const { user, isLoggedIn } = useContext(AuthContext);
@@ -38,8 +39,8 @@ export function AccordionProfile({ userId }) {
       </AccordionButton>
       <AccordionPanel>
         <EditProfile userId={userId} />
-        {user.role == 'admin' ? <></> : null}
         {user.role == 'mitra' ? <MitraProfile mitraId={user.mitraId} /> : null}
+        {user.role == 'admin' ? <AdminDashboard /> : null}
       </AccordionPanel>
     </AccordionItem>
   );

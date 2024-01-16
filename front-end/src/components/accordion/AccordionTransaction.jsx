@@ -38,7 +38,7 @@ export function AccordionTransaction({ role }) {
       </AccordionButton>
       <AccordionPanel>
         <MyOrder />
-        {role != 'user' ? <MyTransaction /> : null}
+        {role == 'mitra' ? <MyTransaction /> : null}
       </AccordionPanel>
     </AccordionItem>
   );

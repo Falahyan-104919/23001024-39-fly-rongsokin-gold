@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import { Layout } from './layout/Layout';
 import { Profile } from './pages/Profile';
@@ -12,10 +12,15 @@ import Product from './pages/Product';
 import User from './pages/User';
 import Mitra from './pages/Mitra';
 import Search from './pages/Search';
+import { useContext } from 'react';
+import AdminDashboard from './pages/AdminDashboard';
+import { AuthContext } from './store/AuthProvider';
+import { AdminLayout } from './layout/AdminLayout';
 
 const queryClient = new QueryClient();
 
 function App() {
+  const { user } = useContext(AuthContext);
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
@@ -34,6 +39,18 @@ function App() {
           <Route path="user/:userId" element={<User />} />
           <Route path="mitra/:mitraId" element={<Mitra />} />
           <Route path="search" element={<Search />} />
+        </Route>
+        <Route
+          path="/admin_dashboard"
+          element={
+            user.role == 'admin' ? (
+              <AdminLayout />
+            ) : (
+              <Navigate to="/" replace={true} />
+            )
+          }
+        >
+          <Route index element={<AdminDashboard />} />
         </Route>
       </Routes>
     </QueryClientProvider>
