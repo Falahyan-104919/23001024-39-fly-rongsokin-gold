@@ -11,7 +11,7 @@ export function AdminLayout() {
         <GridItem as="aside" colSpan="1" bgColor="teal.600" minHeight="100vh">
           <AdminSidebar />
         </GridItem>
-        <GridItem as="main" colSpan="5">
+        <GridItem as="main" colSpan="5" margin="8px">
           <Outlet />
         </GridItem>
       </Grid>

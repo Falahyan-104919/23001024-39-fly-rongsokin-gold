@@ -1,5 +1,5 @@
-import { Text } from '@chakra-ui/react';
+import AdminDashboardContainer from '../containers/AdminDashboardContainer';
 
 export default function AdminDashboard() {
-  return <Text>Welcome Back Admin</Text>;
+  return <AdminDashboardContainer />;
 }

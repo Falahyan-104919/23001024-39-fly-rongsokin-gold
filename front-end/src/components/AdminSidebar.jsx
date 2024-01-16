@@ -23,7 +23,7 @@ export default function AdminSidebar() {
         <LinkOverlay href="/">
           <Box
             display="flex"
-            justifyContents="center"
+            justifyContent="center"
             alignItems="center"
             gap="8px"
             textAlign="center"
@@ -45,7 +45,7 @@ export default function AdminSidebar() {
         <LinkOverlay href="/">
           <Box
             display="flex"
-            justifyContents="center"
+            justifyContent="center"
             alignItems="center"
             gap="8px"
             textAlign="center"
@@ -67,7 +67,7 @@ export default function AdminSidebar() {
         <LinkOverlay href="/">
           <Box
             display="flex"
-            justifyContents="center"
+            justifyContent="center"
             alignItems="center"
             gap="8px"
             textAlign="center"
@@ -89,7 +89,7 @@ export default function AdminSidebar() {
         <LinkOverlay href="/">
           <Box
             display="flex"
-            justifyContents="center"
+            justifyContent="center"
             alignItems="center"
             gap="8px"
             textAlign="center"
@@ -111,7 +111,7 @@ export default function AdminSidebar() {
         <LinkOverlay href="/">
           <Box
             display="flex"
-            justifyContents="center"
+            justifyContent="center"
             alignItems="center"
             gap="8px"
             textAlign="center"
