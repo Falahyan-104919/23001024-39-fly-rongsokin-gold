@@ -33,9 +33,6 @@ export default function UserConfigurationContainer() {
     queryKey: ['user'],
     queryFn: fetchUserData,
   });
-  const deactivateUser = async (userId) => {
-    return await axiosInstance.put(`admin/deactivate_user/${userId}`);
-  };
   const deactiveUserMutation = useMutation({
     mutationKey: ['deactive'],
     mutationFn: deactivateUser,
