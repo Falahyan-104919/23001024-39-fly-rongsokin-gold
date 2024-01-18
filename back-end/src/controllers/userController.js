@@ -9,11 +9,12 @@ const userController = {
   getAllUserProfile: async (req, res) => {
     try {
       const resData = await db.manyOrNone(`
-          SELECT u.user_id, u.fullname, u.email, u.phone_number, u.role, 
+          SELECT u.user_id, u.fullname, u.email, u.phone_number, u.role, u.updated_at,
           json_agg(json_build_object('image_id', i.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as profile_image
           FROM users u 
           LEFT JOIN user_image ui ON u.user_id = ui.user_id
           LEFT JOIN images i ON ui.image_id = i.image_id
+          WHERE u.status
           GROUP BY u.user_id
         `);
 

@@ -74,7 +74,7 @@ export default function CardStats() {
           </Flex>
         </CardBody>
         <CardFooter borderTop="1px">
-          <ChakraLink as={ReactRouterLink} to="/">
+          <ChakraLink as={ReactRouterLink} to="user_configuration">
             See More <ExternalLinkIcon mx="2px" />
           </ChakraLink>
         </CardFooter>

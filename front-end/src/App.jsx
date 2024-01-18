@@ -16,6 +16,7 @@ import { useContext } from 'react';
 import AdminDashboard from './pages/AdminDashboard';
 import { AuthContext } from './store/AuthProvider';
 import { AdminLayout } from './layout/AdminLayout';
+import UserConfiguration from './pages/UserConfiguration';
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,13 @@ function App() {
           }
         >
           <Route index element={<AdminDashboard />} />
+          <Route path="user_configuration" element={<UserConfiguration />} />
+          <Route path="product_configuration" element={<UserConfiguration />} />
+          <Route
+            path="product_type_configuration"
+            element={<UserConfiguration />}
+          />
+          <Route path="forum_configuration" element={<UserConfiguration />} />
         </Route>
       </Routes>
     </QueryClientProvider>

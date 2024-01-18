@@ -1,15 +1,4 @@
-import {
-  Box,
-  Container,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
-} from '@chakra-ui/react';
+import { Container } from '@chakra-ui/react';
 import LastUserRegisteredTable from './table/LastUserRegisteredTable';
 import LastUProductsAddedTable from './table/LastProductsAddedTable';
 import LastDiscussionPostedTable from './table/LastDiscussionPostedTable';

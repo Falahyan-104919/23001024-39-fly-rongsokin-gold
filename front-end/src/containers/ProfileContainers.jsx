@@ -13,7 +13,7 @@ export default function ProfileContainers() {
         <Flex alignItems="center" gap="10px" mt="10px" mb="10px">
           <UserAvatar />
           <Box w="100%">
-            <Link to={`user/${user.userId}`}>
+            <Link to={`/user/${user.userId}`}>
               <Text fontSize="lg" fontWeight="bold" color="white">
                 {user.fullname}
               </Text>

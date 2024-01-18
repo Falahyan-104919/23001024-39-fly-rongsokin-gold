@@ -49,7 +49,25 @@ const adminController = {
       });
     }
   },
-  deactivateUser: () => {},
+  deactivateUser: async (req, res) => {
+    const { userId } = req.params;
+    try {
+      await db.none(
+        `
+        UPDATE users SET status = false WHERE user_id = $1
+      `,
+        [userId]
+      );
+      res.status(200).json({
+        message: 'Users Deactivated',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
   deactivateProduct: () => {},
   deactivateForum: () => {},
 };

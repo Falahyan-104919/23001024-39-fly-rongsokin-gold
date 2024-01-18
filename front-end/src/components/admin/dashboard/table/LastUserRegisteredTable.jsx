@@ -60,9 +60,9 @@ export default function LastUserRegisteredTable({ loading, activity }) {
           </Tbody>
         ) : (
           <Tbody>
-            {activity.map((act) => {
+            {activity.map((act, index) => {
               return (
-                <Tr>
+                <Tr key={index}>
                   <Td>{act.email}</Td>
                   <Td>{formatingDate(act.created_at)}</Td>
                 </Tr>

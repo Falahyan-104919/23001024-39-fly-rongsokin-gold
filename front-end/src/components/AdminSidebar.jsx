@@ -1,4 +1,12 @@
-import { Box, LinkBox, LinkOverlay, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Link as ChakraLink,
+  LinkBox,
+  LinkOverlay,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
+import { Link as ReactRouterLink } from 'react-router-dom';
 import ProfileContainers from '../containers/ProfileContainers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -13,28 +21,28 @@ export default function AdminSidebar() {
   return (
     <VStack mt="10px" padding="12px" gap="18px">
       <ProfileContainers />
-      <LinkBox
-        as="button"
+      <ChakraLink
+        as={ReactRouterLink}
+        to="user_configuration"
         width="100%"
         p="5"
         borderRadius="12px"
         backgroundColor="teal.300"
+        style={{ textDecoration: 'none' }}
       >
-        <LinkOverlay href="/">
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            gap="8px"
-            textAlign="center"
-          >
-            <FontAwesomeIcon icon={faUsers} color="white" />
-            <Text fontWeight="bold" color="white">
-              Users Configuration
-            </Text>
-          </Box>
-        </LinkOverlay>
-      </LinkBox>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          gap="8px"
+          textAlign="center"
+        >
+          <FontAwesomeIcon icon={faUsers} color="white" />
+          <Text fontWeight="bold" color="white">
+            Users Configuration
+          </Text>
+        </Box>
+      </ChakraLink>
       <LinkBox
         as="button"
         width="100%"

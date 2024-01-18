@@ -58,9 +58,9 @@ export default function LastDiscussionPostedTable({ loading, activity }) {
           </Tbody>
         ) : (
           <Tbody>
-            {activity.map((act) => {
+            {activity.map((act, index) => {
               return (
-                <Tr>
+                <Tr key={index}>
                   <Td>{act.title}</Td>
                   <Td>{formatingDate(act.created_at)}</Td>
                 </Tr>

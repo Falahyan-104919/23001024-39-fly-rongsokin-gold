@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Container,
-  Heading,
-  Text,
-} from '@chakra-ui/react';
+import { Container, Heading } from '@chakra-ui/react';
 import { useContext } from 'react';
 import { AuthContext } from '../store/AuthProvider';
 import CardStats from '../components/admin/dashboard/CardStats';
