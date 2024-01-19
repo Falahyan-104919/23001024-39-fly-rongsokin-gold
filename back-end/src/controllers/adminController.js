@@ -49,9 +49,39 @@ const adminController = {
       });
     }
   },
-  deactivateUser: async (req, res) => {
-    const { userId } = req.params;
+  getProducts: async (req, res) => {
     try {
+      const products = await db.many(`
+        select p.product_id, p.name, m.mitra_name, p.updated_at from products p 
+        left join mitras m on p.mitra_id = m.mitra_id 
+        where status 
+        order by p.updated_at desc;
+        `);
+      res.status(200).json({ products });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  turnToSuperuser: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      await db.none("UPDATE users SET role='admin' WHERE user_id=$1", [userId]);
+      res.status(200).json({
+        message: 'Users Successfully Turn to Superuser',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  deactivateUser: async (req, res) => {
+    try {
+      const { userId } = req.params;
       await db.none(
         `
         UPDATE users SET status = false WHERE user_id = $1
@@ -68,7 +98,25 @@ const adminController = {
       });
     }
   },
-  deactivateProduct: () => {},
+  deactivateProduct: async (req, res) => {
+    try {
+      const { productId } = req.params;
+      await db.none(
+        `
+        UPDATE products SET status = false WHERE product_id = $1
+      `,
+        [productId]
+      );
+      res.status(200).json({
+        message: 'Deleteing Product Successfully',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
   deactivateForum: () => {},
 };
 

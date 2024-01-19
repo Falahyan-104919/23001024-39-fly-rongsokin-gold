@@ -31,7 +31,7 @@ export default function CardStats() {
       .catch((err) => err);
     return stats;
   };
-  const { data, error, isError, isLoading, isFetched } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['stats'],
     queryFn: fetchCardStats,
   });
@@ -113,7 +113,7 @@ export default function CardStats() {
           </Flex>
         </CardBody>
         <CardFooter borderTop="1px">
-          <ChakraLink as={ReactRouterLink} to="/">
+          <ChakraLink as={ReactRouterLink} to="product_configuration">
             See More <ExternalLinkIcon mx="2px" />
           </ChakraLink>
         </CardFooter>

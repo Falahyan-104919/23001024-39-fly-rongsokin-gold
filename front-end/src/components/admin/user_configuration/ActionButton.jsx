@@ -5,12 +5,7 @@ import { useState } from 'react';
 import DeactivateUserAlert from '../../modal/DeactivateUserAlert';
 import SuperuserAlert from '../../modal/SuperuserAlert';
 
-export default function ActionButton({
-  id,
-  role,
-  handleDeactivate,
-  handleSuperUser,
-}) {
+export default function ActionButton({ id, role }) {
   const [isDeactivateAlertOpen, setIsDeactivateAlertOpen] = useState(false);
   const [isSuperuserAlertOpen, setSuperuserAlertOpen] = useState(false);
   const handleOpenDeactivateAlert = () => {
@@ -34,7 +29,6 @@ export default function ActionButton({
             userId={id}
             open={isDeactivateAlertOpen}
             toggleOff={handleCloseDeactivateAlert}
-            handleDeactivate={handleDeactivate}
           />
         </>
       );
@@ -58,13 +52,11 @@ export default function ActionButton({
             userId={id}
             open={isDeactivateAlertOpen}
             toggleOff={handleCloseDeactivateAlert}
-            handleDeactivate={handleDeactivate}
           />
           <SuperuserAlert
             userId={id}
             open={isSuperuserAlertOpen}
             toggleOff={handleCloseSuperuserAlert}
-            handleSuperuser={handleSuperUser}
           />
         </>
       );

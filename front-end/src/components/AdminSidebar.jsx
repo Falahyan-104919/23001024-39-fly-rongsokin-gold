@@ -43,28 +43,28 @@ export default function AdminSidebar() {
           </Text>
         </Box>
       </ChakraLink>
-      <LinkBox
-        as="button"
+      <ChakraLink
+        as={ReactRouterLink}
+        to="product_configuration"
         width="100%"
         p="5"
         borderRadius="12px"
         backgroundColor="teal.300"
+        style={{ textDecoration: 'none' }}
       >
-        <LinkOverlay href="/">
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            gap="8px"
-            textAlign="center"
-          >
-            <FontAwesomeIcon icon={faBoxesPacking} color="white" />
-            <Text fontWeight="bold" color="white">
-              Product Configuration
-            </Text>
-          </Box>
-        </LinkOverlay>
-      </LinkBox>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          gap="8px"
+          textAlign="center"
+        >
+          <FontAwesomeIcon icon={faBoxesPacking} color="white" />
+          <Text fontWeight="bold" color="white">
+            Product Configuration
+          </Text>
+        </Box>
+      </ChakraLink>
       <LinkBox
         as="button"
         width="100%"

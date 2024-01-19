@@ -4,8 +4,10 @@ const adminController = require('../controllers/adminController');
 
 router.get('/admin/card_stats', adminController.getCardStats);
 router.get('/admin/summary_table', adminController.getSummaryTable);
+router.get('/admin/products', adminController.getProducts);
+router.put('/admin/turn_to_superuser/:userId', adminController.turnToSuperuser);
 router.put('/admin/deactivate_user/:userId', adminController.deactivateUser);
-router.delete(
+router.put(
   '/admin/deactivate_product/:productId',
   adminController.deactivateProduct
 );

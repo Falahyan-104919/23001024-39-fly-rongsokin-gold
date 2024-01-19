@@ -9,32 +9,25 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from '../../utils/axios';
+import axiosInstance from '../../../utils/axios';
 
-export default function SuperuserAlert({ userId, open, toggleOff }) {
+export default function DeleteProductAlert({ productId, open, toggleOff }) {
   const toast = useToast();
   const queryClient = useQueryClient();
-  const { mutate, isError, isPending, error, status, failureReason } =
-    useMutation({
-      mutationKey: ['superuser'],
-      mutationFn: () => axiosInstance.put(`admin/turn_to_superuser/${userId}`),
-      onMutate: () => {
-        return console.log('mutating is in progress', status);
-      },
-      onSettled: () => {
-        return console.log(status, failureReason);
-      },
-      onSuccess: () => {
-        console.log('refetching is in progress');
-        return queryClient.invalidateQueries('users');
-      },
-    });
+  const { mutate, isPending, isError } = useMutation({
+    mutationKey: ['product_mutate'],
+    mutationFn: (productId) =>
+      axiosInstance.put(`admin/deactivate_product/${productId}`),
+    onSuccess: () => {
+      return queryClient.invalidateQueries('products');
+    },
+  });
   return (
     <AlertDialog isOpen={open} onClose={toggleOff}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Turn User to Superuser?
+            Delete Product?
           </AlertDialogHeader>
 
           <AlertDialogBody>
@@ -45,40 +38,37 @@ export default function SuperuserAlert({ userId, open, toggleOff }) {
             <Button onClick={toggleOff}>Cancel</Button>
             {isPending ? (
               <Button
-                colorScheme="twitter"
+                colorScheme="red"
                 isLoading
                 loadingText="Processing..."
                 ml={3}
               >
-                Turn User to Superuser
+                Delete Product
               </Button>
             ) : (
               <Button
-                colorScheme="twitter"
+                colorScheme="red"
                 onClick={() => {
-                  mutate(userId);
+                  mutate(productId);
                   if (isError) {
-                    console.error(error);
                     return toast({
                       title: 'Failed',
-                      description: 'Turn User to Superuser is Failed',
+                      description: "Couldn't delete the user.",
                       status: 'error',
                       duration: 3000,
-                      isClosable: true,
                     });
                   }
                   toast({
-                    title: 'Success',
-                    description: 'Deactivating User is Successful',
+                    title: 'Deleted',
+                    description: `User was successfully deleted.`,
                     status: 'success',
-                    duration: 3000,
-                    isClosable: true,
+                    duration: 5000,
                   });
-                  return toggleOff();
+                  toggleOff();
                 }}
                 ml={3}
               >
-                Turn User to Superuser
+                Delete Product
               </Button>
             )}
           </AlertDialogFooter>
