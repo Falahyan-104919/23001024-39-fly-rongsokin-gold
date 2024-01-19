@@ -51,13 +51,31 @@ const adminController = {
   },
   getProducts: async (req, res) => {
     try {
-      const products = await db.many(`
+      const products = await db.manyOrNone(`
         select p.product_id, p.name, m.mitra_name, p.updated_at from products p 
         left join mitras m on p.mitra_id = m.mitra_id 
         where status 
         order by p.updated_at desc;
         `);
       res.status(200).json({ products });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  getForumCustomer: async (req, res) => {
+    try {
+      const forumList = await db.manyOrNone(`
+        select fc.forum_customers_id, fc.title, u.fullname, fc.updated_at, fc.status  from forum_customers fc 
+        left join users u on fc.user_id = u.user_id
+        where fc.status
+        order by fc.updated_at desc 
+      `);
+      res.status(200).json({
+        list: forumList,
+      });
     } catch (err) {
       console.error(err);
       res.status(500).json({
@@ -117,7 +135,25 @@ const adminController = {
       });
     }
   },
-  deactivateForum: () => {},
+  deactivateForumCustomer: async (req, res) => {
+    try {
+      const { forumId } = req.params;
+      await db.none(
+        `
+        UPDATE forum_customers SET status = false WHERE forum_customers_id = $1
+      `,
+        [forumId]
+      );
+      res.status(200).json({
+        message: 'Deleting Forum Successfully',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
 };
 
 module.exports = adminController;

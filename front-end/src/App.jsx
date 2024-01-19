@@ -18,6 +18,7 @@ import { AuthContext } from './store/AuthProvider';
 import { AdminLayout } from './layout/AdminLayout';
 import UserConfiguration from './pages/UserConfiguration';
 import AdminProductConfiguration from './pages/AdminProductConfiguration';
+import AdminForumCustomerConfigurationContainer from './containers/AdminForumCustomerConfigurationContainer';
 
 const queryClient = new QueryClient();
 
@@ -62,7 +63,10 @@ function App() {
             path="product_type_configuration"
             element={<UserConfiguration />}
           />
-          <Route path="forum_configuration" element={<UserConfiguration />} />
+          <Route
+            path="forum_customer"
+            element={<AdminForumCustomerConfigurationContainer />}
+          />
         </Route>
       </Routes>
     </QueryClientProvider>
