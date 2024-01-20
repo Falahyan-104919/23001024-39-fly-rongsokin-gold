@@ -41,7 +41,7 @@ export default function FormForumMitra() {
   const postForumMitra = async ({ forumTitle, forumTopic }, images) => {
     formData.append('title', forumTitle);
     formData.append('content', forumTopic);
-    if (images) {
+    if ('name' in images) {
       formData.append('forumMitraImg', images, images.name);
     }
     const response = await axiosInstance

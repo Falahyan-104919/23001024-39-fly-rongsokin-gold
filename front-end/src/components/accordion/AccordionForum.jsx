@@ -37,7 +37,7 @@ export function AccordionForum({ role }) {
       </AccordionButton>
       <AccordionPanel>
         <ForumCustomer />
-        {role != 'user' ? <ForumMitra /> : null}
+        {role == 'mitra' ? <ForumMitra /> : null}
       </AccordionPanel>
     </AccordionItem>
   );

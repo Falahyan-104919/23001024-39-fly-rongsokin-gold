@@ -27,9 +27,18 @@ const adminController = {
             SELECT name AS title, created_at FROM products ORDER BY created_at DESC LIMIT 5
         `);
       const forumLastAct = await db.many(`
-        ((SELECT title, created_at FROM forum_mitras ORDER BY created_at DESC LIMIT 5)
-        UNION ALL
-        (SELECT title, created_at FROM forum_customers ORDER BY created_at DESC LIMIT 5))
+          WITH combined AS (
+            SELECT title, created_at FROM forum_mitras
+            UNION ALL
+            SELECT title, created_at FROM forum_customers
+          ),
+          ranked AS (
+            SELECT *, RANK() OVER (ORDER BY created_at DESC) rank
+            FROM combined
+          )
+          SELECT title, created_at
+          FROM ranked
+          WHERE rank <= 5
         `);
       const transactionLastAct = await db.many(`
         select p.name, t.transaction_date  from transactions t 
@@ -76,6 +85,23 @@ const adminController = {
       res.status(200).json({
         list: forumList,
       });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  getForumMitra: async (req, res) => {
+    try {
+      const forumList = await db.manyOrNone(`
+      select fm.forum_mitra_id, fm.title, u.fullname, fm.updated_at from forum_mitras fm 
+        left join mitras m on fm.mitra_id = m.mitra_id 
+        left join users u on m.user_id = u.user_id 
+        where fm.status 
+        order by fm.updated_at DESC
+      `);
+      res.status(200).json({ forumList });
     } catch (err) {
       console.error(err);
       res.status(500).json({
@@ -146,6 +172,25 @@ const adminController = {
       );
       res.status(200).json({
         message: 'Deleting Forum Successfully',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  deactivateForumMitra: async (req, res) => {
+    try {
+      const { forumId } = req.params;
+      await db.none(
+        `
+        UPDATE forum_mitras SET status = false WHERE forum_mitra_id = $1
+      `,
+        [forumId]
+      );
+      res.status(200).json({
+        message: 'Deleting Forum Mitra Successfull',
       });
     } catch (err) {
       console.error(err);

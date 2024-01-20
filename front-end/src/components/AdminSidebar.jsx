@@ -115,7 +115,7 @@ export default function AdminSidebar() {
       </ChakraLink>
       <ChakraLink
         as={ReactRouterLink}
-        to="forum_customer"
+        to="forum_mitra"
         width="100%"
         p="5"
         borderRadius="12px"

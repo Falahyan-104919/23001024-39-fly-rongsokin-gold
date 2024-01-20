@@ -5,6 +5,7 @@ import {
   CardHeader,
   Container,
   Flex,
+  Spacer,
   Spinner,
   Text,
 } from '@chakra-ui/react';
@@ -147,9 +148,12 @@ export default function CardStats() {
             )}
           </Flex>
         </CardBody>
-        <CardFooter borderTop="1px">
-          <ChakraLink as={ReactRouterLink} to="/">
-            See More <ExternalLinkIcon mx="2px" />
+        <CardFooter borderTop="1px" justifyContent="space-around">
+          <ChakraLink as={ReactRouterLink} to="forum_customers">
+            Customer <ExternalLinkIcon mx="2px" />
+          </ChakraLink>
+          <ChakraLink as={ReactRouterLink} to="forum_mitra">
+            Mitra <ExternalLinkIcon mx="2px" />
           </ChakraLink>
         </CardFooter>
       </Card>

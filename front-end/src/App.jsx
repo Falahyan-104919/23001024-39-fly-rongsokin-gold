@@ -18,7 +18,8 @@ import { AuthContext } from './store/AuthProvider';
 import { AdminLayout } from './layout/AdminLayout';
 import UserConfiguration from './pages/UserConfiguration';
 import AdminProductConfiguration from './pages/AdminProductConfiguration';
-import AdminForumCustomerConfigurationContainer from './containers/AdminForumCustomerConfigurationContainer';
+import AdminForumCustomerConfiguration from './pages/AdminForumCustomerConfiguration';
+import AdminForumMitraConfiguration from './pages/AdminForumMitraConfiguration';
 
 const queryClient = new QueryClient();
 
@@ -65,7 +66,11 @@ function App() {
           />
           <Route
             path="forum_customer"
-            element={<AdminForumCustomerConfigurationContainer />}
+            element={<AdminForumCustomerConfiguration />}
+          />
+          <Route
+            path="forum_Mitra"
+            element={<AdminForumMitraConfiguration />}
           />
         </Route>
       </Routes>
