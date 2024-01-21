@@ -20,13 +20,13 @@ const adminController = {
   },
   getSummaryTable: async (req, res) => {
     try {
-      const userLastAct = await db.many(`
+      const userLastAct = await db.manyOrNone(`
             SELECT email, created_at FROM users ORDER BY created_at DESC LIMIT 5
         `);
-      const productLastAct = await db.many(`
+      const productLastAct = await db.manyOrNone(`
             SELECT name AS title, created_at FROM products ORDER BY created_at DESC LIMIT 5
         `);
-      const forumLastAct = await db.many(`
+      const forumLastAct = await db.manyOrNone(`
           WITH combined AS (
             SELECT title, created_at FROM forum_mitras
             UNION ALL
@@ -40,7 +40,7 @@ const adminController = {
           FROM ranked
           WHERE rank <= 5
         `);
-      const transactionLastAct = await db.many(`
+      const transactionLastAct = await db.manyOrNone(`
         select p.name, t.transaction_date  from transactions t 
         left join products p on t.product_id = p.product_id 
         order by t.transaction_date desc limit 5

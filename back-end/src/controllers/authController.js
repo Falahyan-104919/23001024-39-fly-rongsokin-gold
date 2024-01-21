@@ -94,8 +94,9 @@ const authController = {
 
       const mitra = await db.oneOrNone(
         `
-          SELECT * from mitras 
-          WHERE user_id = $1
+          SELECT m.*, mt.type from mitras m
+            LEFT JOIN mitra_type mt ON m.mitra_type_id = mt.mitra_type_id
+            WHERE user_id = $1
         `,
         user.user_id
       );

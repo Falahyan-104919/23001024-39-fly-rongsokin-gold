@@ -29,32 +29,41 @@ import * as Yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { AttachmentIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import axiosInstance from '../../utils/axios';
+import { useQuery } from '@tanstack/react-query';
+
+const ProductTypeOption = ({ mitraType }) => {
+  const fetchProductType = async (type) => {
+    const listType = await axiosInstance
+      .get(`product_types?type=${type}`)
+      .then((res) => res.data)
+      .catch((err) => err.data.message);
+    return listType;
+  };
+  const { data, isLoading } = useQuery({
+    queryKey: ['product_types'],
+    queryFn: () => fetchProductType(mitraType),
+  });
+  if (isLoading) {
+    return <option>Loading...</option>;
+  }
+  return data['productTypes'].map((type) => {
+    const { product_type_id, name } = type;
+    return (
+      <option
+        key={product_type_id}
+        value={product_type_id}
+        id={product_type_id}
+      >
+        {name}
+      </option>
+    );
+  });
+};
 
 export default function EditProductsModal({ products, open, toggleOff }) {
   const { user } = useContext(AuthContext);
   const [uploadProductImage, setUploadProductImage] = useState({});
   const toast = useToast();
-  const pengumpulProductType = [
-    'Kertas dan Kardus',
-    'Logam',
-    'Plastik',
-    'Elektronik',
-    'Barang Tekstil',
-    'Barang-Bahan Bangunan',
-    'Barang Medis',
-    'Barang-Bahan Kimia',
-  ];
-  const pengelolaProductType = [
-    'Kertas Daur Ulang',
-    'Logam Daur Ulang',
-    'Plastik Daur Ulang',
-    'Kaca Daur Ulang',
-    'Barang Elektronik Daur Ulang',
-    'Barang Tekstil Daur Ulang',
-    'Barang-Bahan Bangunan Daur Ulang',
-    'Barang Medis Daur Ulang',
-    'Barang-Bahan Kimia Daur Ulang',
-  ];
 
   const displayImage = products?.images.map((image) => {
     const baseURL = 'http://localhost:8080/';
@@ -67,7 +76,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
   let initialValues = {
     productId: products.product_id,
     productName: products.name,
-    productType: products.product_type,
+    productType: products.product_type_id,
     productDescription: products.description,
     productPrice: products.price,
     productQuantity: products.quantity,
@@ -118,7 +127,9 @@ export default function EditProductsModal({ products, open, toggleOff }) {
     formData.append('description', productDescription);
     formData.append('price', Number(productPrice));
     formData.append('quantity', Number(productQuantity));
-    formData.append('productImg', uploadImg, uploadImg.name);
+    if ('name' in uploadImg) {
+      formData.append('productImg', uploadImg, uploadImg.name);
+    }
     const response = await axiosInstance
       .put(`products/update/${productId}`, formData)
       .then((res) => {
@@ -213,22 +224,7 @@ export default function EditProductsModal({ products, open, toggleOff }) {
                           type="text"
                           focusBorderColor="teal.100"
                         >
-                          {(() => {
-                            switch (user.mitraType) {
-                              case 'Pengelola':
-                                return pengelolaProductType.map((type) => (
-                                  <option key={type} value={type} id={type}>
-                                    {type}
-                                  </option>
-                                ));
-                              default:
-                                return pengumpulProductType.map((type) => (
-                                  <option key={type} value={type} id={type}>
-                                    {type}
-                                  </option>
-                                ));
-                            }
-                          })()}
+                          <ProductTypeOption mitraType={user.mitraType} />
                         </Select>
                         <ErrorMessage
                           name="productType"

@@ -28,30 +28,42 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../../store/AuthProvider';
 import * as Yup from 'yup';
 import { AttachmentIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../utils/axios';
+
+const ProductTypeOption = ({ mitraType }) => {
+  const fetchProductType = async (type) => {
+    const listType = await axiosInstance
+      .get(`product_types?type=${type}`)
+      .then((res) => res.data)
+      .catch((err) => err.data.message);
+    return listType;
+  };
+  const { data, isLoading } = useQuery({
+    queryKey: ['product_types'],
+    queryFn: () => fetchProductType(mitraType),
+  });
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  return data['productTypes'].map((type) => {
+    const { product_type_id, name } = type;
+    return (
+      <option
+        key={product_type_id}
+        value={product_type_id}
+        id={product_type_id}
+      >
+        {name}
+      </option>
+    );
+  });
+};
 
 export default function AddProductsModal({ open, toggleOff }) {
   const { user } = useContext(AuthContext);
   const [uploadProductImage, setUploadProductImage] = useState({});
   const toast = useToast();
-  const pengumpulProductType = [
-    'Kertas/Kardus',
-    'Besi/Logam',
-    'Kaca/Beling',
-    'Plastik',
-    'Elektronik',
-    'Barang Tekstil',
-    'Bahan Bangunan',
-  ];
-  const pengelolaProductType = [
-    'Bahan Kertas Daur Ulang',
-    'Bahan Besi/Logam Daur Ulang',
-    'Bahan Kaca/Beling Daur Ulang',
-    'Bahan Plastik Daur Ulang',
-    'Bahan Elektronik Daur Ulang',
-    'Bahan Tekstil Daur Ulang',
-    'Bahan Bangunan Daur Ulang',
-  ];
 
   const initialValues = {
     productName: '',
@@ -197,22 +209,7 @@ export default function AddProductsModal({ open, toggleOff }) {
                           name="productType"
                           {...field}
                         >
-                          {(() => {
-                            switch (user.mitraType) {
-                              case 'Pengelola':
-                                return pengelolaProductType.map((type) => (
-                                  <option key={type} value={type} id={type}>
-                                    {type}
-                                  </option>
-                                ));
-                              default:
-                                return pengumpulProductType.map((type) => (
-                                  <option key={type} value={type} id={type}>
-                                    {type}
-                                  </option>
-                                ));
-                            }
-                          })()}
+                          <ProductTypeOption mitraType={user.mitraType} />
                         </Select>
                         <ErrorMessage
                           name="productType"

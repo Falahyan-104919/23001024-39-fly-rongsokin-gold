@@ -2,7 +2,7 @@ import { focusManager } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button, ButtonGroup, Tbody, Td, Text, Tr } from '@chakra-ui/react';
 import EditProductsModal from '../../modal/EditProducts.Modal';
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon } from '@chakra-ui/icons';
 import DeleteProductsAlert from '../../modal/DeleteProductsAlertModal';
 
 export default function TableBodyProduct({ products, keyword }) {

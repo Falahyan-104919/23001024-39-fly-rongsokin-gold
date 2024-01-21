@@ -10,7 +10,7 @@ const productController = {
       const productImg = req.file;
       const newProduct = await db.one(
         `
-                INSERT INTO products (mitra_id, name, product_type, description, price, quantity) 
+                INSERT INTO products (mitra_id, name, product_type_id, description, price, quantity) 
                 VALUES ($1, $2, $3, $4, $5, $6) RETURNING product_id
             `,
         [mitraId, name, productType, description, price, quantity]
@@ -47,13 +47,14 @@ const productController = {
 
       const productData = await db.oneOrNone(
         `
-              SELECT p.product_id, p.mitra_id, p.name, p.product_type, p.description, p.price, p.quantity, 
+              SELECT p.product_id, p.mitra_id, p.name, pt.name AS product_type, p.description, p.price, p.quantity, 
                      json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as images
               FROM products p
+              LEFT JOIN product_type pt ON p.product_type_id = pt.product_type_id
               LEFT JOIN product_image pi ON p.product_id = pi.product_id
               LEFT JOIN images i ON pi.image_id = i.image_id
-              WHERE p.product_id = $1
-              GROUP BY p.product_id;
+              WHERE p.product_id = $1 AND p.status
+              GROUP BY p.product_id, pt.name;
             `,
         [productId]
       );
@@ -64,8 +65,9 @@ const productController = {
 
       const productOwner = await db.oneOrNone(
         `
-          SELECT m.mitra_id, u.phone_number, m.mitra_name, m.address, m.type 
+          SELECT m.mitra_id, u.phone_number, m.mitra_name, m.address, mt.type 
           FROM mitras as m
+          LEFT JOIN mitra_type mt ON m.mitra_type_id = mt.mitra_type_id
           LEFT JOIN users as u ON u.user_id =  m.user_id 
           WHERE m.mitra_id = $1 
       `,
@@ -93,7 +95,7 @@ const productController = {
       await db.none(
         `
                 UPDATE products SET 
-                name = $1, product_type = $2, description = $3, price = $4, quantity = $5 
+                name = $1, product_type_id = $2, description = $3, price = $4, quantity = $5 
                 WHERE product_id = $6
             `,
         [name, productType, description, price, quantity, productId]
@@ -163,7 +165,7 @@ const productController = {
   getAllProduct: async (req, res) => {
     try {
       const productData = await db.manyOrNone(`
-              SELECT p.mitra_id, p.product_id, p.name, pt.name, p.description, p.price, p.quantity, 
+              SELECT p.mitra_id, p.product_id, p.name, pt.name AS product_type, p.description, p.price, p.quantity, 
                      json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path,'image_name', i.image_name)) as images
               FROM products p
               LEFT JOIN product_type pt ON p.product_type_id = pt.product_type_id
@@ -187,13 +189,14 @@ const productController = {
       const { mitraId } = req.params;
       const productData = await db.manyOrNone(
         `
-              SELECT p.mitra_id, p.product_id, p.name, p.product_type, p.description, p.price, p.quantity, 
+              SELECT p.mitra_id, p.product_id, p.name, pt.product_type_id, pt.name AS product_type, p.description, p.price, p.quantity, 
                      json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path,'image_name', i.image_name)) as images
               FROM products p
+              LEFT JOIN product_type pt ON p.product_type_id = pt.product_type_id
               LEFT JOIN product_image pi ON p.product_id = pi.product_id
               LEFT JOIN images i ON pi.image_id = i.image_id
-              WHERE p.mitra_id = $1 AND status
-              GROUP BY p.product_id;
+              WHERE p.mitra_id = $1 AND p.status
+              GROUP BY p.product_id, pt.product_type_id, pt.name;
             `,
         [mitraId]
       );
@@ -214,17 +217,41 @@ const productController = {
       const keyword = '%' + name + ' %';
       const products = await db.manyOrNone(
         `
-        SELECT p.mitra_id, p.product_id, p.name, p.product_type, p.description, p.price, p.quantity, 
+        SELECT p.mitra_id, p.product_id, p.name, pt.name AS product_type, p.description, p.price, p.quantity, 
         json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path,'image_name', i.image_name)) as images
         FROM products p
+        LEFT JOIN product_type pt ON p.product_type_id = pt.product_type_id
         LEFT JOIN product_image pi ON p.product_id = pi.product_id
         LEFT JOIN images i ON pi.image_id = i.image_id
-        WHERE p.name ILIKE $1 AND status
-        GROUP BY p.product_id;
+        WHERE p.name ILIKE $1 AND p.status
+        GROUP BY p.product_id, pt.name;
       `,
         [keyword]
       );
       res.json(products);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  getProductType: async (req, res) => {
+    try {
+      const { type } = req.query;
+      if (!type)
+        return res.status(400).json({
+          message: 'Bad Request',
+        });
+      const productTypes = await db.manyOrNone(
+        `
+        SELECT pt.product_type_id, pt.name FROM product_type pt
+          LEFT JOIN mitra_type mt ON pt.mitra_type_id = mt.mitra_type_id
+          WHERE mt.type = $1
+      `,
+        [type]
+      );
+      res.status(200).json({ productTypes });
     } catch (err) {
       console.error(err);
       res.status(500).json({
