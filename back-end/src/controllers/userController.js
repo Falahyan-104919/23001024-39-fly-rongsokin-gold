@@ -29,7 +29,6 @@ const userController = {
       });
     }
   },
-
   getUserProfile: async (req, res) => {
     try {
       const userId = req.params.userId;
@@ -221,7 +220,7 @@ const userController = {
 
       const newMitra = await db.one(
         `
-          INSERT INTO mitras (user_id, mitra_name, type, address) 
+          INSERT INTO mitras (user_id, mitra_name, mitra_type_id, address) 
           VALUES ($1, $2, $3, $4) RETURNING mitra_id
         `,
         [userId, mitraName, type, address]

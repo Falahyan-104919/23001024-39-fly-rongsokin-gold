@@ -8,6 +8,8 @@ const transactionsTable = require('./migrations/transaction_table');
 const forumCustomersTable = require('./migrations/forum_customers_table');
 const forumMitrasTable = require('./migrations/forum_mitra_table');
 const imageTable = require('./migrations/images_table');
+const productTypeTable = require('./migrations/product_type_table');
+const mitraTypeTable = require('./migrations/mitra_type_table');
 const forumMitrasImageJunction = require('./migrations/forum_mitra_image_junction_table');
 const forumCustomersImageJunction = require('./migrations/forum_customer_image_junction_table');
 const productsImageJunction = require('./migrations/product_image_junction_table');
@@ -34,6 +36,8 @@ const connectDatabase = () => {
 
   db.task(async (t) => {
     await t.none(extensionsQuery);
+    await t.none(mitraTypeTable);
+    await t.none(productTypeTable);
     await t.none(usersTable);
     await t.none(mitraTable);
     await t.none(productsTable);
@@ -45,7 +49,9 @@ const connectDatabase = () => {
     await t.none(forumCustomersImageJunction);
     await t.none(productsImageJunction);
     await t.none(userImageJunction);
-    await t.none(additionalQuery);
+    await t.none(additionalQuery.additionalQuery);
+    // await t.none(additionalQuery.insertDataMitraType);
+    // await t.none(additionalQuery.insertDataProductType);
   })
     .then((data) => {
       console.log('Database is Ready');

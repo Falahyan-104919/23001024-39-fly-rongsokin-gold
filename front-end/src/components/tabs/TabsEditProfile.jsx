@@ -19,12 +19,16 @@ export default function TabsEditProfile() {
       <TabList>
         <Tab>Edit Profile</Tab>
         <Tab>Change Password</Tab>
-        <Tab isDisabled={user.role == 'mitra' || 'admin' ? true : false}>
-          Become Mitra
-        </Tab>
-        <Tab isDisabled={user.role == 'user' || 'admin' ? true : false}>
-          Edit Profile Mitra
-        </Tab>
+        {user.role != 'admin' ? (
+          <Tab isDisabled={user.role == 'mitra' ? true : false}>
+            Become Mitra
+          </Tab>
+        ) : null}
+        {user.role != 'admin' ? (
+          <Tab isDisabled={user.role == 'user' ? true : false}>
+            Edit Profile Mitra
+          </Tab>
+        ) : null}
       </TabList>
       <TabPanels>
         <TabPanel>

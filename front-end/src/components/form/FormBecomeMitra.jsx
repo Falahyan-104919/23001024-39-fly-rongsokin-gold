@@ -13,7 +13,34 @@ import * as Yup from 'yup';
 import axiosInstance from '../../utils/axios';
 import { useContext } from 'react';
 import { AuthContext } from '../../store/AuthProvider';
-import { focusManager } from '@tanstack/react-query';
+import { focusManager, useQuery } from '@tanstack/react-query';
+
+const MitraTypeOption = () => {
+  const fetchMitraType = async () => {
+    const mitraType = await axiosInstance
+      .get('mitra_type')
+      .then((res) => res.data)
+      .catch((err) => err.data.message);
+    return mitraType;
+  };
+  const { data, isLoading } = useQuery({
+    queryKey: ['mitra_type'],
+    queryFn: fetchMitraType,
+  });
+
+  if (isLoading) {
+    return null;
+  }
+
+  return data['mitraType'].map((option) => {
+    const { mitra_type_id, type } = option;
+    return (
+      <option key={mitra_type_id} value={mitra_type_id} id={mitra_type_id}>
+        {type}
+      </option>
+    );
+  });
+};
 
 export default function FormBecomeMitra() {
   const { userId } = useParams();
@@ -119,11 +146,7 @@ export default function FormBecomeMitra() {
                   onChange={field.onChange}
                   value={field.value}
                 >
-                  {['Pengumpul', 'Pengelola'].map((type) => (
-                    <option key={type} value={type} id={type}>
-                      {type}
-                    </option>
-                  ))}
+                  <MitraTypeOption />
                 </Select>
               </FormControl>
             )}

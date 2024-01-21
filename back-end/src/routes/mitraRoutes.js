@@ -8,6 +8,7 @@ const profileMitraController = require('../controllers/mitraController');
 
 // Mitra Profile Routes
 router.get('/mitra/:mitraId', profileMitraController.getMitraProfile);
+router.get('/mitra_type', profileMitraController.getMitraType);
 router.get(
   '/user_mitra/:userId',
   profileMitraController.getMitraProfileWithUserId
