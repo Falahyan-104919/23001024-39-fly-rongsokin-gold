@@ -199,6 +199,38 @@ const adminController = {
       });
     }
   },
+  getProductTypeWithMitraType: async (req, res) => {
+    try {
+      const productMitraType = await db.manyOrNone(`
+        SELECT pt.product_type_id, mt.type, pt.name  FROM product_type pt
+          LEFT JOIN mitra_type mt ON pt.mitra_type_id = mt.mitra_type_id
+          WHERE pt.status 
+          GROUP BY pt.product_type_id, mt.mitra_type_id, mt.type
+          order by mt.type
+      `);
+      res.status(200).json({ productMitraType });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  putProductType: async (req, res) => {
+    try {
+      const { productTypeId } = req.params;
+      await db.none(
+        `
+      UPDATE product_type SET status = false WHERE product_type_id = $1
+    `,
+        [productTypeId]
+      );
+      res.status(200).send();
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
 };
 
 module.exports = adminController;

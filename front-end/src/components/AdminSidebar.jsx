@@ -13,6 +13,7 @@ import {
   faBoxesPacking,
   faComments,
   faHouse,
+  faStore,
   faToolbox,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
@@ -67,7 +68,7 @@ export default function AdminSidebar() {
       </ChakraLink>
       <ChakraLink
         as={ReactRouterLink}
-        to="product_type"
+        to="mitra_settings"
         width="100%"
         p="5"
         borderRadius="12px"
@@ -81,9 +82,9 @@ export default function AdminSidebar() {
           gap="8px"
           textAlign="center"
         >
-          <FontAwesomeIcon icon={faToolbox} color="white" />
+          <FontAwesomeIcon icon={faStore} color="white" />
           <Text fontWeight="bold" color="white" fontSize="14px">
-            Product Type Configuration
+            Mitra Settings
           </Text>
         </Box>
       </ChakraLink>

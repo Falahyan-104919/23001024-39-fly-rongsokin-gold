@@ -259,6 +259,26 @@ const productController = {
       });
     }
   },
+  postProductType: async (req, res) => {
+    try {
+      const { mitra_type_id, type } = req.body;
+      await db.none(
+        `
+        INSERT INTO product_type (mitra_type_id, name) 
+        VALUES ($1, $2)
+      `,
+        [mitra_type_id, type]
+      );
+      res.status(200).json({
+        message: 'Successfully added New Product Type for Mitra',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
 };
 
 module.exports = productController;

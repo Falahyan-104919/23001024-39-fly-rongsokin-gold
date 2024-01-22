@@ -10,6 +10,7 @@ const uploadsProductImg = storage.productsImageStorage.single('productImg');
 router.get('/products', productMitraController.getAllProduct);
 router.get('/search_products', productMitraController.getProductByName);
 router.get('/product_types', productMitraController.getProductType);
+router.post('/product_types', productMitraController.postProductType);
 router.post(
   '/products/upload/:mitraId',
   uploadsProductImg,

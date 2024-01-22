@@ -7,6 +7,14 @@ router.get('/admin/summary_table', adminController.getSummaryTable);
 router.get('/admin/products', adminController.getProducts);
 router.get('/admin/forum_customer', adminController.getForumCustomer);
 router.get('/admin/forum_mitra', adminController.getForumMitra);
+router.get(
+  '/admin/product_and_mitra_type',
+  adminController.getProductTypeWithMitraType
+);
+router.put(
+  '/admin/product_type/:productTypeId',
+  adminController.putProductType
+);
 router.put('/admin/turn_to_superuser/:userId', adminController.turnToSuperuser);
 router.put('/admin/deactivate_user/:userId', adminController.deactivateUser);
 router.put(

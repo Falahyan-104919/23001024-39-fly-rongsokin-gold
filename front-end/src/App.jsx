@@ -20,6 +20,7 @@ import UserConfiguration from './pages/UserConfiguration';
 import AdminProductConfiguration from './pages/AdminProductConfiguration';
 import AdminForumCustomerConfiguration from './pages/AdminForumCustomerConfiguration';
 import AdminForumMitraConfiguration from './pages/AdminForumMitraConfiguration';
+import MitraSettings from './pages/MitraSettings';
 
 const queryClient = new QueryClient();
 
@@ -60,10 +61,7 @@ function App() {
             path="product_configuration"
             element={<AdminProductConfiguration />}
           />
-          <Route
-            path="product_type_configuration"
-            element={<UserConfiguration />}
-          />
+          <Route path="mitra_settings" element={<MitraSettings />} />
           <Route
             path="forum_customer"
             element={<AdminForumCustomerConfiguration />}

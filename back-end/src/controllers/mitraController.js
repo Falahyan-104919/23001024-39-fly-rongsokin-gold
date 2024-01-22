@@ -112,6 +112,42 @@ const mitraController = {
       });
     }
   },
+  postMitraType: async (req, res) => {
+    try {
+      const { type_name } = req.body;
+      await db.none(
+        `
+        INSERT INTO mitra_type(type) VALUES ($1);
+      `,
+        [type_name]
+      );
+      res.status(200).json({
+        message: 'Successfully Added New Mitra Type',
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  putMitraType: async (req, res) => {
+    try {
+      console.log('HIT!!!!!!!!!!!');
+      const { mitraTypeId } = req.params;
+      await db.none(
+        `
+        UPDATE mitra_type SET status = false
+        WHERE mitra_type_id = $1
+      `,
+        [mitraTypeId]
+      );
+      res.status(200).send();
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
 };
 
 module.exports = mitraController;
