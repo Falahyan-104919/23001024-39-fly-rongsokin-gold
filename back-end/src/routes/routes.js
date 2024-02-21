@@ -9,6 +9,8 @@ const forumMitraRoutes = require('./forumMitraRoutes');
 const forumCustomerRoutes = require('./forumCustomerRoutes');
 const productsRoutes = require('./productRoutes');
 const adminRoutes = require('./adminRoutes');
+const paymentRoutes = require('./paymentReceiptRoutes');
+const deliveryRoutes = require('./deliveryReceiptRoutes');
 
 router.use('/', authRoutes);
 router.use('/', userRoutes);
@@ -18,5 +20,7 @@ router.use('/', transactionRoutes);
 router.use('/', forumMitraRoutes);
 router.use('/', forumCustomerRoutes);
 router.use('/', adminRoutes);
+router.use('/', paymentRoutes);
+router.use('/', deliveryRoutes);
 
 module.exports = router;

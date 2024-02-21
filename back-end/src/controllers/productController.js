@@ -6,14 +6,31 @@ const productController = {
   postProduct: async (req, res) => {
     try {
       const mitraId = req.params.mitraId;
-      const { name, productType, description, price, quantity } = req.body;
+      const {
+        name,
+        productType,
+        description,
+        price,
+        quantity,
+        unit,
+        min_order,
+      } = req.body;
       const productImg = req.file;
       const newProduct = await db.one(
         `
-                INSERT INTO products (mitra_id, name, product_type_id, description, price, quantity) 
-                VALUES ($1, $2, $3, $4, $5, $6) RETURNING product_id
+                INSERT INTO products (mitra_id, name, product_type_id, description, price, quantity, unit, minimum_order) 
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING product_id
             `,
-        [mitraId, name, productType, description, price, quantity]
+        [
+          mitraId,
+          name,
+          productType,
+          description,
+          price,
+          quantity,
+          unit,
+          min_order,
+        ]
       );
 
       const newImage = await db.one(
@@ -47,7 +64,7 @@ const productController = {
 
       const productData = await db.oneOrNone(
         `
-              SELECT p.product_id, p.mitra_id, p.name, pt.name AS product_type, p.description, p.price, p.quantity, 
+              SELECT p.product_id, p.mitra_id, p.name, pt.name AS product_type, p.description, p.price, p.quantity, p.unit, p.minimum_order,
                      json_agg(json_build_object('image_id', pi.image_id, 'image_path', i.image_path, 'image_name', i.image_name)) as images
               FROM products p
               LEFT JOIN product_type pt ON p.product_type_id = pt.product_type_id
@@ -65,7 +82,7 @@ const productController = {
 
       const productOwner = await db.oneOrNone(
         `
-          SELECT m.mitra_id, u.phone_number, m.mitra_name, m.address, mt.type 
+          SELECT m.mitra_id, u.phone_number, m.mitra_name, mt.type 
           FROM mitras as m
           LEFT JOIN mitra_type mt ON m.mitra_type_id = mt.mitra_type_id
           LEFT JOIN users as u ON u.user_id =  m.user_id 

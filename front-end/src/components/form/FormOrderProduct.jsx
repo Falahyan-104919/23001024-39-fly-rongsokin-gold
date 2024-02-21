@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import axiosInstance from '../../utils/axios';
-import { Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 import {
   Box,
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
@@ -22,16 +23,14 @@ export default function FormOrderProduct(props) {
   const toast = useToast();
   const initialValues = {
     quantity: 0,
-    total_price: totalPrice,
+    total_price: 0,
   };
 
   const validationSchema = Yup.object().shape({
-    transaction_status: Yup.string(),
-    quantity: Yup.number().max(
-      props.quantity,
-      "Can't Order More Than Quantity of Products"
-    ),
-    total_price: Yup.number(),
+    quantity: Yup.number()
+      .min(props.minOrder, "Can't Order Less Than Minimum Order")
+      .max(props.quantity, "Can't Order More Than Quantity of Products")
+      .required('Quantity is required'),
   });
 
   const postTransaction = async (values) => {
@@ -145,6 +144,7 @@ export default function FormOrderProduct(props) {
           handleSubmit,
           actions,
           values,
+          errors,
         }) => (
           <Form>
             <Field name="quantity">
@@ -154,35 +154,31 @@ export default function FormOrderProduct(props) {
                   <Flex mr="20px">
                     <HStack w="250px">
                       <Input
+                        type="number"
                         {...field}
                         onChange={(e) => {
-                          if (!isNaN(Number(e.target.value))) {
-                            if (e.target.value > props.quantity) {
-                              setFieldValue('quantity', Number(props.quantity));
-                              setTotalPrice(props.quantity * props.price);
-                              setFieldValue(
-                                'total_price',
-                                props.quantity * props.price
-                              );
-                            } else {
-                              setFieldValue('quantity', Number(e.target.value));
-                              setTotalPrice(e.target.value * props.price);
-                              setFieldValue(
-                                'total_price',
-                                e.target.value * props.price
-                              );
-                            }
-                          } else {
-                            setFieldValue('quantity', 1);
-                            setTotalPrice(1 * props.price);
-                            setFieldValue('total_price', 1 * props.price);
+                          const value = e.target.value;
+                          let validatedValue = value;
+                          if (isNaN(Number(value))) {
+                            validatedValue = 0;
                           }
+                          setFieldValue('quantity', validatedValue);
+                          setTotalPrice(validatedValue * props.price);
+                          setFieldValue(
+                            'total_price',
+                            validatedValue * props.price
+                          );
                         }}
                       />
                     </HStack>
                     <Spacer />
                     <Text>Total Price : Rp. {totalPrice}</Text>
                   </Flex>
+                  {errors.quantity ? (
+                    <Text color="red.500" fontSize="sm" fontWeight="light">
+                      {errors.quantity}{' '}
+                    </Text>
+                  ) : null}
                 </FormControl>
               )}
             </Field>
@@ -197,42 +193,6 @@ export default function FormOrderProduct(props) {
               actions={actions}
               values={values}
             />
-            {/* {user.mitraId ? (
-              user.mitraId == props.ownerId ? (
-                <Button
-                  w="100%"
-                  mt="15px"
-                  colorScheme="teal"
-                  isLoading={isSubmitting}
-                  isDisabled="true"
-                  onClick={() => handleSubmit(values, actions)}
-                >
-                  Can't Buy You're Own Product
-                </Button>
-              ) : (
-                <Button
-                  w="100%"
-                  mt="15px"
-                  colorScheme="teal"
-                  isLoading={isSubmitting}
-                  isDisabled={isSubmitting || !isValid || !dirty || !isLoggedIn}
-                  onClick={() => handleSubmit(values, actions)}
-                >
-                  Submit Order
-                </Button>
-              )
-            ) : (
-              <Button
-                w="100%"
-                mt="15px"
-                colorScheme="teal"
-                isLoading={isSubmitting}
-                isDisabled={isSubmitting || !isValid || !dirty || !isLoggedIn}
-                onClick={() => handleSubmit(values, actions)}
-              >
-                Submit Order
-              </Button>
-            )} */}
           </Form>
         )}
       </Formik>

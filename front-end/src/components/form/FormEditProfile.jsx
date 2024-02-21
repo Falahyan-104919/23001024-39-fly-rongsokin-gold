@@ -4,6 +4,7 @@ import {
   FormLabel,
   Input,
   Text,
+  Textarea,
   useToast,
 } from '@chakra-ui/react';
 import { useContext } from 'react';
@@ -141,6 +142,19 @@ export default function FormEditProfile() {
                   component={Text}
                   color="red.500"
                 />
+              </FormControl>
+            )}
+          </Field>
+          <Field name="address">
+            {({ field }) => (
+              <FormControl id="address" isRequired>
+                <FormLabel>Address</FormLabel>
+                <Textarea
+                  {...field}
+                  placeholder="Your address here."
+                  focusBorderColor="teal.100"
+                />
+                <ErrorMessage name="address" component={Text} color="red.500" />
               </FormControl>
             )}
           </Field>

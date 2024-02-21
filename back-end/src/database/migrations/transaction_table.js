@@ -4,10 +4,11 @@ const createTransactionsTable = `
     buyer_id UUID REFERENCES users(user_id),
     mitra_id UUID REFERENCES mitras(mitra_id),
     product_id UUID REFERENCES products(product_id),
-    transaction_status VARCHAR(10) NOT NULL,
+    transaction_status VARCHAR(128) NOT NULL,
     transaction_date TIMESTAMP DEFAULT NOW(),
-    quantity INT NOT NULL,
-    total_price DECIMAL(12, 2) NOT NULL
+    deadline TIMESTAMP DEFAULT (CURRENT_TIMESTAMP + INTERVAL '1 day'),
+    quantity NUMERIC NOT NULL,
+    total_price NUMERIC NOT NULL
   );
 `;
 

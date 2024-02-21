@@ -17,20 +17,20 @@ const insertDataMitraType = `
 const insertDataProductType = `
     INSERT INTO product_type (mitra_type_id, name)
     VALUES 
-    ('06ac01ab-018d-46ef-bca6-01ef87dc3ce4', 'Kertas/Kardus'),
-    ('06ac01ab-018d-46ef-bca6-01ef87dc3ce4', 'Besi/Logam'),
-    ('06ac01ab-018d-46ef-bca6-01ef87dc3ce4', 'Kaca/Beling'),
-    ('06ac01ab-018d-46ef-bca6-01ef87dc3ce4', 'Plastik'),
-    ('06ac01ab-018d-46ef-bca6-01ef87dc3ce4', 'Elektronik'),
-    ('06ac01ab-018d-46ef-bca6-01ef87dc3ce4', 'Barang Tekstil'),
-    ('06ac01ab-018d-46ef-bca6-01ef87dc3ce4', 'Bahan Bangunan'),
-    ('b47c79b4-23bf-436a-b621-99bba8c74879', 'Bahan Kertas Daur Ulang'),
-    ('b47c79b4-23bf-436a-b621-99bba8c74879', 'Bahan Besi/Logam Daur Ulang'),
-    ('b47c79b4-23bf-436a-b621-99bba8c74879', 'Bahan Kaca/Beling Daur Ulang'),
-    ('b47c79b4-23bf-436a-b621-99bba8c74879', 'Bahan Plastik Daur Ulang'),
-    ('b47c79b4-23bf-436a-b621-99bba8c74879', 'Bahan Elektronik Daur Ulang'),
-    ('b47c79b4-23bf-436a-b621-99bba8c74879', 'Bahan Tekstil Daur Ulang'),
-    ('b47c79b4-23bf-436a-b621-99bba8c74879', 'Bahan Bangunan Daur Ulang')
+    ('e468f56b-d7a5-4969-8ca6-1646e8e7980d', 'Kertas/Kardus'),
+    ('e468f56b-d7a5-4969-8ca6-1646e8e7980d', 'Besi/Logam'),
+    ('e468f56b-d7a5-4969-8ca6-1646e8e7980d', 'Kaca/Beling'),
+    ('e468f56b-d7a5-4969-8ca6-1646e8e7980d', 'Plastik'),
+    ('e468f56b-d7a5-4969-8ca6-1646e8e7980d', 'Elektronik'),
+    ('e468f56b-d7a5-4969-8ca6-1646e8e7980d', 'Barang Tekstil'),
+    ('e468f56b-d7a5-4969-8ca6-1646e8e7980d', 'Bahan Bangunan'),
+    ('91c1715d-f238-4b74-9315-bd4d18b7a1e5', 'Bahan Kertas Daur Ulang'),
+    ('91c1715d-f238-4b74-9315-bd4d18b7a1e5', 'Bahan Besi/Logam Daur Ulang'),
+    ('91c1715d-f238-4b74-9315-bd4d18b7a1e5', 'Bahan Kaca/Beling Daur Ulang'),
+    ('91c1715d-f238-4b74-9315-bd4d18b7a1e5', 'Bahan Plastik Daur Ulang'),
+    ('91c1715d-f238-4b74-9315-bd4d18b7a1e5', 'Bahan Elektronik Daur Ulang'),
+    ('91c1715d-f238-4b74-9315-bd4d18b7a1e5', 'Bahan Tekstil Daur Ulang'),
+    ('91c1715d-f238-4b74-9315-bd4d18b7a1e5', 'Bahan Bangunan Daur Ulang')
 `;
 
 module.exports = {

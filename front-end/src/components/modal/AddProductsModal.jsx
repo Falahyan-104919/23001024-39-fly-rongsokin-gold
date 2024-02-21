@@ -60,6 +60,17 @@ const ProductTypeOption = ({ mitraType }) => {
   });
 };
 
+const ProductUnitOption = () => {
+  const units = ['Kilogram', 'Piece', 'Bulk'];
+  return units.map((unit, index) => {
+    return (
+      <option key={index} value={unit} id={unit}>
+        {unit}
+      </option>
+    );
+  });
+};
+
 export default function AddProductsModal({ open, toggleOff }) {
   const { user } = useContext(AuthContext);
   const [uploadProductImage, setUploadProductImage] = useState({});
@@ -71,6 +82,8 @@ export default function AddProductsModal({ open, toggleOff }) {
     descriptionProduct: '',
     productPrice: '',
     productQuantity: '',
+    productUnit: '',
+    min_order: '',
     productImage: '',
   };
 
@@ -88,6 +101,8 @@ export default function AddProductsModal({ open, toggleOff }) {
     productQuantity: Yup.number('Product Quantity is Must Be a Number Types')
       .required('Product Quantity is Required')
       .positive('Product Quantity is Must Be a Positive Number'),
+    productUnit: Yup.string().required('Please Select One'),
+    min_order: Yup.number().required('Minimum Order is Required'),
     productImage: Yup.mixed().required('File is required'),
   });
 
@@ -105,6 +120,8 @@ export default function AddProductsModal({ open, toggleOff }) {
       descriptionProduct,
       productPrice,
       productQuantity,
+      productUnit,
+      min_order,
     },
     uploadProductImage
   ) => {
@@ -115,6 +132,8 @@ export default function AddProductsModal({ open, toggleOff }) {
     formData.set('description', descriptionProduct);
     formData.set('price', parseInt(productPrice));
     formData.set('quantity', parseInt(productQuantity));
+    formData.set('unit', productUnit);
+    formData.set('min_order', min_order);
     formData.append('productImg', uploadProductImage, uploadProductImage.name);
     const response = await axiosInstance
       .post(`products/upload/${user.mitraId}`, formData)
@@ -261,24 +280,61 @@ export default function AddProductsModal({ open, toggleOff }) {
                       </FormControl>
                     )}
                   </Field>
-                  <Field name="productQuantity">
-                    {({ field }) => (
-                      <FormControl id="productQuantity" mb="10px" isRequired>
-                        <FormLabel>Product Quantity</FormLabel>
-                        <Input
-                          {...field}
-                          type="number"
-                          placeholder="Kilogram / pcs"
-                          focusBorderColor="teal.100"
-                        />
-                        <ErrorMessage
-                          name="productQuantity"
-                          component={Text}
-                          color="red.500"
-                        />
-                      </FormControl>
-                    )}
-                  </Field>
+                  <Flex gap="12px">
+                    <Field name="productQuantity">
+                      {({ field }) => (
+                        <FormControl id="productQuantity" mb="10px" isRequired>
+                          <FormLabel>Product Quantity</FormLabel>
+                          <Input
+                            {...field}
+                            type="number"
+                            focusBorderColor="teal.100"
+                          />
+                          <ErrorMessage
+                            name="productQuantity"
+                            component={Text}
+                            color="red.500"
+                          />
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="productUnit">
+                      {({ field }) => (
+                        <FormControl id="productUnit" mb="10px" isRequired>
+                          <FormLabel>Unit</FormLabel>
+                          <Select
+                            placeholder="Unit Product"
+                            name="productUnit"
+                            {...field}
+                          >
+                            <ProductUnitOption />
+                          </Select>
+                          <ErrorMessage
+                            name="productUnit"
+                            component={Text}
+                            color="red.500"
+                          />
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name="min_order">
+                      {({ field }) => (
+                        <FormControl id="min_order" mb="10px" isRequired>
+                          <FormLabel>Minimum Order</FormLabel>
+                          <Input
+                            {...field}
+                            type="number"
+                            focusBorderColor="teal.100"
+                          />
+                          <ErrorMessage
+                            name="min_order"
+                            component={Text}
+                            color="red.500"
+                          />
+                        </FormControl>
+                      )}
+                    </Field>
+                  </Flex>
                   <Field name="productImage" type="file" multiple>
                     {({ field: { value, ...field } }) => (
                       <FormControl id="productImage" isRequired>

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const { verifyToken } = require('./middleware/verifyCredentials');
 
 const profileMitraController = require('../controllers/mitraController');

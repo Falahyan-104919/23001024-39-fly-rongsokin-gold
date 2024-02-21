@@ -90,11 +90,67 @@ const imgProfileStorage = multer.diskStorage({
   },
 });
 
+const imgPaymentReceiptStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const transaction_id = req.body.transaction_id;
+    const uploadDir = path.join(
+      'public',
+      'img',
+      'transaction',
+      `${transaction_id}`,
+      'payment_receipt'
+    );
+    fs.access(uploadDir, (error) => {
+      if (error) {
+        if ((error.code = 'ENOENT')) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+      } else {
+        cb(null, uploadDir);
+      }
+    });
+  },
+  filename: (req, res, cb) => {
+    const filename = req.body.uploaded_by;
+    cb(null, filename);
+  },
+});
+
+const imgDeliveryReceiptsStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const transaction_id = req.body.transaction_id;
+    const uploadDir = path.join(
+      'public',
+      'img',
+      'transaction',
+      `${transaction_id}`,
+      'delivery_receipt'
+    );
+    fs.access(uploadDir, (error) => {
+      if (error) {
+        if ((error.code = 'ENOENT')) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+      } else {
+        cb(null, uploadDir);
+      }
+    });
+  },
+  filename: (req, file, cb) => {
+    const filename = req.body.uploaded_by;
+    cb(null, filename);
+  },
+});
+
 const storage = {
   productsImageStorage: multer({ storage: imgProductStorage }),
   forumCustomerImageStorage: multer({ storage: imgForumCustomerStorage }),
   forumMitraImageStorage: multer({ storage: imgForumMitraStorage }),
   profileImageStorage: multer({ storage: imgProfileStorage }),
+  paymentReceiptStorage: multer({ storage: imgPaymentReceiptStorage }),
+  deliveryReceiptStorage: multer({ storage: imgDeliveryReceiptsStorage }),
 };
 
 const updateImgProcessor = {

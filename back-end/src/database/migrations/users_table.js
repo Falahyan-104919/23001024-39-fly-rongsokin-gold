@@ -4,6 +4,7 @@ const createUsersTable = `
     fullname VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     phone_number NUMERIC(15,0) NOT NULL,
+    address TEXT NOT NULL,
     password_hash VARCHAR(60) NOT NULL,
     role VARCHAR(10) NOT NULL,
     status BOOLEAN NOT NULL,

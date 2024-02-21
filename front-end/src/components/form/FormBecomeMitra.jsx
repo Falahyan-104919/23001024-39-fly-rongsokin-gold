@@ -42,6 +42,26 @@ const MitraTypeOption = () => {
   });
 };
 
+const BankNameOption = () => {
+  const bankName = [
+    'Mandiri',
+    'BRI',
+    'BCA',
+    'BNI',
+    'BTN',
+    'CIMB Niaga',
+    'BSI',
+    'Permata',
+    'OCBC',
+    'Panin',
+  ];
+  return bankName.map((name) => (
+    <option key={name} value={name} id={name}>
+      {name}
+    </option>
+  ));
+};
+
 export default function FormBecomeMitra() {
   const { userId } = useParams();
   const { logout } = useContext(AuthContext);
@@ -51,23 +71,34 @@ export default function FormBecomeMitra() {
     mitraName: '',
     type: '',
     address: '',
+    bank_name: '',
+    bank_number: '',
   };
   const mitraSchema = Yup.object().shape({
     mitraName: Yup.string()
       .min(10, 'Mitra Name is Need at least Contain 10 Character')
       .required('Mitra Name is Required'),
     type: Yup.string().required('Mitra Type is Required'),
-    address: Yup.string()
-      .min(30, 'Mitra Address at least Contain 30 Character')
-      .required('Mitra Address is Required'),
+    bank_name: Yup.string().required(),
+    bank_number: Yup.number()
+      .min(8, 'Bank Number Must Have Minimum 8 number')
+      .required('Bank Number is Required'),
   });
 
-  const becomeMitra = async ({ mitraName, type, address }) => {
+  const becomeMitra = async ({
+    mitraName,
+    type,
+    address,
+    bank_name,
+    bank_number,
+  }) => {
     const response = await axiosInstance
       .post(`user/become_mitra/${userId}`, {
         mitraName,
         type,
         address,
+        bank_name,
+        bank_number,
       })
       .then((res) => {
         return {
@@ -89,24 +120,25 @@ export default function FormBecomeMitra() {
     focusManager.setFocused(false);
     const response = await becomeMitra(values);
     switch (response.status) {
-      case 201:
-        logout();
-        navigate('/');
-        focusManager.setFocused(true);
-        return toast({
-          title: 'Success',
-          description: `${response.message} \n You need to Re-Logged In`,
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-      default:
+      case 500:
         return toast({
           title: 'Become Mitra Failed',
           description: response.message,
           status: 'error',
           duration: 3000,
           isClosable: true,
+        });
+      default:
+        toast({
+          title: 'Success',
+          description: `${response.message} \n You need to Re-Logged In`,
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete: () => {
+            logout();
+            navigate('/');
+          },
         });
     }
   };
@@ -116,7 +148,7 @@ export default function FormBecomeMitra() {
       validationSchema={mitraSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting, isValid, dirty }) => (
+      {({ isSubmitting, isValid, dirty, setFieldValue }) => (
         <Form autoComplete="off">
           <Field name="mitraName">
             {({ field }) => (
@@ -151,17 +183,49 @@ export default function FormBecomeMitra() {
               </FormControl>
             )}
           </Field>
-          <Field name="address">
+          <Field name="bank_name">
             {({ field }) => (
-              <FormControl id="type" isRequired>
-                <FormLabel>Mitra Address</FormLabel>
+              <FormControl id="bank_name" isRequired>
+                <FormLabel>Bank Name</FormLabel>
+                <Select
+                  placeholder="Select Bank Name"
+                  name="bank_name"
+                  onChange={field.onChange}
+                  value={field.value}
+                >
+                  <BankNameOption />
+                </Select>
+                <ErrorMessage
+                  name="bank_name"
+                  component={Text}
+                  color="red.500"
+                />
+              </FormControl>
+            )}
+          </Field>
+          <Field name="bank_number">
+            {({ field }) => (
+              <FormControl id="bank_number" isRequired>
+                <FormLabel>Bank Number</FormLabel>
                 <Input
                   {...field}
-                  placeholder="Address"
-                  type="text"
-                  focusBorderColor="teal.100"
+                  maxLength={20}
+                  onChange={(e) => {
+                    if (!isNaN(Number(e.target.value))) {
+                      if (e.target.value == 0) {
+                        setFieldValue('bank_number', '');
+                      }
+                      setFieldValue('bank_number', Number(e.target.value));
+                    } else {
+                      setFieldValue('bank_number', '');
+                    }
+                  }}
                 />
-                <ErrorMessage name="address" component={Text} color="red.500" />
+                <ErrorMessage
+                  name="bank_number"
+                  component={Text}
+                  color="red.500"
+                />
               </FormControl>
             )}
           </Field>

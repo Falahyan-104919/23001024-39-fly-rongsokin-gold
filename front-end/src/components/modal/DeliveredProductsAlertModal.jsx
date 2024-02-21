@@ -9,14 +9,16 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import axiosInstance from '../../utils/axios';
-import { focusManager } from '@tanstack/react-query';
+import { focusManager, useQueryClient } from '@tanstack/react-query';
 
 export default function DeliveredProductsAlertModal({
   orderId,
   open,
-  toggleOff,
+  toggleOffAlert,
+  toggleOffModal,
 }) {
   const toast = useToast();
+  const queryClient = useQueryClient();
   const handleRecieveProducts = async (order_id) => {
     focusManager.setFocused(false);
     await axiosInstance
@@ -24,8 +26,8 @@ export default function DeliveredProductsAlertModal({
         status: 'success',
       })
       .then((res) => {
-        focusManager.setFocused(true);
         if (res.status == 201) {
+          queryClient.invalidateQueries('order');
           return toast({
             title: 'Status Order Updated',
             description: res.data.message,
@@ -46,8 +48,8 @@ export default function DeliveredProductsAlertModal({
       });
   };
   return (
-    <AlertDialog isOpen={open} onClose={toggleOff}>
-      <AlertDialogOverlay>
+    <AlertDialog isOpen={open} onClose={toggleOffAlert}>
+      <AlertDialogOverlay blur="md">
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
             Recieve Products ?
@@ -58,13 +60,14 @@ export default function DeliveredProductsAlertModal({
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button onClick={toggleOff}>Cancel</Button>
+            <Button onClick={toggleOffAlert}>Cancel</Button>
             <Button
               colorScheme="whatsapp"
               onClick={() => {
                 handleRecieveProducts(orderId);
                 focusManager.setFocused(true);
-                toggleOff();
+                toggleOffAlert();
+                toggleOffModal();
               }}
               ml={3}
             >

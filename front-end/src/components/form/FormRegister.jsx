@@ -7,6 +7,7 @@ import {
   useToast,
   InputLeftAddon,
   InputGroup,
+  Textarea,
 } from '@chakra-ui/react';
 import { ErrorMessage, Form, Formik, Field } from 'formik';
 import axiosInstance from '../../utils/axios';
@@ -27,6 +28,9 @@ export default function FormRegister({ close }) {
     phoneNumber: Yup.number()
       .min(10, 'Phone Number Must be at least 10 Character')
       .required('Phone Number is Required'),
+    address: Yup.string()
+      .min(10, 'Please Input Address Correctly')
+      .required('Address is Required'),
     password: Yup.string()
       .min(6, 'Password need at least 6 Character')
       .required('Password is Required'),
@@ -39,11 +43,18 @@ export default function FormRegister({ close }) {
     email: '',
     fullname: '',
     phoneNumber: '',
+    address: '',
     password: '',
     passwordConf: '',
   };
 
-  const register = async ({ email, fullname, phoneNumber, password }) => {
+  const register = async ({
+    email,
+    fullname,
+    phoneNumber,
+    address,
+    password,
+  }) => {
     const user = {
       email: '',
       password: '',
@@ -54,6 +65,7 @@ export default function FormRegister({ close }) {
         email: email,
         fullname: fullname,
         phoneNumber: phoneNumber,
+        address: address,
         password: password,
       })
       .then((res) => {
@@ -143,7 +155,7 @@ export default function FormRegister({ close }) {
           </Field>
           <Field name="phoneNumber">
             {({ field }) => (
-              <FormControl id="phoneNumber" isRequired>
+              <FormControl id="phoneNumber" isRequired marginBottom="2px">
                 <FormLabel>Phone Number</FormLabel>
                 <InputGroup>
                   <InputLeftAddon children="+62" />
@@ -169,6 +181,19 @@ export default function FormRegister({ close }) {
                   component={Text}
                   color="red.500"
                 />
+              </FormControl>
+            )}
+          </Field>
+          <Field name="address">
+            {({ field }) => (
+              <FormControl id="address" isRequired>
+                <FormLabel>Address</FormLabel>
+                <Textarea
+                  {...field}
+                  placeholder="Your address here."
+                  focusBorderColor="teal.100"
+                />
+                <ErrorMessage name="address" component={Text} color="red.500" />
               </FormControl>
             )}
           </Field>

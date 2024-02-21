@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
     fullname: '',
     email: '',
     phoneNumber: '',
+    address: '',
     role: '',
     token: '',
   };
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
         password: password,
       })
       .then((response) => {
+        console.log(response.data);
         return {
           status: response.status,
           data: response.data,
@@ -47,12 +49,12 @@ export const AuthProvider = ({ children }) => {
       };
     }
     setIsLoggedIn(true);
-    console.log(res.userData);
     setUser({
       userId: res.userData.userId,
       fullname: res.userData.fullname,
       email: res.userData.email,
       phoneNumber: res.userData.phoneNumber,
+      address: res.userData.address,
       role: res.userData.role,
       token: res.token,
     });
@@ -83,7 +85,6 @@ export const AuthProvider = ({ children }) => {
           mitraId: res.userData.mitraId,
           mitraType: res.userData.mitraType,
           mitraName: res.userData.mitraName,
-          mitraAddress: res.userData.mitraAddress,
         };
       });
     }
@@ -134,6 +135,7 @@ export const AuthProvider = ({ children }) => {
       fullname: '',
       email: '',
       phoneNumber: '',
+      address: '',
       role: '',
       token: '',
       profileImg: '',

@@ -13,20 +13,38 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import DeliveredProductsAlertModal from '../../modal/DeliveredProductsAlertModal';
+import UploadPaymentReceiptModal from '../../modal/UploadPaymentReceiptModal';
+import DeliveryDetailsModal from '../../modal/DeliveryDetailsModal';
 
 export default function TableBodyOrders({ orders, keyword }) {
-  const [openDeliveredAlert, setOpenDeliveredAlert] = useState({});
+  const [openUploadPaymentReceiptModal, setUploadPaymentReceiptModal] =
+    useState({});
+  const [deliverysModal, setDeliverysModal] = useState({});
 
-  const handleOpenDeliveredAlert = (order_id) => {
-    setOpenDeliveredAlert((prevDeliveredAlert) => ({
-      ...prevDeliveredAlert,
+  const handleOpenUploadPaymentReceiptModal = (order_id) => {
+    setUploadPaymentReceiptModal((prev) => ({
+      ...prev,
       [order_id]: true,
     }));
   };
 
-  const handleCloseDeliveredAlert = (order_id) => {
-    setOpenDeliveredAlert((prevDeliveredAlert) => ({
-      ...prevDeliveredAlert,
+  const handleOpenDeliveryModal = (order_id) => {
+    setDeliverysModal((prev) => ({
+      ...prev,
+      [order_id]: true,
+    }));
+  };
+
+  const handleCloseUploadPaymentReceiptModal = (order_id) => {
+    setUploadPaymentReceiptModal((prev) => ({
+      ...prev,
+      [order_id]: false,
+    }));
+  };
+
+  const handleCloseDeliveryModal = (order_id) => {
+    setDeliverysModal((prev) => ({
+      ...prev,
       [order_id]: false,
     }));
   };
@@ -36,33 +54,38 @@ export default function TableBodyOrders({ orders, keyword }) {
   });
 
   const ActionButton = ({ status, id }) => {
-    const toast = useToast();
     switch (status) {
-      case 'pending':
-        return (
-          <Button isDisabled colorScheme="green">
-            Delivered
-          </Button>
-        );
-      case 'process':
+      case 'waiting_for_payment':
         return (
           <>
             <Button
-              colorScheme="green"
-              onClick={() => {
-                focusManager.setFocused(false);
-                handleOpenDeliveredAlert(orders.order_id);
-              }}
+              colorScheme="facebook"
+              size="sm"
+              onClick={() => handleOpenUploadPaymentReceiptModal(id)}
             >
-              Delivered
+              Upload Payment Receipt
             </Button>
-            <DeliveredProductsAlertModal
-              orderId={id}
-              open={openDeliveredAlert[orders.order_id] || false}
-              toggleOff={() => {
-                focusManager.setFocused(true);
-                handleCloseDeliveredAlert(orders.order_id);
-              }}
+            <UploadPaymentReceiptModal
+              order_id={id}
+              open={openUploadPaymentReceiptModal[id] || false}
+              toggleOff={() => handleCloseUploadPaymentReceiptModal(id)}
+            />
+          </>
+        );
+      case 'on_the_way':
+        return (
+          <>
+            <Button
+              colorScheme="whatsapp"
+              size="sm"
+              onClick={() => handleOpenDeliveryModal(id)}
+            >
+              Delivery Details
+            </Button>
+            <DeliveryDetailsModal
+              open={deliverysModal[id] || false}
+              toggleOff={() => handleCloseDeliveryModal(id)}
+              transaction_id={id}
             />
           </>
         );
@@ -73,16 +96,22 @@ export default function TableBodyOrders({ orders, keyword }) {
 
   const BadgeStatus = ({ status }) => {
     switch (status) {
-      case 'pending':
+      case 'waiting_for_payment':
         return (
           <Badge variant="subtle" colorScheme="yellow">
-            {status.toUpperCase()}
+            {status.replaceAll('_', ' ').toUpperCase()}
           </Badge>
         );
-      case 'process':
+      case 'waiting_for_delivery':
         return (
           <Badge variant="subtle" colorScheme="blue">
-            {status.toUpperCase()}
+            {status.replaceAll('_', ' ').toUpperCase()}
+          </Badge>
+        );
+      case 'on_the_way':
+        return (
+          <Badge variant="subtle" colorScheme="green">
+            {status.replaceAll('_', ' ').toUpperCase()}
           </Badge>
         );
       case 'success':

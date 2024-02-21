@@ -32,7 +32,6 @@ export default function FormLogin({ close }) {
 
   const handleSubmit = async (values, actions) => {
     const { status, message } = await login(values);
-    console.log(status);
     if (status != 200) {
       switch (status) {
         case 404:

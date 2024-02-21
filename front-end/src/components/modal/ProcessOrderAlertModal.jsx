@@ -19,13 +19,13 @@ export default function ProcessOrderAlertModal({
   toggleOff,
 }) {
   const toast = useToast();
-  const handleProcessOrder = async (transaction_id, product_id, quantity) => {
+  const handleProcessOrder = async (transaction_id, productId, quantity) => {
     focusManager.setFocused(false);
     await axiosInstance
       .put(`process_order/${transaction_id}`, {
         status: 'process',
         quantity: quantity,
-        product_id: product_id,
+        product_id: productId,
       })
       .then((res) => {
         if (res.status == 201) {

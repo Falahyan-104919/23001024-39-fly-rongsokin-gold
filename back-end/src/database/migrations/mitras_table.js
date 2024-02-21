@@ -4,7 +4,8 @@ const createMitrasTable = `
       user_id UUID REFERENCES users(user_id),
       mitra_type_id UUID REFERENCES mitra_type(mitra_type_id),
       mitra_name VARCHAR(100) NOT NULL,
-      address VARCHAR(100) NOT NULL,
+      bank_name VARCHAR(100) NOT NULL,
+      bank_number NUMERIC NOT NULL,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW()
   );

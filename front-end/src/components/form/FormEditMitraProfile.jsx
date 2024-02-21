@@ -13,6 +13,53 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { useParams } from 'react-router-dom';
 
+const MitraTypeOption = () => {
+  const fetchMitraType = async () => {
+    const mitraType = await axiosInstance
+      .get('mitra_type')
+      .then((res) => res.data)
+      .catch((err) => err.data.message);
+    return mitraType;
+  };
+  const { data, isLoading } = useQuery({
+    queryKey: ['mitra_type'],
+    queryFn: fetchMitraType,
+  });
+
+  if (isLoading) {
+    return null;
+  }
+
+  return data['mitraType'].map((option) => {
+    const { mitra_type_id, type } = option;
+    return (
+      <option key={mitra_type_id} value={mitra_type_id} id={mitra_type_id}>
+        {type}
+      </option>
+    );
+  });
+};
+
+const BankNameOption = () => {
+  const bankName = [
+    'Mandiri',
+    'BRI',
+    'BCA',
+    'BNI',
+    'BTN',
+    'CIMB Niaga',
+    'BSI',
+    'Permata',
+    'OCBC',
+    'Panin',
+  ];
+  return bankName.map((name) => (
+    <option key={name} value={name} id={name}>
+      {name}
+    </option>
+  ));
+};
+
 export default function FormEditMitraProfile() {
   const { userId } = useParams();
   const toast = useToast();
@@ -28,9 +75,6 @@ export default function FormEditMitraProfile() {
       .min(10, 'Mitra Name is Need at least Contain 10 Character')
       .required('Mitra Name is Required'),
     type: Yup.string().required('Mitra Type is Required'),
-    address: Yup.string()
-      .min(30, 'Mitra Address at least Contain 30 Character')
-      .required('Mitra Address is Required'),
   });
 
   const editMitra = async ({ mitra_id, mitra_name, type, address }) => {
@@ -124,36 +168,64 @@ export default function FormEditMitraProfile() {
               </FormControl>
             )}
           </Field>
-          <Field name="type">
+          <Field name="type_id">
             {({ field }) => (
-              <FormControl id="type" isRequired>
+              <FormControl id="type_id" isRequired>
                 <FormLabel>Mitra Type</FormLabel>
                 <Select
                   placeholder="Select Mitra Type"
-                  name="type"
+                  name="type_id"
                   onChange={field.onChange}
                   value={field.value}
                 >
-                  {['Pengumpul', 'Pengelola'].map((type) => (
-                    <option key={type} value={type} id={type}>
-                      {type}
-                    </option>
-                  ))}
+                  <MitraTypeOption />
                 </Select>
               </FormControl>
             )}
           </Field>
-          <Field name="address">
+          <Field name="bank_name">
             {({ field }) => (
-              <FormControl id="type" isRequired>
-                <FormLabel>Mitra Address</FormLabel>
+              <FormControl id="bank_name" isRequired>
+                <FormLabel>Bank Name</FormLabel>
+                <Select
+                  placeholder="Select Bank Name"
+                  name="bank_name"
+                  onChange={field.onChange}
+                  value={field.value}
+                >
+                  <BankNameOption />
+                </Select>
+                <ErrorMessage
+                  name="bank_name"
+                  component={Text}
+                  color="red.500"
+                />
+              </FormControl>
+            )}
+          </Field>
+          <Field name="bank_number">
+            {({ field }) => (
+              <FormControl id="bank_number" isRequired>
+                <FormLabel>Bank Number</FormLabel>
                 <Input
                   {...field}
-                  placeholder="Address"
-                  type="text"
-                  focusBorderColor="teal.100"
+                  maxLength={20}
+                  onChange={(e) => {
+                    if (!isNaN(Number(e.target.value))) {
+                      if (e.target.value == 0) {
+                        setFieldValue('bank_number', '');
+                      }
+                      setFieldValue('bank_number', Number(e.target.value));
+                    } else {
+                      setFieldValue('bank_number', '');
+                    }
+                  }}
                 />
-                <ErrorMessage name="address" component={Text} color="red.500" />
+                <ErrorMessage
+                  name="bank_number"
+                  component={Text}
+                  color="red.500"
+                />
               </FormControl>
             )}
           </Field>

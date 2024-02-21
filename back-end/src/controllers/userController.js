@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { db } = require('../database/db');
 const bcryptjs = require('bcryptjs');
-const fs = require('fs');
-const path = require('path');
 require('dotenv').config();
 
 const userController = {
@@ -209,7 +207,7 @@ const userController = {
   becomeMitra: async (req, res) => {
     try {
       const userId = req.params.userId;
-      const { mitraName, type, address } = req.body;
+      const { mitraName, type, bank_name, bank_number } = req.body;
 
       await db.none(
         `
@@ -220,10 +218,10 @@ const userController = {
 
       const newMitra = await db.one(
         `
-          INSERT INTO mitras (user_id, mitra_name, mitra_type_id, address) 
-          VALUES ($1, $2, $3, $4) RETURNING mitra_id
+          INSERT INTO mitras (user_id, mitra_name, mitra_type_id, bank_name, bank_number) 
+          VALUES ($1, $2, $3, $4, $5) RETURNING mitra_id
         `,
-        [userId, mitraName, type, address]
+        [userId, mitraName, type, bank_name, bank_number]
       );
 
       res.status(201).json({

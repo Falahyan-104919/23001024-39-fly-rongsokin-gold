@@ -16,6 +16,8 @@ const productsImageJunction = require('./migrations/product_image_junction_table
 const userImageJunction = require('./migrations/user_image_junction_table');
 const additionalQuery = require('./migrations/additional_query');
 const extensionsQuery = require('./migrations/extensions_query');
+const paymentReceiptQuery = require('./migrations/payment_receipt_table');
+const deliveryReceiptQuery = require('./migrations/delivery_receipts_table');
 
 const pool = new Pool({
   user: process.env.USER,
@@ -42,6 +44,8 @@ const connectDatabase = () => {
     await t.none(mitraTable);
     await t.none(productsTable);
     await t.none(transactionsTable);
+    await t.none(paymentReceiptQuery);
+    await t.none(deliveryReceiptQuery);
     await t.none(forumCustomersTable);
     await t.none(forumMitrasTable);
     await t.none(imageTable);

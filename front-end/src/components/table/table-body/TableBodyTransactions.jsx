@@ -15,10 +15,12 @@ import { focusManager } from '@tanstack/react-query';
 import { useState } from 'react';
 import ProcessOrderAlertModal from '../../modal/ProcessOrderAlertModal';
 import CancelTransactionAlertModal from '../../modal/CancelTransactionAlertModal';
+import UploadDeliveryReceiptModal from '../../modal/UploadDeliveryReceiptModal';
 
 export default function TableBodyTransaction({ transactions, keyword }) {
   const [openProcessAlert, setOpenProcessAlert] = useState({});
   const [openCancelAlert, setOpenCancelAlert] = useState({});
+  const [openDeliveryModal, setDeliveryModal] = useState({});
 
   const handleOpenProcessAlert = (transaction_id) => {
     setOpenProcessAlert((prevProcessAlert) => ({
@@ -30,6 +32,13 @@ export default function TableBodyTransaction({ transactions, keyword }) {
   const handleOpenCancelAlert = (transaction_id) => {
     setOpenCancelAlert((prevCancelAlert) => ({
       ...prevCancelAlert,
+      [transaction_id]: true,
+    }));
+  };
+
+  const handleOpenDeliveryModal = (transaction_id) => {
+    setDeliveryModal((prevDeliveryModal) => ({
+      ...prevDeliveryModal,
       [transaction_id]: true,
     }));
   };
@@ -48,62 +57,33 @@ export default function TableBodyTransaction({ transactions, keyword }) {
     }));
   };
 
-  const ActionButton = ({
-    status,
-    order_quantity,
-    quantity_product,
-    transactionId,
-    productId,
-  }) => {
+  const handleCloseDeliveryModal = (transaction_id) => {
+    setDeliveryModal((prevDeliveryModal) => ({
+      ...prevDeliveryModal,
+      [transaction_id]: false,
+    }));
+  };
+
+  const ActionButton = ({ status, transactionId }) => {
     switch (status) {
-      case 'pending':
+      case 'waiting_for_payment':
+        return <Text>No Action Needed</Text>;
+      case 'waiting_for_delivery':
         return (
           <ButtonGroup>
             <Button
-              colorScheme="blue"
-              isDisabled={order_quantity > quantity_product}
-              onClick={() => {
-                focusManager.setFocused(false);
-                handleOpenProcessAlert(transactions.transaction_id);
-              }}
+              colorScheme="messenger"
+              onClick={() => handleOpenDeliveryModal(transactionId)}
             >
-              Process
+              Upload Delivery Receipts
             </Button>
-            <ProcessOrderAlertModal
-              transactionId={transactionId}
-              productId={productId}
-              newQuantity={quantity_product - order_quantity}
-              toggleOff={() =>
-                handleCloseProcessAlert(transactions.transaction_id)
-              }
-              open={openProcessAlert[transactions.transaction_id] || false}
-            />
-            <Button
-              colorScheme="red"
-              onClick={() => {
-                focusManager.setFocused(false);
-                handleOpenCancelAlert(transactions.transaction_id);
-              }}
-            >
-              Cancel
-            </Button>
-            <CancelTransactionAlertModal
-              transactionId={transactionId}
-              open={openCancelAlert[transactions.transaction_id] || false}
-              toggleOff={() =>
-                handleCloseCancelAlert(transactions.transaction_id)
-              }
+            <UploadDeliveryReceiptModal
+              open={openDeliveryModal[transactionId] || false}
+              toggleOff={() => handleCloseDeliveryModal(transactionId)}
+              trans_id={transactionId}
             />
           </ButtonGroup>
         );
-      case 'process':
-        return (
-          <Button colorScheme="green" isDisabled>
-            Success
-          </Button>
-        );
-      case 'delivered':
-        return <Button colorScheme="green">Success</Button>;
       default:
         return <Text>No Action Needed</Text>;
     }
@@ -111,16 +91,22 @@ export default function TableBodyTransaction({ transactions, keyword }) {
 
   const BadgeStatus = ({ status }) => {
     switch (status) {
-      case 'pending':
+      case 'waiting_for_payment':
         return (
           <Badge variant="subtle" colorScheme="yellow">
-            {status.toUpperCase()}
+            {status.replaceAll('_', ' ').toUpperCase()}
           </Badge>
         );
-      case 'process':
+      case 'waiting_for_delivery':
         return (
           <Badge variant="subtle" colorScheme="blue">
-            {status.toUpperCase()}
+            {status.replaceAll('_', ' ').toUpperCase()}
+          </Badge>
+        );
+      case 'on_the_way':
+        return (
+          <Badge variant="subtle" colorScheme="green">
+            {status.replaceAll('_', ' ').toUpperCase()}
           </Badge>
         );
       case 'success':
@@ -155,26 +141,28 @@ export default function TableBodyTransaction({ transactions, keyword }) {
   }
   return (
     <Tbody>
-      {filteredTransactions?.map((transaction, index) => (
-        <Tr key={index}>
-          <Td>{transaction.fullname}</Td>
-          <Td>{transaction.name}</Td>
-          <Td>{transaction.quantity}</Td>
-          <Td>RP. {transaction.total_price}</Td>
-          <Td>
-            <BadgeStatus status={transaction.transaction_status} />
-          </Td>
-          <Td colSpan={2} textAlign="center">
-            <ActionButton
-              status={transaction.transaction_status}
-              transactionId={transaction.transaction_id}
-              productId={transaction.product_id}
-              order_quantity={transaction.quantity}
-              quantity_product={transaction.quantity_product}
-            />
-          </Td>
-        </Tr>
-      ))}
+      {filteredTransactions?.map((transaction, index) => {
+        return (
+          <Tr key={index}>
+            <Td>{transaction.fullname}</Td>
+            <Td>{transaction.name}</Td>
+            <Td>{transaction.quantity}</Td>
+            <Td>RP. {transaction.total_price}</Td>
+            <Td>
+              <BadgeStatus status={transaction.transaction_status} />
+            </Td>
+            <Td colSpan={2} textAlign="center">
+              <ActionButton
+                status={transaction.transaction_status}
+                transactionId={transaction.transaction_id}
+                productId={transaction.product_id}
+                order_quantity={transaction.quantity}
+                quantity_product={transaction.quantity_product}
+              />
+            </Td>
+          </Tr>
+        );
+      })}
     </Tbody>
   );
 }

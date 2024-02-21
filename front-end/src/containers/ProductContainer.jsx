@@ -105,6 +105,7 @@ export default function ProductContainer() {
               quantity={data?.productData.quantity}
               ownerId={data?.productOwner.mitra_id}
               productId={data?.productData.product_id}
+              minOrder={data?.productData.minimum_order}
             />
           </Card>
         </GridItem>

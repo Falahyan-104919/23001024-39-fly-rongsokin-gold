@@ -6,7 +6,7 @@ require('dotenv').config();
 const authController = {
   registerUser: async (req, res) => {
     try {
-      const { fullname, email, phoneNumber, password } = req.body;
+      const { fullname, email, phoneNumber, address, password } = req.body;
 
       const existingUser = await db.oneOrNone(
         `
@@ -26,10 +26,10 @@ const authController = {
 
       db.none(
         `
-          INSERT INTO users (fullname, email, phone_number, role, password_hash)
-          VALUES ($1, $2, $3, $4, $5);
+          INSERT INTO users (fullname, email, phone_number, address, password_hash, role)
+          VALUES ($1, $2, $3, $4, $5, $6);
         `,
-        [fullname, email, phoneNumber, 'user', hashedPassword]
+        [fullname, email, phoneNumber, address, hashedPassword, 'user']
       );
 
       return res.status(201).json({
@@ -88,6 +88,7 @@ const authController = {
         fullname: user.fullname,
         email: user.email,
         phoneNumber: user.phone_number,
+        address: user.address,
         role: user.role,
         image_profile: user.image_profile,
       };
