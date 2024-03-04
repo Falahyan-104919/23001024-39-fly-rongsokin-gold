@@ -8,8 +8,6 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from '../../../utils/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';

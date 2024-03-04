@@ -21,6 +21,7 @@ import AdminProductConfiguration from './pages/AdminProductConfiguration';
 import AdminForumCustomerConfiguration from './pages/AdminForumCustomerConfiguration';
 import AdminForumMitraConfiguration from './pages/AdminForumMitraConfiguration';
 import MitraSettings from './pages/MitraSettings';
+import AdminTransactionConfiguration from './pages/AdminTransactionConfiguration';
 
 const queryClient = new QueryClient();
 
@@ -60,6 +61,10 @@ function App() {
           <Route
             path="product_configuration"
             element={<AdminProductConfiguration />}
+          />
+          <Route
+            path="transcation_configuration"
+            element={<AdminTransactionConfiguration />}
           />
           <Route path="mitra_settings" element={<MitraSettings />} />
           <Route

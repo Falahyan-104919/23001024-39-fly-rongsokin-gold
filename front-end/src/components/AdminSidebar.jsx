@@ -13,6 +13,7 @@ import {
   faBoxesPacking,
   faComments,
   faHouse,
+  faMoneyBillTransfer,
   faStore,
   faToolbox,
   faUsers,
@@ -63,6 +64,28 @@ export default function AdminSidebar() {
           <FontAwesomeIcon icon={faBoxesPacking} color="white" />
           <Text fontWeight="bold" color="white">
             Product Configuration
+          </Text>
+        </Box>
+      </ChakraLink>
+      <ChakraLink
+        as={ReactRouterLink}
+        to="transcation_configuration"
+        width="100%"
+        p="5"
+        borderRadius="12px"
+        backgroundColor="teal.300"
+        style={{ textDecoration: 'none' }}
+      >
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          gap="8px"
+          textAlign="center"
+        >
+          <FontAwesomeIcon icon={faMoneyBillTransfer} color="white" />
+          <Text fontWeight="bold" color="white" fontSize="sm">
+            Transaction Configuration
           </Text>
         </Box>
       </ChakraLink>

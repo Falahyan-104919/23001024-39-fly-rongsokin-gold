@@ -74,6 +74,22 @@ const adminController = {
       });
     }
   },
+  getTransaction: async (req, res) => {
+    try {
+      const transaction = await db.manyOrNone(`
+      select t.*, u.fullname, m.mitra_name, p."name" as product_name from transactions t 
+      left join users u on t.buyer_id = u.user_id 
+      left join mitras m on t.mitra_id = m.mitra_id 
+      left join products p on t.product_id = p.product_id 
+      `);
+      res.status(200).json(transaction);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: `Failed to fetch data : ${err}`,
+      });
+    }
+  },
   getForumCustomer: async (req, res) => {
     try {
       const forumList = await db.manyOrNone(`

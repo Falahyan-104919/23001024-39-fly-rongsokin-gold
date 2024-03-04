@@ -11,6 +11,7 @@ router.get(
   '/admin/product_and_mitra_type',
   adminController.getProductTypeWithMitraType
 );
+router.get('/admin/transactions', adminController.getTransaction);
 router.put(
   '/admin/product_type/:productTypeId',
   adminController.putProductType
