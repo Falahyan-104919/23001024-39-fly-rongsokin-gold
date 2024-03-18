@@ -13,11 +13,11 @@ export default function MitraSettingsContainer() {
       rowGap="8px"
       borderRadius="12px"
     >
-      <Heading size="lg" mb={4}>
+      <Heading size="lg" mb="4px">
         Mitra Settings
       </Heading>
       <MitraTypeSettings />
-      <Heading size="lg" mb={4} mt="48px">
+      <Heading size="lg" mb={4} mt="8px">
         Product Settings
       </Heading>
       <ProductTypeSettings />

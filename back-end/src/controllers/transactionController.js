@@ -14,6 +14,7 @@ const transactionController = {
                 LEFT JOIN images i ON pi.image_id = i.image_id 
                 WHERE buyer_id = $1 
                 GROUP BY t.transaction_id, p.name, m.mitra_name
+                ORDER BY t.transaction_status DESC
             `,
         userId
       );
@@ -42,6 +43,7 @@ const transactionController = {
                 LEFT JOIN images i ON pi.image_id = i.image_id 
                 WHERE t.mitra_id = $1 
                 GROUP BY t.transaction_id, p.name, u.fullname, p.quantity, p.product_id
+                ORDER BY t.transaction_status DESC
             `,
         [mitraId]
       );
@@ -54,6 +56,29 @@ const transactionController = {
       console.error(error);
       res.status(500).json({
         message: 'Internal Server Error',
+      });
+    }
+  },
+  getTransactionDetails: async (req, res) => {
+    try {
+      const { transactionId } = req.params;
+      const details = await db.oneOrNone(
+        `
+        select t.*, t.quantity as order_quantity ,p.*, u.*, m.*, pr.*, pr.file_path as payment_pict, dr.*, dr.file_path as delivery_pict from transactions t 
+        left join products p on t.product_id = p.product_id 
+        left join users u on t.buyer_id = u.user_id 
+        left join mitras m on t.mitra_id = m.mitra_id 
+        left join payment_receipt pr on t.transaction_id = pr.transaction_id 
+        left join delivery_receipt dr on t.transaction_id = dr.transaction_id 
+        where t.transaction_id = $1
+      `,
+        transactionId
+      );
+      res.status(200).json({ details });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        message: 'Internal Server error',
       });
     }
   },
@@ -90,6 +115,15 @@ const transactionController = {
     try {
       const userId = req.params.userId;
       const { mitraId, productId, quantity, totalPrice } = req.body;
+
+      await db.none(
+        `
+        UPDATE products 
+        SET quantity = quantity - $2
+        WHERE product_id = $1
+      `,
+        [productId, quantity]
+      );
 
       await db.none(
         `

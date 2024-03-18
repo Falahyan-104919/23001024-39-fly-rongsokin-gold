@@ -27,40 +27,43 @@ export default function AdminProductConfigurationContainer() {
     queryKey: ['products'],
     queryFn: fetchProducts,
   });
-  const filteredProducts = isFetched
-    ? data.filter((product) => {
-        return product['name']
-          .toLowerCase()
-          .includes(keywordProduct.toLowerCase());
-      })
-    : [];
-  return (
-    <Container
-      display="flex"
-      flexDir="column"
-      backgroundColor="white"
-      maxW="full"
-      padding="16px"
-      rowGap="8px"
-      borderRadius="12px"
-    >
-      <Heading size="lg">Configure Product</Heading>
-      <Flex justify="flex-end">
-        <InputGroup maxW="250px">
-          <InputLeftElement pointerEvents="none">
-            <SearchIcon color="gray.300" />
-          </InputLeftElement>
-          <Input
-            placeholder="Search..."
-            onChange={(e) => {
-              setKeywordProduct(e.target.value);
-            }}
-          />
-        </InputGroup>
-      </Flex>
-      <TableContainer>
-        <TableProduct list={filteredProducts} />
-      </TableContainer>
-    </Container>
-  );
+  if (isFetched) {
+    console.log(data);
+    const filteredProducts = Array.isArray(data)
+      ? data.filter((product) => {
+          return product['name']
+            .toLowerCase()
+            .includes(keywordProduct.toLowerCase());
+        })
+      : [];
+    return (
+      <Container
+        display="flex"
+        flexDir="column"
+        backgroundColor="white"
+        maxW="full"
+        padding="16px"
+        rowGap="8px"
+        borderRadius="12px"
+      >
+        <Heading size="lg">Configure Product</Heading>
+        <Flex justify="flex-end">
+          <InputGroup maxW="250px">
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              placeholder="Search..."
+              onChange={(e) => {
+                setKeywordProduct(e.target.value);
+              }}
+            />
+          </InputGroup>
+        </Flex>
+        <TableContainer>
+          <TableProduct list={filteredProducts} />
+        </TableContainer>
+      </Container>
+    );
+  }
 }

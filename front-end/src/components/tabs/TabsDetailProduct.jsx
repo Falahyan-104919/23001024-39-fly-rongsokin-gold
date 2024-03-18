@@ -16,7 +16,15 @@ import {
 import { Link } from 'react-router-dom';
 
 export default function TabsDetailProduct(props) {
-  const { name, product_type, description, price, quantity, unit } = props.data;
+  const {
+    name,
+    product_type,
+    description,
+    price,
+    quantity,
+    unit,
+    minimum_order,
+  } = props.data;
   const { mitra_id, mitra_name, address, type, phone_number } = props.owner;
   return (
     <Tabs variant="enclosed" isFitted p="0">
@@ -65,7 +73,7 @@ export default function TabsDetailProduct(props) {
                 <Td>
                   <Flex>
                     Stock: <Spacer />
-                    {quantity}
+                    {quantity} <Spacer /> Min Order : <Spacer /> {minimum_order}
                   </Flex>
                 </Td>
               </Tr>

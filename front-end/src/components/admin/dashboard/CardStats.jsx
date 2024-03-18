@@ -149,7 +149,7 @@ export default function CardStats() {
           </Flex>
         </CardBody>
         <CardFooter borderTop="1px" justifyContent="space-around">
-          <ChakraLink as={ReactRouterLink} to="forum_customers">
+          <ChakraLink as={ReactRouterLink} to="forum_customer">
             Customer <ExternalLinkIcon mx="2px" />
           </ChakraLink>
           <ChakraLink as={ReactRouterLink} to="forum_mitra">
@@ -187,7 +187,7 @@ export default function CardStats() {
           </Flex>
         </CardBody>
         <CardFooter borderTop="1px">
-          <ChakraLink as={ReactRouterLink} to="/">
+          <ChakraLink as={ReactRouterLink} to="transcation_configuration">
             See More <ExternalLinkIcon mx="2px" />
           </ChakraLink>
         </CardFooter>

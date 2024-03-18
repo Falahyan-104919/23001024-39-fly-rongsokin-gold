@@ -26,6 +26,10 @@ router.put(
 // Transaction Routes
 router.get('/order/:transactionId', transactionController.getTransaction);
 router.get(
+  '/order_details/:transactionId',
+  transactionController.getTransactionDetails
+);
+router.get(
   '/order_list/:userId',
   verifyToken,
   transactionController.getCustomerTransaction

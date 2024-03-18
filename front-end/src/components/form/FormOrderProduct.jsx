@@ -16,8 +16,10 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AuthContext } from '../../store/AuthProvider';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function FormOrderProduct(props) {
+  const queryClient = useQueryClient();
   const { user, isLoggedIn } = useContext(AuthContext);
   const [totalPrice, setTotalPrice] = useState(0);
   const toast = useToast();
@@ -62,6 +64,7 @@ export default function FormOrderProduct(props) {
     const response = await postTransaction(values);
     switch (response.status) {
       case 201:
+        queryClient.invalidateQueries('product');
         toast({
           title: 'Order Successfull!',
           description: response.message,

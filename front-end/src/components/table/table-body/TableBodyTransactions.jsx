@@ -16,6 +16,9 @@ import { useState } from 'react';
 import ProcessOrderAlertModal from '../../modal/ProcessOrderAlertModal';
 import CancelTransactionAlertModal from '../../modal/CancelTransactionAlertModal';
 import UploadDeliveryReceiptModal from '../../modal/UploadDeliveryReceiptModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import ModalTransactionDetails from '../../admin/transaction_configuration/ModalTransactionDetails';
 
 export default function TableBodyTransaction({ transactions, keyword }) {
   const [openProcessAlert, setOpenProcessAlert] = useState({});
@@ -65,6 +68,10 @@ export default function TableBodyTransaction({ transactions, keyword }) {
   };
 
   const ActionButton = ({ status, transactionId }) => {
+    const [isOpen, setOpen] = useState(false);
+    const handleDetails = () => {
+      setOpen((state) => !state);
+    };
     switch (status) {
       case 'waiting_for_payment':
         return <Text>No Action Needed</Text>;
@@ -83,6 +90,20 @@ export default function TableBodyTransaction({ transactions, keyword }) {
               trans_id={transactionId}
             />
           </ButtonGroup>
+        );
+      case 'success':
+        return (
+          <>
+            <Button colorScheme="gray" onClick={() => handleDetails()}>
+              <FontAwesomeIcon icon={faEye} style={{ marginRight: '8px' }} />
+              See Details
+            </Button>
+            <ModalTransactionDetails
+              open={isOpen}
+              toggleOff={handleDetails}
+              id={transactionId}
+            />
+          </>
         );
       default:
         return <Text>No Action Needed</Text>;

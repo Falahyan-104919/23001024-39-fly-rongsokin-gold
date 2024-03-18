@@ -1,5 +1,3 @@
-import axiosInstance from '../../../utils/axios';
-import { focusManager } from '@tanstack/react-query';
 import {
   Badge,
   Box,
@@ -15,6 +13,9 @@ import { useState } from 'react';
 import DeliveredProductsAlertModal from '../../modal/DeliveredProductsAlertModal';
 import UploadPaymentReceiptModal from '../../modal/UploadPaymentReceiptModal';
 import DeliveryDetailsModal from '../../modal/DeliveryDetailsModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import ModalTransactionDetails from '../../admin/transaction_configuration/ModalTransactionDetails';
 
 export default function TableBodyOrders({ orders, keyword }) {
   const [openUploadPaymentReceiptModal, setUploadPaymentReceiptModal] =
@@ -54,6 +55,10 @@ export default function TableBodyOrders({ orders, keyword }) {
   });
 
   const ActionButton = ({ status, id }) => {
+    const [isOpen, setOpen] = useState(false);
+    const handleDetails = () => {
+      return setOpen((state) => !state);
+    };
     switch (status) {
       case 'waiting_for_payment':
         return (
@@ -86,6 +91,20 @@ export default function TableBodyOrders({ orders, keyword }) {
               open={deliverysModal[id] || false}
               toggleOff={() => handleCloseDeliveryModal(id)}
               transaction_id={id}
+            />
+          </>
+        );
+      case 'success':
+        return (
+          <>
+            <Button colorScheme="gray" onClick={() => handleDetails()}>
+              <FontAwesomeIcon icon={faEye} style={{ marginRight: '8px' }} />
+              See Details
+            </Button>
+            <ModalTransactionDetails
+              open={isOpen}
+              toggleOff={handleDetails}
+              id={id}
             />
           </>
         );

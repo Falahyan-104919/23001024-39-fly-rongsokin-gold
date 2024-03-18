@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }) => {
         password: password,
       })
       .then((response) => {
-        console.log(response.data);
         return {
           status: response.status,
           data: response.data,

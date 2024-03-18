@@ -24,7 +24,10 @@ export default function TableTransaction({ list }) {
               <BadgeStatus status={transaction.transaction_status} />
             </Td>
             <Td>
-              <ActionButton status={transaction.transaction_status} />
+              <ActionButton
+                status={transaction.transaction_status}
+                id={transaction.transaction_id}
+              />
             </Td>
           </Tr>
         ))}

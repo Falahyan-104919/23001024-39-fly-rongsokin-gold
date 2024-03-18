@@ -1,13 +1,31 @@
-const ActionButton = ({ status }) => {
+import { Button } from '@chakra-ui/react';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
+import ModalTransactionDetails from './ModalTransactionDetails';
+
+const ActionButton = ({ status, id }) => {
+  const [isOpen, setOpen] = useState(false);
+  const handleModal = () => {
+    return setOpen((state) => !state);
+  };
   switch (status) {
-    case 'waiting_for_delivery':
-      return 'Payment Details';
-    case 'on_the_way':
-      return 'Payment Details & Delivery Details';
-    case 'success':
-      return 'Payment Details & Delivery Details';
+    case 'cancel':
+      return 'No Actions Needed';
     default:
-      return 'No Action Needs';
+      return (
+        <>
+          <Button colorScheme="gray" onClick={() => handleModal()}>
+            <FontAwesomeIcon icon={faEye} style={{ marginRight: '8px' }} />
+            See Details
+          </Button>
+          <ModalTransactionDetails
+            open={isOpen}
+            toggleOff={handleModal}
+            id={id}
+          />
+        </>
+      );
   }
 };
 
