@@ -38,7 +38,7 @@ export default function LastTransactionPlacedTable({ loading, activity }) {
       <Table size="md" colorScheme="gray" variant="striped">
         <Thead>
           <Tr>
-            <Th>Product</Th>
+            <Th>Buyer</Th>
             <Th>Date Time</Th>
           </Tr>
         </Thead>
@@ -61,7 +61,7 @@ export default function LastTransactionPlacedTable({ loading, activity }) {
             {activity.map((act, index) => {
               return (
                 <Tr key={index}>
-                  <Td>{act.name}</Td>
+                  <Td>{act.fullname}</Td>
                   <Td>{formatingDate(act.transaction_date)}</Td>
                 </Tr>
               );

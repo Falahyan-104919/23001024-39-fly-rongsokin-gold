@@ -57,6 +57,7 @@ export default function UserProfileContainer() {
         borderRadius="15px"
         p="25px"
         gap={3}
+        boxShadow="outline"
       >
         <GridItem colSpan={4} rowSpan={1}>
           <Heading mb="25px">User Profile</Heading>

@@ -27,13 +27,13 @@ export default function AdminTransactionConfigurationContainer() {
     queryFn: fetchTransaction,
   });
 
-  const filteredTransaction = isFetched
-    ? data.filter((transaction) => {
-        return transaction['product_name']
-          .toLowerCase()
-          .includes(keywordTranscation.toLowerCase());
-      })
-    : [];
+  // const filteredTransaction = isFetched
+  //   ? data.filter((transaction) => {
+  //       return transaction['product_name']
+  //         .toLowerCase()
+  //         .includes(keywordTranscation.toLowerCase());
+  //     })
+  //   : [];
 
   return (
     <Container
@@ -44,6 +44,7 @@ export default function AdminTransactionConfigurationContainer() {
       padding="16px"
       rowGap="8px"
       borderRadius="12px"
+      boxShadow="outline"
     >
       <Heading size="lg">Transaction Details</Heading>
       <Flex justify="flex-end">
@@ -60,7 +61,7 @@ export default function AdminTransactionConfigurationContainer() {
         </InputGroup>
       </Flex>
       <TableContainer>
-        <TableTransaction list={filteredTransaction} />
+        {isFetched ? <TableTransaction list={data} /> : null}
       </TableContainer>
     </Container>
   );

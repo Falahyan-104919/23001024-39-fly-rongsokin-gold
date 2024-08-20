@@ -7,7 +7,7 @@ export default function MitraProfile({ mitraId }) {
   return (
     <Card
       variant="elevated"
-      bgColor="teal.300"
+      bgColor="#ffffff"
       h="40px"
       justifyContent="center"
       alignItems="center"
@@ -15,8 +15,8 @@ export default function MitraProfile({ mitraId }) {
     >
       <Link to={`/mitra/${mitraId}`}>
         <Flex as="span" alignItems="center" textAlign="left">
-          <FontAwesomeIcon icon={faStore} color="white" />
-          <Text ml="10px" fontWeight="bold" color="white">
+          <FontAwesomeIcon icon={faStore} color="#03045e" />
+          <Text ml="10px" fontWeight="bold" color="#03045e">
             Mitra Profile
           </Text>
         </Flex>

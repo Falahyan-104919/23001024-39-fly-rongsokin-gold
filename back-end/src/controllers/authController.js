@@ -1,12 +1,27 @@
 const { db } = require('../database/db');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const b64 = require('js-base64');
+const axios = require('axios');
 require('dotenv').config();
 
 const authController = {
   registerUser: async (req, res) => {
     try {
-      const { fullname, email, phoneNumber, address, password } = req.body;
+      const { fullname, email, phoneNumber, address, password, token } =
+        req.body;
+
+      // console.log(token);
+      const response = await axios.post(`
+          https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_KEY}&response=${token}
+        `);
+      console.log(response.data);
+      if (!response.data.success) {
+        res.status(404).json({
+          message: 'Anda Robot',
+        });
+      }
 
       const existingUser = await db.oneOrNone(
         `
@@ -114,6 +129,107 @@ const authController = {
       });
     } catch (error) {
       console.error(error);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  forgotPassword: async (req, res) => {
+    try {
+      console.log('HIT!!!!');
+      const { email } = req.body;
+      const JWT_SECRET = process.env.JWT_SECRET;
+      const GMAIL = process.env.GMAIL_USERNAME || 'scm.rongsokinid@gmail.com';
+      const GMAIL_PASSWORD =
+        process.env.GMAIL_PASSWORD || 'ilez fccv shak etii';
+
+      const user = await db.oneOrNone(
+        `
+          SELECT user_id,email
+          from users
+          WHERE email = $1
+        `,
+        [email]
+      );
+      if (!user) {
+        return res.status(404).json({
+          message: 'User Not Found',
+        });
+      }
+
+      const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, {
+        expiresIn: '15m',
+      });
+      const encodedToken = b64.encode(token);
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: GMAIL,
+          pass: GMAIL_PASSWORD,
+        },
+      });
+
+      const mailOptions = {
+        from: GMAIL,
+        to: user.email,
+        subject: 'Password Reset',
+        text: `You requested a password reset. Click the link to reset your password : ${req.headers.origin}/reset_password/${encodedToken} \n Please note that this link is only Valid fot 15 minutes`,
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log('Email sent: ' + info.response);
+      });
+
+      res.status(200).json({
+        message: 'Your Password Reset Link Successfully Sended',
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+      });
+    }
+  },
+  resetPassword: async (req, res) => {
+    try {
+      const { token } = req.params;
+      const { password } = req.body;
+
+      const decoded_token = b64.decode(token);
+
+      const decoded = jwt.verify(decoded_token, process.env.JWT_SECRET);
+      const user = await db.oneOrNone(
+        `
+        SELECT * from users
+        WHERE user_id = $1
+      `,
+        [decoded.userId]
+      );
+      if (!user) {
+        return res.status(404).json({
+          message: 'User not found',
+          user_id: decoded,
+        });
+      }
+
+      const hashedPassword = await bcryptjs.hash(password, 10);
+
+      await db.none(
+        `
+        UPDATE users SET password_hash = $1 WHERE user_id = $2
+      `,
+        [hashedPassword, decoded.userId]
+      );
+
+      return res.status(200).json({
+        message: 'Successfully Reset Password',
+      });
+    } catch (err) {
+      console.error(err);
       return res.status(500).json({
         message: 'Internal Server Error',
       });

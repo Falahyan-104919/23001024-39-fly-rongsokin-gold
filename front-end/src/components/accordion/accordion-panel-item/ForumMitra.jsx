@@ -7,7 +7,7 @@ export default function ForumMitra() {
   return (
     <Card
       variant="elevated"
-      bgColor="teal.300"
+      bgColor="#ffffff"
       h="40px"
       justifyContent="center"
       mt="10px"
@@ -15,8 +15,8 @@ export default function ForumMitra() {
     >
       <Link to="/forum_mitra">
         <Flex as="span" alignItems="center" textAlign="left">
-          <FontAwesomeIcon icon={faHandshake} color="white" />
-          <Text ml="10px" fontWeight="bold" color="white" fontSize="md">
+          <FontAwesomeIcon icon={faHandshake} color="#03045e" />
+          <Text ml="10px" fontWeight="bold" color="#03045e" fontSize="md">
             Forum Mitra
           </Text>
         </Flex>

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   HStack,
   Image,
@@ -15,6 +16,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../store/AuthProvider';
 import LogoutButton from './button/LogoutButton';
+import CartProducts from './cart/CartProducts';
 
 export default function Navbar() {
   const { isLoggedIn } = useContext(AuthContext);
@@ -28,7 +30,7 @@ export default function Navbar() {
   };
 
   return (
-    <Flex as="nav" bg={'teal.600'} alignItems="center" p="5px">
+    <Flex as="nav" bg={'#03045e'} alignItems="center" p="5px">
       <Link to="/">
         <Image
           ml="25px"
@@ -40,6 +42,7 @@ export default function Navbar() {
       </Link>
       <Spacer />
       <HStack>
+        {isLoggedIn ? <CartProducts /> : null}
         <form onSubmit={handleSubmit}>
           <Box bgColor={'whitesmoke'} borderRadius={10}>
             <InputGroup alignContent={'center'}>

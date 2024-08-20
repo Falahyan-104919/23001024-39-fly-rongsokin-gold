@@ -44,7 +44,12 @@ export default function ProductTable() {
   });
 
   return (
-    <TableContainer borderRadius="10px" bgColor="white" p="10px">
+    <TableContainer
+      borderRadius="10px"
+      bgColor="white"
+      p="10px"
+      boxShadow="outline"
+    >
       <Flex mb="10px">
         <Button
           colorScheme="whatsapp"
@@ -76,12 +81,7 @@ export default function ProductTable() {
           focusManager.setFocused(true);
         }}
       />
-      <Table
-        variant="simple"
-        colorScheme="teal"
-        bgColor="gray.100"
-        borderRadius="10px"
-      >
+      <Table variant="simple" borderRadius="10px">
         <Thead>
           <Tr>
             <Th textAlign="center">Name</Th>

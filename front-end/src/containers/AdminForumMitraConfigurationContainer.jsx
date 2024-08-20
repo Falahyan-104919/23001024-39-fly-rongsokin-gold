@@ -41,6 +41,7 @@ export default function AdminForumMitraConfigurationContainer() {
       padding="16px"
       rowGap="8px"
       borderRadius="12px"
+      boxShadow="outline"
     >
       <Heading size="lg">Forum Mitra Configuration</Heading>
       <Flex justify="flex-end">

@@ -4,6 +4,7 @@ import { Button, ButtonGroup, Tbody, Td, Text, Tr } from '@chakra-ui/react';
 import EditProductsModal from '../../modal/EditProducts.Modal';
 import { DeleteIcon } from '@chakra-ui/icons';
 import DeleteProductsAlert from '../../modal/DeleteProductsAlertModal';
+import formatNumberWithCommas from '../../../utils/helper';
 
 export default function TableBodyProduct({ products, keyword }) {
   const [openModalsAddProducts, setOpenModalsAddProducts] = useState({});
@@ -59,7 +60,7 @@ export default function TableBodyProduct({ products, keyword }) {
         <Tr key={product.product_id}>
           <Td>{product.name}</Td>
           <Td>{product.product_type}</Td>
-          <Td>Rp. {product.price}</Td>
+          <Td>Rp. {formatNumberWithCommas(product.price)}</Td>
           <Td>{product.quantity}</Td>
           <Td colSpan="2" textAlign="center">
             <ButtonGroup>

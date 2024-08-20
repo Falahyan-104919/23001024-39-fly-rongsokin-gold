@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../../utils/axios';
+import formatNumberWithCommas from '../../../utils/helper';
 
 function convertString(str) {
   const words = str.split('_');
@@ -23,7 +24,12 @@ function convertString(str) {
   return format;
 }
 
-export default function ModalTransactionDetails({ open, toggleOff, id }) {
+export default function ModalTransactionDetails({
+  open,
+  toggleOff,
+  id,
+  products,
+}) {
   const fetchTransactionDetails = async () => {
     const res = await axiosInstance
       .get(`order_details/${id}`)
@@ -35,7 +41,6 @@ export default function ModalTransactionDetails({ open, toggleOff, id }) {
     queryKey: ['transaction_details', id],
     queryFn: fetchTransactionDetails,
   });
-  if (isFetched) console.log(data);
   return (
     <AlertDialog
       isOpen={open}
@@ -54,25 +59,69 @@ export default function ModalTransactionDetails({ open, toggleOff, id }) {
             {isFetched ? (
               <>
                 <Flex justify="center" flexDir="column" gap="16px">
-                  <Box shadow="lg" borderRadius="lg" p="2">
-                    <Text fontSize="3xl">Order Data</Text>
+                  <Box shadow="lg" borderRadius="lg" p="4">
+                    <Text fontSize="3xl" fontWeight="bold">
+                      Order Data
+                    </Text>
                     <Flex flexDir="column" gap="4px" mt="2">
-                      <Text>Buyer : {data.fullname}</Text>
-                      <Text>Mitra : {data.mitra_name}</Text>
-                      <Text>Products : {data.name}</Text>
-                      <Text>Quantity : {data.order_quantity}</Text>
+                      <Text fontWeight="medium">Buyer : {data.fullname}</Text>
+                      <Text fontWeight="medium">Mitra : {data.mitra_name}</Text>
+                      <Text fontWeight="medium" fontSize="2xl">
+                        Products
+                      </Text>
+                      {products?.map((products, index) => {
+                        return (
+                          <Box
+                            key={index}
+                            shadow="base"
+                            rounded="md"
+                            padding={4}
+                            mb={4}
+                          >
+                            <Flex gap={4} alignItems={'center'}>
+                              <Image
+                                src={`http://localhost:8080/${products.image_path}`}
+                                alt={products.name}
+                                w="125px"
+                                h="125px"
+                              />
+                              <Box flex={1}>
+                                <Text fontWeight="medium">
+                                  Name : {products.product_name}
+                                </Text>
+                                <Text fontWeight="medium">
+                                  Price : Rp.{' '}
+                                  {formatNumberWithCommas(products.price)}
+                                </Text>
+                                <Text fontWeight="medium">
+                                  Order Quantity : {products.quantity}
+                                </Text>
+                                <Text fontWeight="medium">
+                                  Total Price : Rp.{' '}
+                                  {formatNumberWithCommas(products.price)}
+                                </Text>
+                              </Box>
+                            </Flex>
+                          </Box>
+                        );
+                      })}
                     </Flex>
                   </Box>
                   {data['transfer_receipt_id'] ? (
-                    <Box shadow="lg" borderRadius="lg" p="2">
-                      <Text fontSize="3xl">Payment Data</Text>
+                    <Box shadow="lg" borderRadius="lg" p="4">
+                      <Text fontSize="3xl" fontWeight="bold">
+                        Payment Data
+                      </Text>
                       <Flex flexDir="column" gap="4px" mt="2">
-                        <Text>
+                        <Text fontWeight="medium">
                           Payment Method : {convertString(data.payment_method)}
                         </Text>
-                        <Text>From : {data.fullname}</Text>
-                        <Text>Amount : Rp. {data.payment_amount} </Text>
-                        <Text>Payment Receipt</Text>
+                        <Text fontWeight="medium">From : {data.fullname}</Text>
+                        <Text fontWeight="medium">
+                          Amount : Rp.{' '}
+                          {formatNumberWithCommas(data.payment_amount)}
+                        </Text>
+                        <Text fontWeight="medium">Payment Receipt</Text>
                         <Box alignSelf="center" m="8px">
                           <Image
                             src={`http://localhost:8080/${data.payment_pict}`}
@@ -84,17 +133,22 @@ export default function ModalTransactionDetails({ open, toggleOff, id }) {
                     </Box>
                   ) : null}
                   {data['delivery_receipt_id'] ? (
-                    <Box shadow="lg" borderRadius="lg" p="2">
-                      <Text fontSize="3xl">Delivery Data</Text>
+                    <Box shadow="lg" borderRadius="lg" p="4">
+                      <Text fontSize="3xl" fontWeight="bold">
+                        Delivery Data
+                      </Text>
                       <Flex flexDir="column" gap="4px" mt="2">
-                        <Text>
+                        <Text fontWeight="medium">
                           Delivery Method :{' '}
                           {convertString(data.delivery_services)}
                         </Text>
                         {data.tracking_number ? (
-                          <Text> Tracking Number : {data.tracking_number}</Text>
+                          <Text fontWeight="medium">
+                            {' '}
+                            Tracking Number : {data.tracking_number}
+                          </Text>
                         ) : null}
-                        <Text>Delivery Receipts</Text>
+                        <Text fontWeight="medium">Delivery Receipts</Text>
                         <Box alignSelf="center" m="8px">
                           <Image
                             src={`http://localhost:8080/${data.delivery_pict}`}

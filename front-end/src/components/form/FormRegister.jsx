@@ -12,10 +12,12 @@ import {
 import { ErrorMessage, Form, Formik, Field } from 'formik';
 import axiosInstance from '../../utils/axios';
 import * as Yup from 'yup';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { AuthContext } from '../../store/AuthProvider';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function FormRegister({ close }) {
+  const captchaRef = useRef(null);
   const { login } = useContext(AuthContext);
   const toast = useToast();
   const registerSchema = Yup.object().shape({
@@ -48,13 +50,10 @@ export default function FormRegister({ close }) {
     passwordConf: '',
   };
 
-  const register = async ({
-    email,
-    fullname,
-    phoneNumber,
-    address,
-    password,
-  }) => {
+  const register = async (
+    { email, fullname, phoneNumber, address, password },
+    captcha
+  ) => {
     const user = {
       email: '',
       password: '',
@@ -67,6 +66,7 @@ export default function FormRegister({ close }) {
         phoneNumber: phoneNumber,
         address: address,
         password: password,
+        token: captcha,
       })
       .then((res) => {
         user.email = email;
@@ -91,7 +91,8 @@ export default function FormRegister({ close }) {
   };
 
   const handleSubmit = async (values, actions) => {
-    const res = await register(values);
+    const token = captchaRef.current.getValue();
+    const res = await register(values, token);
     switch (res.status) {
       case 409:
         return toast({
@@ -233,6 +234,7 @@ export default function FormRegister({ close }) {
               </FormControl>
             )}
           </Field>
+          <ReCAPTCHA sitekey={import.meta.env.VITE_SITE_KEY} ref={captchaRef} />
           <Button
             w="100%"
             mt={4}

@@ -58,13 +58,13 @@ export default function CardStats() {
             minW="max-content"
             columnGap="12px"
           >
-            <FontAwesomeIcon icon={faUsers} fontSize="48px" color="teal" />
+            <FontAwesomeIcon icon={faUsers} fontSize="48px" color="#03045e" />
             {isLoading ? (
               <Spinner
                 thickness="4px"
                 speed="0.65s"
                 emptyColor="gray.200"
-                color="teal.500"
+                color="#03045e"
                 size="xl"
               />
             ) : (
@@ -96,14 +96,14 @@ export default function CardStats() {
             <FontAwesomeIcon
               icon={faBoxesStacked}
               fontSize="48px"
-              color="teal"
+              color="#03045e"
             />
             {isLoading ? (
               <Spinner
                 thickness="4px"
                 speed="0.65s"
                 emptyColor="gray.200"
-                color="teal.500"
+                color="#03045e"
                 size="xl"
               />
             ) : (
@@ -132,7 +132,11 @@ export default function CardStats() {
             minW="max-content"
             columnGap="12px"
           >
-            <FontAwesomeIcon icon={faComments} fontSize="48px" color="teal" />
+            <FontAwesomeIcon
+              icon={faComments}
+              fontSize="48px"
+              color="#03045e"
+            />
             {isLoading ? (
               <Spinner
                 thickness="4px"
@@ -170,7 +174,11 @@ export default function CardStats() {
             minW="max-content"
             columnGap="12px"
           >
-            <FontAwesomeIcon icon={faMoneyBill} fontSize="48px" color="teal" />
+            <FontAwesomeIcon
+              icon={faMoneyBill}
+              fontSize="48px"
+              color="#03045e"
+            />
             {isLoading ? (
               <Spinner
                 thickness="4px"

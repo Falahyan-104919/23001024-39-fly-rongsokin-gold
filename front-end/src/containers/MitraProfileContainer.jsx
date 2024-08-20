@@ -77,12 +77,12 @@ export default function MitraProfileContainer() {
         borderRadius="15px"
         p="25px"
         gap={3}
+        boxShadow="outline"
       >
         <GridItem colSpan={4} rowSpan={1}>
           <Heading mb="25px">Mitra Profile</Heading>
           <Box>
             <Text>Mitra Name : {data.mitraProfile.mitra_name}</Text>
-            <Text>Address : {data.mitraProfile.address}</Text>
             <Text>Email : {data.mitraProfile.email}</Text>
             <Text>Phone : {data.mitraProfile.phone_number}</Text>
           </Box>

@@ -16,6 +16,7 @@ import DeliveryDetailsModal from '../../modal/DeliveryDetailsModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import ModalTransactionDetails from '../../admin/transaction_configuration/ModalTransactionDetails';
+import formatNumberWithCommas from '../../../utils/helper';
 
 export default function TableBodyOrders({ orders, keyword }) {
   const [openUploadPaymentReceiptModal, setUploadPaymentReceiptModal] =
@@ -51,10 +52,10 @@ export default function TableBodyOrders({ orders, keyword }) {
   };
 
   const filteredOrders = orders.filter((order) => {
-    return order.name.toLowerCase().includes(keyword.toLowerCase());
+    return order.mitra_name.toLowerCase().includes(keyword.toLowerCase());
   });
 
-  const ActionButton = ({ status, id }) => {
+  const ActionButton = ({ status, id, products }) => {
     const [isOpen, setOpen] = useState(false);
     const handleDetails = () => {
       return setOpen((state) => !state);
@@ -105,6 +106,7 @@ export default function TableBodyOrders({ orders, keyword }) {
               open={isOpen}
               toggleOff={handleDetails}
               id={id}
+              products={products}
             />
           </>
         );
@@ -163,10 +165,8 @@ export default function TableBodyOrders({ orders, keyword }) {
     <Tbody>
       {filteredOrders?.map((order, index) => (
         <Tr key={index}>
-          <Td>{order.name}</Td>
-          <Td>{order.quantity}</Td>
-          <Td>RP. {order.total_price}</Td>
           <Td>{order.mitra_name}</Td>
+          <Td>RP. {formatNumberWithCommas(order.total_price)}</Td>
           <Td>
             <BadgeStatus status={order.transaction_status} />
           </Td>
@@ -175,6 +175,7 @@ export default function TableBodyOrders({ orders, keyword }) {
               <ActionButton
                 status={order.transaction_status}
                 id={order.transaction_id}
+                products={order.products}
               />
             </ButtonGroup>
           </Td>

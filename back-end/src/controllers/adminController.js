@@ -41,8 +41,8 @@ const adminController = {
           WHERE rank <= 5
         `);
       const transactionLastAct = await db.manyOrNone(`
-        select p.name, t.transaction_date  from transactions t 
-        left join products p on t.product_id = p.product_id 
+        select u.fullname, t.transaction_date  from transactions t 
+        left join users u on t.buyer_id = u.user_id
         order by t.transaction_date desc limit 5
         `);
       res.status(200).json({
@@ -77,10 +77,10 @@ const adminController = {
   getTransaction: async (req, res) => {
     try {
       const transaction = await db.manyOrNone(`
-      select t.*, u.fullname, m.mitra_name, p."name" as product_name from transactions t 
+      select t.*, u.fullname, m.mitra_name from transactions t 
       left join users u on t.buyer_id = u.user_id 
       left join mitras m on t.mitra_id = m.mitra_id 
-      left join products p on t.product_id = p.product_id 
+      order by t.transaction_date DESC
       `);
       res.status(200).json(transaction);
     } catch (err) {

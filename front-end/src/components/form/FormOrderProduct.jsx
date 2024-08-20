@@ -1,13 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import * as Yup from 'yup';
 import axiosInstance from '../../utils/axios';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import {
   Box,
   Button,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
@@ -17,6 +16,10 @@ import {
 } from '@chakra-ui/react';
 import { AuthContext } from '../../store/AuthProvider';
 import { useQueryClient } from '@tanstack/react-query';
+import AddProducts from '../cart/components/ui/AddProducts';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import formatNumberWithCommas from '../../utils/helper';
 
 export default function FormOrderProduct(props) {
   const queryClient = useQueryClient();
@@ -38,8 +41,7 @@ export default function FormOrderProduct(props) {
   const postTransaction = async (values) => {
     const orderBody = {
       mitraId: props.ownerId,
-      productId: props.productId,
-      quantity: values.quantity,
+      products: [{ ...props.product, order_quantity: values.quantity }],
       totalPrice: values.total_price,
     };
     const response = await axiosInstance
@@ -97,7 +99,7 @@ export default function FormOrderProduct(props) {
       }
       return (
         <Button
-          w="100%"
+          w="65%"
           mt="15px"
           colorScheme="teal"
           isLoading={props.isSubmitting}
@@ -115,7 +117,7 @@ export default function FormOrderProduct(props) {
     }
     return (
       <Button
-        w="100%"
+        w="65%"
         mt="15px"
         colorScheme="teal"
         isLoading={props.isSubmitting}
@@ -175,7 +177,9 @@ export default function FormOrderProduct(props) {
                       />
                     </HStack>
                     <Spacer />
-                    <Text>Total Price : Rp. {totalPrice}</Text>
+                    <Text>
+                      Total Price : Rp. {formatNumberWithCommas(totalPrice)}
+                    </Text>
                   </Flex>
                   {errors.quantity ? (
                     <Text color="red.500" fontSize="sm" fontWeight="light">
@@ -185,17 +189,38 @@ export default function FormOrderProduct(props) {
                 </FormControl>
               )}
             </Field>
-            <OrderButton
-              userMitraId={user.mitraId}
-              ownerProduct={props.ownerId}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              dirty={dirty}
-              isLoggedIn={isLoggedIn}
-              handleSubmit={handleSubmit}
-              actions={actions}
-              values={values}
-            />
+            <Flex gap={'8px'} grow="1" alignItems="end">
+              {user.mitraId == props.ownerId ? null : (
+                <AddProducts
+                  disabled={isSubmitting || !isValid || !dirty || !isLoggedIn}
+                  mitra_id={props.ownerId}
+                  products={props.product}
+                  order_quantity={values.quantity}
+                />
+              )}
+              <OrderButton
+                userMitraId={user.mitraId}
+                ownerProduct={props.ownerId}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                dirty={dirty}
+                isLoggedIn={isLoggedIn}
+                handleSubmit={handleSubmit}
+                actions={actions}
+                values={values}
+              />
+              <Button
+                onClick={() => {
+                  window.open(
+                    `http://wa.me/62${props.whatsappNumber}`,
+                    '_blank'
+                  );
+                }}
+                colorScheme="whatsapp"
+              >
+                <FontAwesomeIcon icon={faWhatsapp} size="2x" />
+              </Button>
+            </Flex>
           </Form>
         )}
       </Formik>

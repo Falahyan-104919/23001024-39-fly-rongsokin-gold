@@ -23,14 +23,15 @@ export function AccordionProfile({ userId }) {
       mt="10px"
       mb="10px"
       border={'unset'}
-      boxShadow="base"
+      boxShadow="outline"
       borderRadius="15px"
+      bgColor="#03045e"
       isDisabled={!isLoggedIn}
     >
       <AccordionButton>
         <Flex as="span" alignItems="center" textAlign="left" border="teal">
-          <FontAwesomeIcon icon={faUser} color="white" />
-          <Text ml="20px" fontWeight="bold" color="white">
+          <FontAwesomeIcon icon={faUser} color="#caf0f8" />
+          <Text ml="20px" fontWeight="bold" color="#caf0f8">
             Profile
           </Text>
         </Flex>

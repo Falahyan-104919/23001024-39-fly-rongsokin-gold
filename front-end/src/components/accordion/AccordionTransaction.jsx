@@ -21,15 +21,16 @@ export function AccordionTransaction({ role }) {
     <AccordionItem
       mt="10px"
       mb="10px"
+      bgColor="#03045e"
       border={'unset'}
-      boxShadow="base"
+      boxShadow="outline"
       borderRadius="15px"
       isDisabled={!isLoggedIn}
     >
       <AccordionButton>
         <Flex as="span" alignItems="center" textAlign="left" border="teal">
-          <FontAwesomeIcon icon={faCartShopping} color="white" />
-          <Text ml="20px" fontWeight="bold" color="white">
+          <FontAwesomeIcon icon={faCartShopping} color="#caf0f8" />
+          <Text ml="20px" fontWeight="bold" color="#caf0f8">
             Transaction
           </Text>
         </Flex>

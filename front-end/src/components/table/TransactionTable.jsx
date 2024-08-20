@@ -39,7 +39,12 @@ export default function TransactionTable() {
   });
 
   return (
-    <TableContainer borderRadius="10px" bgColor="white" p="10px">
+    <TableContainer
+      borderRadius="10px"
+      bgColor="white"
+      p="10px"
+      boxShadow="outline"
+    >
       <Flex mb="10px">
         <Spacer />
         <InputGroup maxW="250px">
@@ -58,9 +63,7 @@ export default function TransactionTable() {
         <Thead>
           <Tr>
             <Th>Buyer Name</Th>
-            <Th>Product Name</Th>
-            <Th>Quantity</Th>
-            <Th>Price</Th>
+            <Th>Total Price</Th>
             <Th>Status</Th>
             <Th colSpan="2" textAlign="center">
               Actions

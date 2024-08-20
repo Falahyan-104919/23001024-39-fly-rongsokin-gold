@@ -22,6 +22,8 @@ import AdminForumCustomerConfiguration from './pages/AdminForumCustomerConfigura
 import AdminForumMitraConfiguration from './pages/AdminForumMitraConfiguration';
 import MitraSettings from './pages/MitraSettings';
 import AdminTransactionConfiguration from './pages/AdminTransactionConfiguration';
+import { ForgotPasswordLayout } from './layout/ForgotPasswordLayout';
+import { ResetPasswordLayout } from './layout/ResetPasswordLayout';
 
 const queryClient = new QueryClient();
 
@@ -72,10 +74,15 @@ function App() {
             element={<AdminForumCustomerConfiguration />}
           />
           <Route
-            path="forum_Mitra"
+            path="forum_mitra"
             element={<AdminForumMitraConfiguration />}
           />
         </Route>
+        <Route path="/forgot" element={<ForgotPasswordLayout />} />
+        <Route
+          path="/reset_password/:token"
+          element={<ResetPasswordLayout />}
+        />
       </Routes>
     </QueryClientProvider>
   );

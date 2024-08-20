@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../utils/axios';
 import Countdown from '../Countdown';
 import FormUploadPaymenReceipt from '../form/FormUploadPaymentReceipt';
+import formatNumberWithCommas from '../../utils/helper';
 
 export default function UploadPaymentReceiptModal({
   open,
@@ -44,7 +45,7 @@ export default function UploadPaymentReceiptModal({
                 <Countdown datetime={data.deadline} />
                 <Flex
                   w="full"
-                  flexDir="row"
+                  flexDir="column"
                   border="1px"
                   borderColor="whiteAlpha.600"
                   borderRadius="base"
@@ -53,21 +54,50 @@ export default function UploadPaymentReceiptModal({
                   align="start"
                   p="4"
                 >
-                  <Image
-                    src={`http://localhost:8080/${data.image_data[0].image_path}`}
-                    boxSize="150px"
-                  />
-                  <Flex flexDir="column" marginLeft="4">
-                    <Text fontSize="md">
-                      Transaction ID : {data.transaction_id}
-                    </Text>
-                    <Text fontSize="xl"> Product Name : {data.name}</Text>
-                    <Text fontSize="xl"> Quantity : {data.buy_quantity}</Text>
-                    <Text fontSize="xl">
-                      Total Price : Rp. {data.total_price}
-                    </Text>
-                    <Text fontSize="xl"> Mitra : {data.mitra_name}</Text>
-                  </Flex>
+                  <Text fontWeight="medium" fontSize="xl">
+                    Products
+                  </Text>
+                  {data.products.map((product, index) => (
+                    <Box
+                      key={index}
+                      shadow="base"
+                      rounded="md"
+                      padding={4}
+                      mb={4}
+                      w={'100%'}
+                    >
+                      <Flex gap={4} alignItems={'center'}>
+                        <Image
+                          src={`http://localhost:8080/${product.image_path}`}
+                          alt={product.product_name}
+                          w="125px"
+                          h="125px"
+                        />
+                        <Box flex={1}>
+                          <Text fontWeight="medium">
+                            Nama : {product.product_name}
+                          </Text>
+                          <Text fontWeight="medium">
+                            Price : Rp. {formatNumberWithCommas(product.price)}
+                          </Text>
+                          <Text fontWeight="medium">Unit : {product.unit}</Text>
+                          <Text fontWeight="medium">
+                            Order Quantity : {product.quantity}
+                          </Text>
+                          <Text fontWeight="medium">
+                            Total Transaction : Rp.
+                            {formatNumberWithCommas(
+                              product.quantity * product.price
+                            )}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    </Box>
+                  ))}
+                  <Text fontSize="lg" fontWeight="bold">
+                    Total Prices : Rp.{' '}
+                    {formatNumberWithCommas(data.total_price)}
+                  </Text>
                 </Flex>
                 <Flex
                   w="full"
@@ -86,7 +116,7 @@ export default function UploadPaymentReceiptModal({
                       Transfer To
                     </Text>
                     <Text fontSize="md" fontWeight="medium">
-                      Fullname : {data.fullname}
+                      Fullname : {data.seller_name}
                     </Text>
                     <Text fontSize="md" fontWeight="medium">
                       Bank Name : {data.bank_name}

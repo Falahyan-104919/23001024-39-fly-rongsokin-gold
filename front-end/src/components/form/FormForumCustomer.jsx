@@ -95,7 +95,14 @@ export default function FormForumCustomer() {
   };
 
   return (
-    <Box m="10px" bgColor="whiteAlpha.500" p="10px" borderRadius="10px">
+    <Box
+      m="10px"
+      bgColor="whiteAlpha.500"
+      p="10px"
+      borderRadius="10px"
+      boxShadow="outline"
+      mb="4"
+    >
       <Text mb="15px" ml="5px" fontWeight="bold" fontSize="larger" color="teal">
         Post To Forum Customer
       </Text>

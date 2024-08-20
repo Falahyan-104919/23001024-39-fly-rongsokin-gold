@@ -12,7 +12,7 @@ export default function Sidebar() {
   return (
     <VStack mt="10px">
       <ProfileContainers />
-      <Accordion w="100%" pl="7px" pr="7px" mt="20px" allowToggle>
+      <Accordion w="100%" pl="7px" pr="7px" allowToggle>
         <AccordionProfile userId={user.userId} />
         <AccordionForum role={user.role} />
         <AccordionTransaction role={user.role} />

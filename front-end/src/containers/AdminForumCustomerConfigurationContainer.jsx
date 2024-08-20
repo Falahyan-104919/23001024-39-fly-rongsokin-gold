@@ -40,6 +40,7 @@ export default function AdminForumCustomerConfigurationContainer() {
       padding="16px"
       rowGap="8px"
       borderRadius="12px"
+      boxShadow="outline"
     >
       <Heading size="lg">Forum Customer Configuration</Heading>
       <Flex justify="flex-end">

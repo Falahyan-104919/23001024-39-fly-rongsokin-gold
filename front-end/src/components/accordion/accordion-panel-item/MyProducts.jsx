@@ -10,15 +10,15 @@ export default function MyProducts() {
   return (
     <Card
       variant="elevated"
-      bgColor="teal.300"
+      bgColor="#ffffff"
       h="40px"
       justifyContent="center"
       alignItems="center"
     >
       <Link to={`/product_configuration/${user.mitraId}`}>
         <Flex as="span" alignItems="center" textAlign="left">
-          <FontAwesomeIcon icon={faCubesStacked} color="white" />
-          <Text ml="10px" fontWeight="bold" color="white" fontSize="md">
+          <FontAwesomeIcon icon={faCubesStacked} color="#03045e" />
+          <Text ml="10px" fontWeight="bold" color="#03045e" fontSize="md">
             My Products
           </Text>
         </Flex>

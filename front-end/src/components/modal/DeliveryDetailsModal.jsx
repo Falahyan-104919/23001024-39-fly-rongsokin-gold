@@ -49,7 +49,7 @@ export default function DeliveryDetailsModal({
           </Flex>
         ) : (
           <ModalBody gap="4">
-            <Box shadow="base" p="4" mb="4">
+            <Box shadow="base" p="4" mb="4" rounded="md">
               <Text fontSize="xl" fontWeight="medium">
                 Delivery Method : {stringFormatter(data.delivery_services)}
               </Text>
@@ -59,7 +59,7 @@ export default function DeliveryDetailsModal({
                 </Text>
               ) : null}
             </Box>
-            <Box shadow="base" p="4">
+            <Box shadow="base" p="4" rounded="md">
               <Text fontSize="xl" fontWeight="medium">
                 Delivery Receipt
               </Text>

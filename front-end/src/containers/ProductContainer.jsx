@@ -72,6 +72,7 @@ export default function ProductContainer() {
         m="15px"
         p="25px"
         borderRadius="15px"
+        boxShadow="outline"
       >
         <GridItem rowSpan={5} colSpan={2} p="5px" borderRadius="10px">
           <Image
@@ -95,9 +96,9 @@ export default function ProductContainer() {
             </CardBody>
           </Card>
         </GridItem>
-        <GridItem rowSpan={2} colSpan={3} p="10px" borderRadius="10px">
-          <Card>
-            <Heading size="md" ml="15px" mt="15px">
+        <GridItem rowSpan={4} colSpan={3} p="10px" borderRadius="10px">
+          <Card p={4}>
+            <Heading size="md" ml="10px" mt="15px">
               Place Order
             </Heading>
             <FormOrderProduct
@@ -106,6 +107,8 @@ export default function ProductContainer() {
               ownerId={data?.productOwner.mitra_id}
               productId={data?.productData.product_id}
               minOrder={data?.productData.minimum_order}
+              whatsappNumber={data?.productOwner.phone_number}
+              product={data?.productData}
             />
           </Card>
         </GridItem>

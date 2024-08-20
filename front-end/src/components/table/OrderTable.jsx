@@ -38,7 +38,12 @@ export default function OrderTable() {
   });
 
   return (
-    <TableContainer borderRadius="10px" bgColor="white" p="10px">
+    <TableContainer
+      borderRadius="10px"
+      bgColor="white"
+      p="10px"
+      boxShadow="outline"
+    >
       <Flex mb="10px">
         <Spacer />
         <InputGroup maxW="250px">
@@ -56,10 +61,8 @@ export default function OrderTable() {
       <Table>
         <Thead>
           <Tr>
-            <Th>Product Name</Th>
-            <Th>Quantity</Th>
-            <Th>Price</Th>
             <Th>Mitra Name</Th>
+            <Th>Price</Th>
             <Th>Status</Th>
             <Th colSpan="2">Actions</Th>
           </Tr>

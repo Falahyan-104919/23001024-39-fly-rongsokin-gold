@@ -28,7 +28,6 @@ export default function AdminProductConfigurationContainer() {
     queryFn: fetchProducts,
   });
   if (isFetched) {
-    console.log(data);
     const filteredProducts = Array.isArray(data)
       ? data.filter((product) => {
           return product['name']
@@ -45,6 +44,7 @@ export default function AdminProductConfigurationContainer() {
         padding="16px"
         rowGap="8px"
         borderRadius="12px"
+        boxShadow="outline"
       >
         <Heading size="lg">Configure Product</Heading>
         <Flex justify="flex-end">

@@ -10,7 +10,7 @@ export default function MyTransaction() {
   return (
     <Card
       variant="elevated"
-      bgColor="teal.300"
+      bgColor="#ffffff"
       h="40px"
       justifyContent="center"
       mt="10px"
@@ -18,8 +18,8 @@ export default function MyTransaction() {
     >
       <Link to={`/transaction/${user.mitraId}`}>
         <Flex as="span" alignItems="center" textAlign="left">
-          <FontAwesomeIcon icon={faClockRotateLeft} color="white" />
-          <Text ml="10px" fontWeight="bold" color="white" fontSize="md">
+          <FontAwesomeIcon icon={faClockRotateLeft} color="#03045e" />
+          <Text ml="10px" fontWeight="bold" color="#03045e" fontSize="md">
             My Transaction
           </Text>
         </Flex>

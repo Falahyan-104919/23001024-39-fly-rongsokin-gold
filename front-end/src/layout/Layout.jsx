@@ -7,8 +7,16 @@ export function Layout() {
   return (
     <>
       <Navbar />
-      <Grid templateColumns="repeat(6, 1fr)" bg="teal.100">
-        <GridItem as="aside" colSpan="1" bgColor="teal.600" minHeight="100vh">
+      <Grid templateColumns="repeat(6, 1fr)" bg="#ffffff">
+        <GridItem
+          as="aside"
+          colSpan="1"
+          bgColor="#ffffff"
+          minHeight="100vh"
+          p="2"
+          borderRight="2px"
+          borderColor="#ced4da"
+        >
           <Sidebar />
         </GridItem>
         <GridItem as="main" colSpan="5">

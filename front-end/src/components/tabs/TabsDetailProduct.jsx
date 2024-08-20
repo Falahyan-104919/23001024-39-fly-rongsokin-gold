@@ -14,6 +14,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import formatNumberWithCommas from '../../utils/helper';
 
 export default function TabsDetailProduct(props) {
   const {
@@ -65,7 +66,7 @@ export default function TabsDetailProduct(props) {
                 <Td>
                   <Flex>
                     Price: <Spacer />
-                    RP. {price} per {unit}
+                    RP. {formatNumberWithCommas(price)} per {unit}
                   </Flex>
                 </Td>
               </Tr>
@@ -95,14 +96,6 @@ export default function TabsDetailProduct(props) {
                 <Td>
                   <Flex>
                     Mitra Type : <Spacer /> {type}
-                  </Flex>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td wordBreak="break-word">
-                  <Flex>
-                    Address : <Spacer />
-                    {address}
                   </Flex>
                 </Td>
               </Tr>

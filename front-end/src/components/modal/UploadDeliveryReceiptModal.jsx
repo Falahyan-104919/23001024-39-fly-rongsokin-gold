@@ -14,11 +14,14 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../utils/axios';
 import FormUploadDeliveryReceipt from '../form/FormUploadDeliveryReceipt';
+import formatNumberWithCommas from '../../utils/helper';
 
 export default function UploadDeliveryReceiptModal({
   open,
   toggleOff,
   trans_id,
+  products,
+  total_price,
 }) {
   const { isLoading, data } = useQuery({
     queryKey: ['payment_receipt', trans_id],
@@ -37,7 +40,7 @@ export default function UploadDeliveryReceiptModal({
         <ModalHeader>Upload Delivery Receipt</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Box shadow="base" p="4">
+          <Box shadow="base" p="4" rounded="md">
             <Text fontSize="xl" fontWeight="medium" mb="12px">
               Buyer Information
             </Text>
@@ -51,7 +54,44 @@ export default function UploadDeliveryReceiptModal({
               Buyer Phone Number : {data.phone_number}
             </Text>
           </Box>
-          <Box mt="12px" shadow="base" p="4">
+          <Box shadow="base" p="4" rounded="md" mt={4}>
+            <Text fontSize="xl" fontWeight="medium" mb="12px">
+              Order Details
+            </Text>
+            {products?.map((products, index) => {
+              return (
+                <Box key={index} shadow="base" rounded="md" padding={4} mb={4}>
+                  <Flex gap={4} alignItems={'center'}>
+                    <Image
+                      src={`http://localhost:8080/${products.image_path}`}
+                      alt={products.name}
+                      w="125px"
+                      h="125px"
+                    />
+                    <Box flex={1}>
+                      <Text fontWeight="medium">
+                        Name : {products.product_name}
+                      </Text>
+                      <Text fontWeight="medium">
+                        Price : Rp. {formatNumberWithCommas(products.price)}
+                      </Text>
+                      <Text fontWeight="medium">
+                        Order Quantity : {products.quantity}
+                      </Text>
+                      <Text fontWeight="medium">
+                        Total Price : Rp.{' '}
+                        {formatNumberWithCommas(products.price)}
+                      </Text>
+                    </Box>
+                  </Flex>
+                </Box>
+              );
+            })}
+            <Text fontWeight="bold" fontSize="md" textAlign="end">
+              Total Transactions : Rp. {total_price}
+            </Text>
+          </Box>
+          <Box mt="12px" shadow="base" p="4" rounded="md">
             <Text fontSize="xl" fontWeight="medium" mb="12px">
               Payment Receipt
             </Text>
@@ -60,7 +100,7 @@ export default function UploadDeliveryReceiptModal({
               boxSize="350px"
             />
           </Box>
-          <Box mt="12px" shadow="base" p="4">
+          <Box mt="12px" shadow="base" p="4" rounded="md">
             <Text mt="12px" fontSize="xl" fontWeight="medium">
               Upload Delivery Receipts
             </Text>

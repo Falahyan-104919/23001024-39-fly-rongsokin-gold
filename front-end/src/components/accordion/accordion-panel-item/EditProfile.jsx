@@ -7,15 +7,15 @@ export default function EditProfile({ userId }) {
   return (
     <Card
       variant="elevated"
-      bgColor="teal.300"
+      bgColor="#ffffff"
       h="40px"
       justifyContent="center"
       alignItems="center"
     >
       <Link to={`/profile/${userId}`}>
         <Flex as="span" alignItems="center" textAlign="left">
-          <FontAwesomeIcon icon={faEdit} color="white" />
-          <Text ml="10px" fontWeight="bold" color="white">
+          <FontAwesomeIcon icon={faEdit} color="#03045e" />
+          <Text ml="10px" fontWeight="bold" color="#03045e">
             Edit Profile
           </Text>
         </Flex>

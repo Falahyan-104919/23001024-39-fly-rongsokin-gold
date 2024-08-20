@@ -4,13 +4,7 @@ import MitraTypeList from './table/MitraTypeList';
 
 export default function MitraTypeSettings() {
   return (
-    <Flex
-      flexDir="row"
-      columnGap="72px"
-      mt="12px"
-      borderBottom="1px"
-      paddingBottom="32px"
-    >
+    <Flex flexDir="row" columnGap="72px" mt="12px" paddingBottom="32psx">
       <FormMitraSettings />
       <MitraTypeList />
     </Flex>

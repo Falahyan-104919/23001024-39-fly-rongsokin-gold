@@ -72,6 +72,7 @@ export default function UserConfigurationContainer() {
       padding="16px"
       rowGap="16px"
       borderRadius="12px"
+      boxShadow="outline"
     >
       <Heading>User Configuration</Heading>
       <Flex justify="flex-end">

@@ -15,10 +15,13 @@ export default function AdminDashboardContainer() {
       padding="16px"
       rowGap="8px"
       borderRadius="12px"
+      boxShadow="outline"
     >
-      <Heading mb="24px">Welcome Back, {user.fullname}!</Heading>
+      <Heading mb="24px" ml="24px">
+        Welcome Back, {user.fullname}!
+      </Heading>
       <CardStats />
-      <Heading mt="24px" mb="24px">
+      <Heading mt="24px" mb="24px" ml="26px">
         Summary Table
       </Heading>
       <SummaryTable />

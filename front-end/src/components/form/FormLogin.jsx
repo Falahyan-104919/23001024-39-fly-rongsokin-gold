@@ -8,6 +8,8 @@ import {
   FormErrorMessage,
   Stack,
   useToast,
+  Flex,
+  Link,
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
 import { AuthContext } from '../../store/AuthProvider';
@@ -115,6 +117,17 @@ export default function FormLogin({ close }) {
               )}
             </Field>
           </Stack>
+          <Flex mt="4" justifyContent="end">
+            <Link
+              color="blue.400"
+              isExternal
+              href="http://localhost:5173/forgot"
+            >
+              <Text color="blue.400" fontWeight="bold">
+                Forgot Password ?
+              </Text>
+            </Link>
+          </Flex>
           <Button
             w="100%"
             mt={4}

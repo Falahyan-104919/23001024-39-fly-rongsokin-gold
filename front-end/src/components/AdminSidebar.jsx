@@ -29,8 +29,9 @@ export default function AdminSidebar() {
         width="100%"
         p="5"
         borderRadius="12px"
-        backgroundColor="teal.300"
         style={{ textDecoration: 'none' }}
+        boxShadow="outline"
+        bgColor="#03045e"
       >
         <Box
           display="flex"
@@ -51,7 +52,8 @@ export default function AdminSidebar() {
         width="100%"
         p="5"
         borderRadius="12px"
-        backgroundColor="teal.300"
+        boxShadow="outline"
+        bgColor="#03045e"
         style={{ textDecoration: 'none' }}
       >
         <Box
@@ -73,7 +75,8 @@ export default function AdminSidebar() {
         width="100%"
         p="5"
         borderRadius="12px"
-        backgroundColor="teal.300"
+        boxShadow="outline"
+        bgColor="#03045e"
         style={{ textDecoration: 'none' }}
       >
         <Box
@@ -95,7 +98,8 @@ export default function AdminSidebar() {
         width="100%"
         p="5"
         borderRadius="12px"
-        backgroundColor="teal.300"
+        boxShadow="outline"
+        bgColor="#03045e"
         style={{ textDecoration: 'none' }}
       >
         <Box
@@ -117,7 +121,8 @@ export default function AdminSidebar() {
         width="100%"
         p="5"
         borderRadius="12px"
-        backgroundColor="teal.300"
+        boxShadow="outline"
+        bgColor="#03045e"
         style={{ textDecoration: 'none' }}
       >
         <Box
@@ -143,7 +148,8 @@ export default function AdminSidebar() {
         width="100%"
         p="5"
         borderRadius="12px"
-        backgroundColor="teal.300"
+        boxShadow="outline"
+        bgColor="#03045e"
         style={{ textDecoration: 'none' }}
       >
         <Box
@@ -169,7 +175,9 @@ export default function AdminSidebar() {
         width="100%"
         p="5"
         borderRadius="12px"
-        backgroundColor="teal.300"
+        boxShadow="outline"
+        bgColor="#03045e"
+        textDecor="none"
       >
         <Box
           display="flex"
